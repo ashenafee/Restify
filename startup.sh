@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Create a virtual environment
-python -m venv env
+python -m venv venv
 
 # Activate the virtual environment
-source env/bin/activate
+source venv/bin/activate
 
 # Upgrade pip
 pip install --upgrade pip
