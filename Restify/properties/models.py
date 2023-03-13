@@ -17,6 +17,11 @@ class Property(models.Model):
     guests = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
+    location = models.CharField(max_length=200)
+    #should be later inherited from Rating model
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    #should be later inherited from Availability model
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
