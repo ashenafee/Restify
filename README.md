@@ -49,9 +49,9 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 - [ ] Property creation & administration
     - [x] User can create property listings
     - [ ] Host can set a listing's availability and pricing
-    - [ ] Host can edit general information of a listing
-    - [ ] Host can approve/deny booking requests and cancellation requests
-    - [ ] Host can terminate a booking at any time
+    - [x] Host can edit general information of a listing
+    - [x] Host can approve/deny booking requests and cancellation requests
+    - [x] Host can terminate a booking at any time
 - [ ] Property info & search
     - [ ] User can search for properties by location, number of guests, amenities and availability
         - [ ] User can sort search results by price or rating
