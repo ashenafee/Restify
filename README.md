@@ -47,7 +47,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [ ] Host leave rating/comment about a guest
     - [ ] Host view ratings/comments about a potential guest
 - [ ] Property creation & administration
-    - [ ] User can create property listings
+    - [x] User can create property listings
     - [ ] Host can set a listing's availability and pricing
     - [ ] Host can edit general information of a listing
     - [ ] Host can approve/deny booking requests and cancellation requests
