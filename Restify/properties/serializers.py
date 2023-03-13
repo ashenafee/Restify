@@ -7,13 +7,12 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from .models import Property, Amenity, PropertyImage, Reservation
 
 
-
-
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
         model = Property
-        fields = ['address', 'description', 'guests', 'beds', 'bathrooms', 'amenities']
-    
+        fields = ['address', 'description', 'guests', 'beds', 'bathrooms',
+                  'location', 'rating', 'price', 'amenities']
+
     def validate(self, data):
         amenities = data.get('amenities')
         if amenities:
@@ -21,13 +20,13 @@ class propertyCreateSerializer(ModelSerializer):
                 if not Amenity.objects.filter(id=amenity.id).exists():
                     raise serializers.ValidationError('Amenity with id={} does not exist.'.format(amenity.id))
         return data
-    
+
 class propertyImageCreator(ModelSerializer):
     class Meta:
         model = PropertyImage
         fields =['name','image','default']
-    
+
 class reservationCreator(ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ['guest', 'start_date', 'end_date', 'state']
+        fields = ['guest', 'start_date', 'end_date', 'state', 'property']

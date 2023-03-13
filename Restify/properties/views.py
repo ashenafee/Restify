@@ -14,8 +14,9 @@ from .models import Property
 
 from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator
 
+
 class propertyCreateView(APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = propertyCreateSerializer
 
@@ -28,7 +29,7 @@ class propertyCreateView(APIView):
 
         
 class propertyImageCreateView(APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = propertyImageCreator
 
@@ -48,9 +49,10 @@ class propertyImageCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(property=property)
         return Response(serializer.data)
-        
+
+
 class ReservationCreateView(APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = reservationCreator
 
@@ -60,13 +62,14 @@ class ReservationCreateView(APIView):
             property = Property.objects.get(id=property_id)
         except Property.DoesNotExist:
             raise NotFound('Property not found.')
-        
-        # # Check if the current user is the owner of the property
-        # if not request.user == property.host:
-        #     raise PermissionDenied('You are not the owner of this property.')
-        
-        # Set the property field of the serializer data
-        serializer = self.serializer_class(data=request.data)
+
+        # Set the property and guest fields of the serializer data
+        data = request.data.copy()
+        data['property'] = property.id
+        data['guest'] = request.user.id
+
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(property=property)
+        serializer.save()
         return Response(serializer.data)
+

@@ -8,4 +8,4 @@ class RatingListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        return Rating.objects.filter(rated_user=user_id)
+        return Rating.objects.filter(guest=user_id)

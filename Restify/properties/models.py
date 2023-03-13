@@ -2,12 +2,14 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from accounts.models import User
 
+
 #similar to Movie model from midterm
 class Amenity(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
+
 
 # Create your models here.
 class Property(models.Model):
@@ -17,9 +19,19 @@ class Property(models.Model):
     guests = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
+    location = models.CharField(max_length=200)
+
+    #should be later inherited from Rating model
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+
+    #should be later inherited from Availability model
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
+
+    def __str__(self):
+        return f"{self.host.get_full_name()}: {self.address}"
 
 class PropertyImage(models.Model):
     name = models.CharField(max_length=255)
@@ -66,3 +78,6 @@ class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     state = models.CharField(choices=RESERVATION_STATES, default=PENDING, max_length=200)
+
+    def __str__(self):
+        return f"({self.property}) {self.guest} - {self.start_date} - {self.end_date}"

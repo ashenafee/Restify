@@ -47,7 +47,6 @@ class LogoutView(APIView):
             return Response({'error': 'Invalid Token'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-
 class SignupView(APIView):
 
     def post(self, request):
