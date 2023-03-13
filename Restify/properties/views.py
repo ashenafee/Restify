@@ -1,5 +1,5 @@
 from django.contrib.auth import logout
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,9 +10,10 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied, NotFound
-from .models import Property
+from .models import Property, Reservation
+from .permissions import IsOwner
 
-from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator
+from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer
 
 
 class propertyCreateView(APIView):
@@ -72,4 +73,56 @@ class ReservationCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
+class PropertyUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Property.objects.all()
+    serializer_class = propertyEditorSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        id = self.kwargs['property_id']
+        return Property.objects.get(id=id)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        user = request.user
+
+        if user != instance.host:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+class ReservationUpdateStateView(APIView):
+    serializer_class = ReservationUpdateStateSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_object(self):
+        reservation_id = self.kwargs.get('reservation_id')
+        try:
+            instance = Reservation.objects.get(id=reservation_id)
+            return instance
+        except Reservation.DoesNotExist:
+            raise NotFound('Reservation does not exist')
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        # Check that the current user is the owner of the reservation's property
+        property_owner = instance.property.host
+        if request.user != property_owner:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)

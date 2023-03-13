@@ -11,7 +11,7 @@ class propertyCreateSerializer(ModelSerializer):
     class Meta:
         model = Property
         fields = ['address', 'description', 'guests', 'beds', 'bathrooms',
-                  'location', 'rating', 'price', 'amenities']
+                  'location','rating', 'price', 'amenities']
 
     def validate(self, data):
         amenities = data.get('amenities')
@@ -30,3 +30,13 @@ class reservationCreator(ModelSerializer):
     class Meta:
         model = Reservation
         fields = ['guest', 'start_date', 'end_date', 'state', 'property']
+
+class propertyEditorSerializer(ModelSerializer):
+    class Meta:
+        model = Property
+        fields = ['description', 'guests', 'beds', 'bathrooms', 'amenities', 'location']
+
+class ReservationUpdateStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ['state']
