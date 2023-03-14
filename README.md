@@ -52,9 +52,9 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [x] Host can edit general information of a listing
     - [x] Host can approve/deny booking requests and cancellation requests
     - [x] Host can terminate a booking at any time
-- [ ] Property info & search
-    - [ ] User can search for properties by location, number of guests, amenities and availability
-        - [ ] User can sort search results by price or rating
+- [x] Property info & search
+    - [x] User can search for properties by location, number of guests, amenities and availability
+        - [x] User can sort search results by price or rating
     - [ ] User can view property details
     - [ ] User can view contact information of a host
     - [ ] User can request to book a property
@@ -67,6 +67,58 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 - [ ] Notifications
     - [ ] Hosts are notified when a user requests to book their property, rates it, posts a comment, or requests a cancellation
     - [ ] Users are notified when a host approves/denies a booking request or when bookings are coming soon
+
+
+**Marking scheme for P2:**
+
+- [ ] General
+-1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
+-1 mark per incorrect permission, e.g., host A cannot terminate host B's reservations, users cannot add comments to a property they have not been to, etc. 
+
+- [ ] Property (30 marks)
+    - [ ] Create/update (10 marks)
+    - [x] Search result (18 marks) - KATE
+        - [x] Pagination support (3 marks)
+        - [x] Must support at least 4 filters, e.g., location, available dates, number of guests, amenities available (10 marks)
+        - [x] Must support at least 2 order-by (5 marks)
+    - [ ] Delete (2 marks)
+
+- [ ] User (17 marks)
+    - [ ] Authentication (5 marks)
+    - [ ] Token based authentication (2 marks) 
+    - [ ] Login (2 mark)
+    - [ ] Logout (1 mark)
+    - [ ] Signup/update profile (12 marks)
+    
+- [ ] Comments (18 marks)
+    - [ ] View comments (8 marks) 
+        - [ ] For Guest/Property (6 marks)
+        - [ ] Can distinguish reply from comment (2 marks)
+        - [ ] -2 marks without pagination support
+    - [ ] Write comments/reply (10 marks)
+        Note: remember the requirements on who can comment/reply and how many times.
+        
+- [ ] Reservations (20 marks)
+    - [ ] List of reservations (8 marks)
+        - [ ] Ability to filter by user type, i.e., host or guest (4 marks)
+        - [ ] Ability to filter by state (4 marks)
+        - [ ] -2 marks without pagination support
+    - [ ] Reservation actions (12 marks)
+        - [ ] Reserve (5 marks)
+        - [ ] Cancel (2 marks)
+        - [ ] Approve/Deny Pending (2 mark)
+        - [ ] Approve/Deny Cancel (2 marks)
+        - [ ] Terminate (1 mark)
+        
+- [ ] Notifications (15 marks)
+    - [ ] List of notifications (8 marks)
+        - [ ] -2 marks without pagination support
+    - [ ] Read notification (2 marks)
+    - [ ] Clear notification (1 marks)
+        - [ ] It is intentionally vague here on when you can/should clear notification, e.g., automatically when read.
+    - [ ] Receiving notifications (4 marks)
+        - [ ] Host: new reservation, cancellation request
+        - [ ] Guest: approved reservation or cancellation request
 
 
 ## Credits
