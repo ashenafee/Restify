@@ -13,7 +13,9 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from .models import Property, Reservation
 from .permissions import IsOwner
 from datetime import date
-from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer
+from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 
 
 class propertyCreateView(APIView):
@@ -178,3 +180,52 @@ class ReservationHistoryView(generics.ListAPIView):
         today = date.today()
         completed_reservations = Reservation.objects.filter(guest=user, state=Reservation.COMPLETED, end_date__lt=today).order_by('-end_date')[:4]
         return completed_reservations   
+
+class HostDetailsView(APIView):
+    def get(self, request, property_id):
+        try:
+            property = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = HostDetailSerializer(property.host)
+        return Response(serializer.data)
+    
+class PropertyDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, property_id):
+        try:
+            to_delete_property = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            return Response({"error": "Property not found."})
+        if self.request.user != to_delete_property.host:
+            return Response({"error": "Not owner of property"}) 
+        property_name = to_delete_property.name
+        property_address = to_delete_property.address
+        to_delete_property.delete()
+        response_data = {'message': 'Property deleted successfully.', 'name': property_name, 'address': property_address}
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+class ReservationListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ReservationListSerializer
+    pagination_class = PageNumberPagination
+    page_size = 4
+
+    def get_queryset(self):
+        user = self.request.user
+        today = date.today()
+        reservations = Reservation.objects.filter(end_date__lt=today).order_by('-end_date')
+        role = self.request.query_params.get('role')
+        if role == 'host':
+            reservations = reservations.filter(property__host   =user)
+        elif role == 'guest':
+            reservations = reservations.filter(guest=user)
+        else:
+            reservations = reservations.filter(Q(property__host=user) | Q(guest=user))
+        state = self.request.query_params.get('state')
+        if state:
+            reservations = reservations.filter(state=state)
+
+        return reservations.order_by('-end_date')

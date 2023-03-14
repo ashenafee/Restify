@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Property, Amenity, PropertyImage, Reservation
-
+from accounts.models import User
 
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
@@ -48,6 +48,19 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CompletedReservationSerializer(serializers.ModelSerializer):
+    property_name = serializers.CharField(source='property.name')
+    property_address = serializers.CharField(source='property.address')
+
+    class Meta:
+        model = Reservation
+        fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address']
+
+class HostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','phone_number','avatar']
+
+class ReservationListSerializer(serializers.ModelSerializer):
     property_name = serializers.CharField(source='property.name')
     property_address = serializers.CharField(source='property.address')
 
