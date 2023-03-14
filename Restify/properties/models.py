@@ -34,9 +34,12 @@ class Property(models.Model):
 
 class PropertyImage(models.Model):
     name = models.CharField(max_length=255)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='imagesOfProperty')
     image = models.ImageField(upload_to='images/')
     default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.property}: {self.image}"
 
 #one Property object can have multiple Availability objects, but an Availability object can only belong to one Property
 class Availability(models.Model):
