@@ -76,7 +76,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 -1 mark per incorrect permission, e.g., host A cannot terminate host B's reservations, users cannot add comments to a property they have not been to, etc. 
 
 - [ ] Property (30 marks)
-    - [ ] Create/update (10 marks)
+    - [x] Create/update (10 marks) - Jason
     - [x] Search result (18 marks) - KATE
         - [x] Pagination support (3 marks)
         - [x] Must support at least 4 filters, e.g., location, available dates, number of guests, amenities available (10 marks)
@@ -103,12 +103,12 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
         - [ ] Ability to filter by user type, i.e., host or guest (4 marks)
         - [ ] Ability to filter by state (4 marks)
         - [ ] -2 marks without pagination support
-    - [ ] Reservation actions (12 marks)
-        - [ ] Reserve (5 marks)
-        - [ ] Cancel (2 marks)
-        - [ ] Approve/Deny Pending (2 mark)
-        - [ ] Approve/Deny Cancel (2 marks)
-        - [ ] Terminate (1 mark)
+    - [x] Reservation actions (12 marks)
+        - [x] Reserve (5 marks)
+        - [x] Cancel (2 marks)
+        - [x] Approve/Deny Pending (2 mark)
+        - [x] Approve/Deny Cancel (2 marks)
+        - [x] Terminate (1 mark)
         
 - [ ] Notifications (15 marks)
     - [ ] List of notifications (8 marks)
