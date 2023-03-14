@@ -12,8 +12,8 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied, NotFound
 from .models import Property, Reservation
 from .permissions import IsOwner
-
-from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer
+from datetime import date
+from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer
 
 
 class propertyCreateView(APIView):
@@ -52,6 +52,7 @@ class propertyImageCreateView(APIView):
         return Response(serializer.data)
 
 
+# For users to create a pending reservation
 class ReservationCreateView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -68,6 +69,7 @@ class ReservationCreateView(APIView):
         data = request.data.copy()
         data['property'] = property.id
         data['guest'] = request.user.id
+        data['state'] = Reservation.PENDING
 
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
@@ -97,7 +99,9 @@ class PropertyUpdateView(generics.RetrieveUpdateAPIView):
     
     def post(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    
 
+# Updating reservation for the property owner
 
 class ReservationUpdateStateView(APIView):
     serializer_class = ReservationUpdateStateSerializer
@@ -120,9 +124,57 @@ class ReservationUpdateStateView(APIView):
         property_owner = instance.property.host
         if request.user != property_owner:
             return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check for valid state
+        state = serializer.validated_data.get('state')
+        if state not in [choice[0] for choice in Reservation.RESERVATION_STATES]:
+            return Response({"detail": "Invalid state value."}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    
+class PropertyDetailView(APIView):
+    def get(self, request, property_id):
+        try:
+            property = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PropertyDetailSerializer(property)
+        return Response(serializer.data)
+    
+class ReservationCancelView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        reservation_id = self.kwargs.get('reservation_id')
+        try:
+            reservation = Reservation.objects.get(id=reservation_id)
+            return reservation
+        except Reservation.DoesNotExist:
+            raise NotFound('Reservation not found')
+
+    def post(self, request, reservation_id):
+        reservation = self.get_object()
+
+        # Check that the reservation belongs to the current user
+        if request.user != reservation.guest:
+            return Response({"detail": "Not the owner of the reservation."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Update the reservation state to CANCELED
+        reservation.state = Reservation.CANCELED
+        reservation.save()
+
+        return Response({"detail": "Reservation canceled."})
+    
+class ReservationHistoryView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CompletedReservationSerializer
+    def get_queryset(self):
+        user = self.request.user
+        today = date.today()
+        completed_reservations = Reservation.objects.filter(guest=user, state=Reservation.COMPLETED, end_date__lt=today).order_by('-end_date')[:4]
+        return completed_reservations   
