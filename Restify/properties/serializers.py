@@ -5,13 +5,13 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Property, Amenity, PropertyImage, Reservation
-
+from accounts.models import User
 
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
         model = Property
         fields = ['address', 'description', 'guests', 'beds', 'bathrooms',
-                  'location','rating', 'price', 'amenities']
+                  'location','rating', 'amenities']
 
     def validate(self, data):
         amenities = data.get('amenities')
@@ -27,6 +27,7 @@ class propertyImageCreator(ModelSerializer):
         fields =['name','image','default']
 
 class reservationCreator(ModelSerializer):
+    state = serializers.CharField(default=Reservation.PENDING)
     class Meta:
         model = Reservation
         fields = ['guest', 'start_date', 'end_date', 'state', 'property']
@@ -40,3 +41,29 @@ class ReservationUpdateStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ['state']
+
+class PropertyDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Property
+        fields = '__all__'
+
+class CompletedReservationSerializer(serializers.ModelSerializer):
+    property_name = serializers.CharField(source='property.name')
+    property_address = serializers.CharField(source='property.address')
+
+    class Meta:
+        model = Reservation
+        fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address']
+
+class HostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','phone_number','avatar']
+
+class ReservationListSerializer(serializers.ModelSerializer):
+    property_name = serializers.CharField(source='property.name')
+    property_address = serializers.CharField(source='property.address')
+
+    class Meta:
+        model = Reservation
+        fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address']
