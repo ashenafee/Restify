@@ -69,7 +69,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [ ] Users are notified when a host approves/denies a booking request or when bookings are coming soon
 
 
-**Marking scheme for P2:**
+--**Marking scheme for P2:**--
 
 - [ ] General
 -1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
