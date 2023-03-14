@@ -81,7 +81,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
         - [x] Pagination support (3 marks)
         - [x] Must support at least 4 filters, e.g., location, available dates, number of guests, amenities available (10 marks)
         - [x] Must support at least 2 order-by (5 marks)
-    - [ ] Delete (2 marks)
+    - [x] Delete (2 marks) - Jason
 
 - [ ] User (17 marks)
     - [ ] Authentication (5 marks)
@@ -103,7 +103,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
         - [ ] Ability to filter by user type, i.e., host or guest (4 marks)
         - [ ] Ability to filter by state (4 marks)
         - [ ] -2 marks without pagination support
-    - [x] Reservation actions (12 marks)
+    - [x] Reservation actions (12 marks) - Jason
         - [x] Reserve (5 marks)
         - [x] Cancel (2 marks)
         - [x] Approve/Deny Pending (2 mark)
