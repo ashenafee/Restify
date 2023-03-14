@@ -42,10 +42,10 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 - [X] Comment page from the user's POV
 
 ### Phase 2
-- [ ] Accounts
-    - [ ] User signup/login/logout/edit
-    - [ ] Host leave rating/comment about a guest
-    - [ ] Host view ratings/comments about a potential guest
+- [x] Accounts
+    - [x] User signup/login/logout/edit
+    - [x] Host leave rating/comment about a guest
+    - [x] Host view ratings/comments about a potential guest
 - [ ] Property creation & administration
     - [x] User can create property listings
     - [ ] Host can set a listing's availability and pricing
