@@ -6,8 +6,8 @@ app_name = 'ratings'
 urlpatterns = [
     path('view/<int:user_id>',
          views.RatingListAPIView.as_view(), name='rating_list'),
-    # path('users/<int:user_id>/ratings/create/',
-    #      views.RatingCreateAPIView.as_view(), name='rating_create'),
+    path('create/',
+         views.RatingCreateAPIView.as_view(), name='rating_create'),
     # path('users/<int:user_id>/ratings/<int:pk>/',
     #      views.RatingRetrieveUpdateDestroyAPIView.as_view(), name='rating_detail'),
 ]

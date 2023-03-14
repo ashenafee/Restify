@@ -13,7 +13,8 @@ class Rating(models.Model):
 
     host = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='ratings_given',
-                             help_text='Host who\'s leaving the rating about the guest')
+                             help_text='Host who\'s leaving the rating about '
+                                       'the guest')
 
     guest = models.ForeignKey(User, on_delete=models.CASCADE,
                               related_name='ratings_received',
@@ -29,3 +30,8 @@ class Rating(models.Model):
 
     comment = models.TextField(blank=True, null=True,
                                help_text='Comment left by the host')
+
+
+    def __str__(self):
+        return f'{self.host.username} rated {self.guest.username} ' \
+               f'{self.rating} stars'
