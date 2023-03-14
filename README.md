@@ -75,7 +75,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 -1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
 -1 mark per incorrect permission, e.g., host A cannot terminate host B's reservations, users cannot add comments to a property they have not been to, etc. 
 
-- [ ] Property (30 marks)
+- [x] Property (30 marks)
     - [x] Create/update (10 marks) - Jason
     - [x] Search result (18 marks) - KATE
         - [x] Pagination support (3 marks)
@@ -98,11 +98,11 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [ ] Write comments/reply (10 marks)
         Note: remember the requirements on who can comment/reply and how many times.
         
-- [ ] Reservations (20 marks)
-    - [ ] List of reservations (8 marks)
-        - [ ] Ability to filter by user type, i.e., host or guest (4 marks)
-        - [ ] Ability to filter by state (4 marks)
-        - [ ] -2 marks without pagination support
+- [x] Reservations (20 marks)
+    - [x] List of reservations (8 marks)
+        - [x] Ability to filter by user type, i.e., host or guest (4 marks)
+        - [x] Ability to filter by state (4 marks)
+        - [x] -2 marks without pagination support
     - [x] Reservation actions (12 marks) - Jason
         - [x] Reserve (5 marks)
         - [x] Cancel (2 marks)
