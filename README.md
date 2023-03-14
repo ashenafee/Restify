@@ -55,11 +55,11 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
 - [x] Property info & search
     - [x] User can search for properties by location, number of guests, amenities and availability
         - [x] User can sort search results by price or rating
-    - [ ] User can view property details
-    - [ ] User can view contact information of a host
-    - [ ] User can request to book a property
-    - [ ] User can view history of their bookings
-    - [ ] User can cancel a booking
+    - [x] User can view property details
+    - [x] User can view contact information of a host
+    - [x] User can request to book a property
+    - [x] User can view history of their bookings
+    - [x] User can cancel a booking
 - [ ] Social network
     - [ ] User can leave a rating/comment for each completed booking
     - [ ] Host can respond to a rating/comment
