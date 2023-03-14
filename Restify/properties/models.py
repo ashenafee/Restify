@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from accounts.models import User
+from django.core.exceptions import ValidationError
 
 
 #similar to Movie model from midterm
@@ -14,6 +15,7 @@ class Amenity(models.Model):
 # Create your models here.
 class Property(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='properties')
+    name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     description = models.TextField()
     guests = models.PositiveIntegerField()
@@ -24,14 +26,11 @@ class Property(models.Model):
     #should be later inherited from Rating model
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
-    #should be later inherited from Availability model
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
 
     def __str__(self):
-        return f"{self.host.get_full_name()}: {self.address}"
+        return f"{self.host.get_full_name()}: {self.name}"
 
 class PropertyImage(models.Model):
     name = models.CharField(max_length=255)
@@ -45,10 +44,19 @@ class Availability(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     # we will set the price for the whole period, not for each day
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"{self.property}: {self.start_date} - {self.end_date}"
+
+    # it's made so that we can't create overlapping availabilities for the same property
+    def save(self, *args, **kwargs):
+        for availability in self.property.availabilitiesOfProperty.exclude(id=self.id):
+            if availability.start_date <= self.end_date and self.start_date <= availability.end_date:
+                raise ValidationError('Overlapping availability already exists for this property.')
+            if self.start_date > self.end_date:
+                raise ValidationError('Start date must be before end date.')
+        super().save(*args, **kwargs)
 
 
 class Reservation(models.Model):
