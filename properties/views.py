@@ -13,9 +13,10 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from .models import Property, Reservation
 from .permissions import IsOwner
 from datetime import date
-from .serializers import propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer
+from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
+from notifications.models import ReservationNotification, CancellationNotification
 
 
 class propertyCreateView(APIView):
@@ -76,6 +77,16 @@ class ReservationCreateView(APIView):
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # Send a notification to the property owner
+        notification = ReservationNotification.objects.create(
+            user=property.host,
+            text=f'You have a new reservation request from {request.user.username}.',
+            reservation=serializer.instance,
+            type='reservation'
+        )
+        notification.save()
+
         return Response(serializer.data)
     
 class PropertyUpdateView(generics.RetrieveUpdateAPIView):
@@ -147,9 +158,11 @@ class PropertyDetailView(APIView):
 
         serializer = PropertyDetailSerializer(property)
         return Response(serializer.data)
-    
+
+
 class ReservationCancelView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = ReservationCancelSerializer
 
     def get_object(self):
         reservation_id = self.kwargs.get('reservation_id')
@@ -166,11 +179,27 @@ class ReservationCancelView(APIView):
         if request.user != reservation.guest:
             return Response({"detail": "Not the owner of the reservation."}, status=status.HTTP_403_FORBIDDEN)
 
-        # Update the reservation state to CANCELED
-        reservation.state = Reservation.CANCELED
-        reservation.save()
+        # Serialize the data
+        serializer = self.serializer_class(data=request.data)
 
-        return Response({"detail": "Reservation canceled."})
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # Send a notification to the property owner
+        res = Reservation.objects.get(id=reservation_id)
+        prop = res.property
+        notification = CancellationNotification.objects.create(
+            user=prop.host,
+            text=f'{request.user.username} has requested to cancel their ({res.start_date} - {res.end_date}) reservation for {res.property.name}.',
+            guest=request.user,
+            reservation=res,
+            type='cancellation'
+        )
+        notification.save()
+
+        return Response({
+            "detail": "Cancellation request sent to the property owner."
+        })
     
 class ReservationHistoryView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]

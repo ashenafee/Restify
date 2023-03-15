@@ -117,7 +117,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [ ] Clear notification (1 marks)
         - [ ] It is intentionally vague here on when you can/should clear notification, e.g., automatically when read.
     - [ ] Receiving notifications (4 marks)
-        - [ ] Host: new reservation, cancellation request
+        - [x] Host: new reservation, cancellation request
         - [ ] Guest: approved reservation or cancellation request
 
 
