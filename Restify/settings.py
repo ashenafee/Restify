@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'properties',
     'ratings',
     'search',
+    'comments',
 ]
 
 REST_FRAMEWORK = {
