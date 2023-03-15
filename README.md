@@ -83,12 +83,12 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
         - [x] Must support at least 2 order-by (5 marks)
     - [x] Delete (2 marks) - Jason
 
-- [ ] User (17 marks)
-    - [ ] Authentication (5 marks)
-    - [ ] Token based authentication (2 marks) 
-    - [ ] Login (2 mark)
-    - [ ] Logout (1 mark)
-    - [ ] Signup/update profile (12 marks)
+- [x] User (17 marks)
+    - [x] Authentication (5 marks)
+    - [x] Token based authentication (2 marks) 
+    - [x] Login (2 mark)
+    - [x] Logout (1 mark)
+    - [x] Signup/update profile (12 marks)
     
 - [ ] Comments (18 marks)
     - [ ] View comments (8 marks) 
