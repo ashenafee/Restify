@@ -18,7 +18,7 @@ Restify is a web-application, much like AirBNB or Bookings.com which allows user
 
 ## Version History
 
-All edits made can be found under the [commits](https://github.com/jason121301/restify-csc309-group2831/commits/main) tab.
+All edits made can be found under the [commits](https://github.com/ashenafee/Restify/commits/main) tab.
 
 ## Roadmap
 
