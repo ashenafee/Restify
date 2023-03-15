@@ -19,7 +19,7 @@ class CommentforGuestWriteView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = GuestCommentSerializer
 
-def post(self, request, user_id):
+    def post(self, request, user_id):
         serializer = self.serializer_class(data=request.data, context={'request': request, 'user_id': user_id})
 
         if serializer.is_valid():
