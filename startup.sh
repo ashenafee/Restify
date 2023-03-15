@@ -12,6 +12,12 @@ pip install --upgrade pip
 # Install required packages
 pip install -r requirements.txt
 
+# Create a secret key
+KEY=$(chars='abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'; python -c "import secrets; print(''.join(secrets.choice('${chars}') for i in range(50)))")
+
+# Create a .env file with SECRET_KEY
+echo "SECRET_KEY=$KEY" > .env
+
 # Install additional apt packages
 sudo apt-get update
 sudo apt-get install python3-dev python3-pil python3-venv -y
