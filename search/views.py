@@ -8,7 +8,7 @@ from rest_framework.serializers import ValidationError
 class PropertySearchView(ListAPIView):
     serializer_class = PropertySearchSerializer
     filter_backends = [OrderingFilter]
-    ordering_fields = ['availabilitiesOfProperty__price_per_night']
+    ordering_fields = ['availabilitiesOfProperty__price_per_night', 'beds', 'guests']
 
     def get_queryset(self):
         queryset = Property.objects.all()

@@ -87,7 +87,8 @@ class PropertyDetailView(RetrieveAPIView):
 
     def get_queryset(self):
         Property.objects.prefetch_related('imagesOfProperty')
-        return Property.objects.prefetch_related('availabilitiesOfProperty')
+        Property.objects.prefetch_related('availabilitiesOfProperty')
+        return Property.objects.prefetch_related('commentsOftheProperty')
 
     def get_object(self):
         idFromURL = self.kwargs['property_id']
