@@ -22,6 +22,9 @@ urlpatterns = [
     path('reservation/pastdetails/',ReservationHistoryView.as_view(), name='reservation_history' ),
     path('reservation/list/',ReservationListView.as_view(), name='reservation_list'),
 
+    path('amenity/add/', AmenityCreateView.as_view(), name='amenity_add'),
+    path('amenity/<int:amenity_id>/delete/', AmenityDeleteView.as_view(), name='amenity_delete')
+
     # path('property/<int:property_id>/details/', PropertyDetailView.as_view(), name ='property_details'),
     # path('property/<int:property_id>/host/', HostDetailsView.as_view(), name='property_host'),
 
