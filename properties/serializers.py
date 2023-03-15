@@ -7,10 +7,12 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from .models import Property, Amenity, PropertyImage, Reservation
 from accounts.models import User
 
+from datetime import datetime
+
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
         model = Property
-        fields = ['address', 'description', 'guests', 'beds', 'bathrooms',
+        fields = ['name', 'address', 'description', 'guests', 'beds', 'bathrooms',
                   'location','rating', 'amenities']
 
     def validate(self, data):
@@ -31,6 +33,22 @@ class reservationCreator(ModelSerializer):
     class Meta:
         model = Reservation
         fields = ['guest', 'start_date', 'end_date', 'state', 'property']
+    
+    def validate_start_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The start date must be in the future.')
+        return value
+    
+    def validate_end_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The end date must be in the future.')
+        
+        start_date = self.initial_data.get('start_date')
+        if start_date:
+            if value < datetime.strptime(start_date, '%Y-%m-%d').date():
+                raise serializers.ValidationError('The end date must be later than the start date.')
+
+        return value
 
 class propertyEditorSerializer(ModelSerializer):
     class Meta:
@@ -41,6 +59,16 @@ class ReservationUpdateStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ['state']
+
+class ReservationCancelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ['id', 'state']
+    
+    def validate_state(self, value):
+        if value != Reservation.CANCELED:
+            raise serializers.ValidationError('You can only cancel a pending reservation.')
+        return value
 
 class PropertyDetailSerializer(serializers.ModelSerializer):
     class Meta:

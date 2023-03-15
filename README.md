@@ -18,7 +18,7 @@ Restify is a web-application, much like AirBNB or Bookings.com which allows user
 
 ## Version History
 
-All edits made can be found under the [commits](https://github.com/jason121301/restify-csc309-group2831/commits/main) tab.
+All edits made can be found under the [commits](https://github.com/ashenafee/Restify/commits/main) tab.
 
 ## Roadmap
 
@@ -117,7 +117,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [ ] Clear notification (1 marks)
         - [ ] It is intentionally vague here on when you can/should clear notification, e.g., automatically when read.
     - [ ] Receiving notifications (4 marks)
-        - [ ] Host: new reservation, cancellation request
+        - [x] Host: new reservation, cancellation request
         - [ ] Guest: approved reservation or cancellation request
 
 

@@ -30,5 +30,5 @@ urlpatterns = [
          name='token_refresh'),
     path('ratings/', include('ratings.urls')),
     path('search/', include('search.urls')),
-
+    path('notifications/', include('notifications.urls')),
 ]
