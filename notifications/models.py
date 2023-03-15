@@ -4,6 +4,7 @@ from django.db import models
 from accounts.models import User
 from ratings.models import Rating
 from properties.models import Reservation
+from comments.models import GuestComment
 
 # Create your models here.
 
@@ -25,11 +26,11 @@ class RatingNotification(Notification):
         return self.text
     
 
-# class CommentNotification(Notification):
-#     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+class GuestCommentNotification(Notification):
+    comment = models.ForeignKey(GuestComment, on_delete=models.CASCADE)
 
-#     def __str__(self):
-#         return self.text
+    def __str__(self):
+        return self.text
 
 class ReservationNotification(Notification):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)

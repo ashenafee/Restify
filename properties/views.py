@@ -27,6 +27,11 @@ class propertyCreateView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+
+            # Set the user as a host
+            request.user.is_host = True
+            request.user.save()
+
             serializer.save(host=request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
