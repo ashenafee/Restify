@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from accounts.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 #similar to Movie model from midterm
 class Amenity(models.Model):
@@ -21,9 +23,7 @@ class Property(models.Model):
     beds = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
     location = models.CharField(max_length=200)
-
-    #should be later inherited from Rating model
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    rating = models.DecimalField(max_digits=1, decimal_places=1, default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
 
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
@@ -45,8 +45,8 @@ class Availability(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='availabilitiesOfProperty')
     start_date = models.DateField()
     end_date = models.DateField()
-    # we will set the price for the whole period, not for each day
-    price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2, 
+                                          validators=[MinValueValidator(0.01)])
 
     def __str__(self):
         return f"{self.property}: {self.start_date} - {self.end_date}"

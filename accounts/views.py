@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +9,8 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSignupSerializer, UserLoginSerializer, UserUpdateSerializer
+from notifications.models import ReservationNotification
+from properties.models import Reservation
 
 
 class LoginView(APIView):
@@ -19,6 +22,24 @@ class LoginView(APIView):
         user = serializer.validated_data['user']
 
         refresh = RefreshToken.for_user(user)
+
+        # See if the user has any upcoming reservations
+        upcoming_reservations = Reservation.objects.filter(
+            guest=user,
+            state='Approved',
+            start_date__lte=datetime.now() + timedelta(days=7)
+        ).order_by('start_date')
+
+        if upcoming_reservations:
+            # Notify the user of their nearest reservation
+            reservation = upcoming_reservations[0]
+            msg = f'You have a reservation at {reservation.property.name} starting on {reservation.start_date}'
+
+            # Before creating the notification, check if the user already has one
+            # for this reservation
+            if not ReservationNotification.objects.filter(user=user, text=msg, reservation=reservation).exists():
+                notif = ReservationNotification.objects.create(user=user, text=msg, reservation=reservation)
+                notif.save()
 
         return Response({
             'refresh': str(refresh),

@@ -239,15 +239,27 @@ class ReservationCreateView(APIView):
             property = Property.objects.get(id=property_id)
         except Property.DoesNotExist:
             raise NotFound('Property not found.')
+        
         try:
             existing_reservation = Reservation.objects.get(property=property,
-                                                        start_date__lte=data['end_date'],
-                                                        end_date__gte=data['start_date'])
+                                                        start_date__lte=request.data['end_date'],
+                                                        end_date__gte=request.data['start_date'])
         except Reservation.DoesNotExist:
             # If no existing reservation conflicts with the new one, continue with creating the reservation
             pass
         else:
-            raise PermissionDenied('A reservation already exists within this date range.')
+
+            # THE FOLLOWING CODE IS COMMENTED OUT BECAUSE WE WANT TO ALLOW
+            # THE PROPERTY OWNER TO SEE ALL RESERVATIONS, EVEN CANCELED ONES
+
+            # Check if the existing reservation is canceled
+            # if existing_reservation.state == Reservation.CANCELED:
+            #     # If the existing reservation is canceled, delete it and continue with creating the new reservation
+            #     # existing_reservation.delete()
+            # else:
+            #     # If the existing reservation is not canceled, raise an error
+            
+            return JsonResponse({'message': 'A reservation already exists within this date range.'}, status=400)
         # Set the property and guest fields of the serializer data
         data = request.data.copy()
         data['property'] = property.id
@@ -297,8 +309,17 @@ class ReservationUpdateStateView(APIView):
         state = serializer.validated_data.get('state')
         if state not in [choice[0] for choice in Reservation.RESERVATION_STATES]:
             return Response({"detail": "Invalid state value."}, status=status.HTTP_400_BAD_REQUEST)
-
         serializer.save()
+
+        # Send a notification to the guest
+        notification = ReservationNotification.objects.create(
+            user=instance.guest,
+            text=f'Your reservation request for {instance.property.name} has been {state}.',
+            reservation=instance,
+            type='reservation'
+        )
+        notification.save()
+
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
