@@ -110,12 +110,12 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Approve/Deny Cancel (2 marks)
         - [x] Terminate (1 mark)
         
-- [ ] Notifications (15 marks)
+- [x] Notifications (15 marks)
     - [x] List of notifications (8 marks) - Ash
         - [x] -2 marks without pagination support - Ash
     - [x] Read notification (2 marks) - Ash
-    - [ ] Clear notification (1 marks)
-        - [ ] It is intentionally vague here on when you can/should clear notification, e.g., automatically when read.
+    - [x] Clear notification (1 marks) - Ash
+        - [x] CLEARS BASED OFF POST REQUEST WITH NOTIFICATION ID - Ash
     - [x] Receiving notifications (4 marks) - Ash
         - [x] Host: new reservation, cancellation request - Ash
         - [x] Guest: approved reservation or cancellation request - Ash

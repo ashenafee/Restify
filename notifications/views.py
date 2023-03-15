@@ -10,6 +10,7 @@ from .serializers import NotificationSerializer, RatingNotificationSerializer, R
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 
 
 
@@ -63,3 +64,25 @@ class ListNotificationsAPIView(ListAPIView):
         if self.paginator is None:
             return None
         return self.paginator.paginate_queryset(queryset, self.request, view=self)
+
+
+class ClearNotificationView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+
+        try:
+            notif_id = request.data['notif_id']
+        except KeyError:
+            return JsonResponse({'message': 'Notification ID not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            notif = Notification.objects.get(id=notif_id)
+        except ValueError:
+            return JsonResponse({'message': 'Notification ID is not an integer'}, status=status.HTTP_400_BAD_REQUEST)
+        except Notification.DoesNotExist:
+            return JsonResponse({'message': 'Notification does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        notif.delete()
+        return JsonResponse({'message': 'Notification deleted'}, status=status.HTTP_200_OK)
