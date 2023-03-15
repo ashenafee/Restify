@@ -80,7 +80,7 @@ All edits made can be found under the [commits](https://github.com/jason121301/r
     - [x] Search result (18 marks) - KATE
         - [x] Pagination support (3 marks)
         - [x] Must support at least 4 filters, e.g., location, available dates, number of guests, amenities available (10 marks)
-        - [x] Must support at least 2 order-by (5 marks)
+        - [ ] Must support at least 2 order-by (5 marks) - I'll add 1 more sort later
     - [x] Delete (2 marks) - Jason
 
 - [x] User (17 marks)
