@@ -60,12 +60,12 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [x] User can request to book a property
     - [x] User can view history of their bookings
     - [x] User can cancel a booking
-- [ ] Social network
-    - [ ] User can leave a rating/comment for each completed booking
-    - [ ] Host can respond to a rating/comment
-    - [ ] User can only respond to host's follow-up comments
+- [x] Social network
+    - [x] User can leave a rating/comment for each completed booking
+    - [x] Host can respond to a rating/comment
+    - [x] User can only respond to host's follow-up comments
 - [ ] Notifications
-    - [ ] Hosts are notified when a user requests to book their property, rates it, posts a comment, or requests a cancellation
+    - [x] Hosts are notified when a user requests to book their property, rates it, posts a comment, or requests a cancellation
     - [ ] Users are notified when a host approves/denies a booking request or when bookings are coming soon
 
 
