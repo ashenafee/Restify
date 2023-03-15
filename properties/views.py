@@ -67,7 +67,15 @@ class ReservationCreateView(APIView):
             property = Property.objects.get(id=property_id)
         except Property.DoesNotExist:
             raise NotFound('Property not found.')
-
+        try:
+            existing_reservation = Reservation.objects.get(property=property,
+                                                        start_date__lte=data['end_date'],
+                                                        end_date__gte=data['start_date'])
+        except Reservation.DoesNotExist:
+            # If no existing reservation conflicts with the new one, continue with creating the reservation
+            pass
+        else:
+            raise PermissionDenied('A reservation already exists within this date range.')
         # Set the property and guest fields of the serializer data
         data = request.data.copy()
         data['property'] = property.id
