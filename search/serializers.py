@@ -40,7 +40,7 @@ class PropertySearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = ['id', 'name', 'location', 'guests', 'amenities', 'rating',]
+        fields = ['id', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities',]
 
     def validate(self, data):
         amenities = data.get('amenities')
