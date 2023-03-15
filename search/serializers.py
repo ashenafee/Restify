@@ -4,6 +4,8 @@ from PIL import Image
 
 from accounts.models import User
 from properties.models import Amenity, Availability, Property, PropertyImage
+from datetime import datetime
+
 
 
 class AmenitySerializer(serializers.ModelSerializer):
@@ -17,10 +19,21 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         fields = ['id', 'start_date', 'end_date', 'price_per_night']
 
     # add validation for start_date and end_date
-    def validate(self, data):
-        if data['start_date'] > data['end_date']:
-            raise ValidationError('Start date must be before end date.')
-        return data
+    def validate_start_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The start date must be in the future.')
+        return value
+    
+    def validate_end_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The end date must be in the future.')
+        
+        start_date = self.initial_data.get('start_date')
+        if start_date:
+            if value < datetime.strptime(start_date, '%Y-%m-%d').date():
+                raise serializers.ValidationError('The end date must be later than the start date.')
+
+        return value
 
 class PropertySearchSerializer(serializers.ModelSerializer):
     amenities = AmenitySerializer(many=True)
@@ -50,18 +63,18 @@ class PropertyImageSerializer(serializers.ModelSerializer):
         fields =['name','image','default']
 
 
-class PropertyViewSerializer(serializers.ModelSerializer):
-    amenities = AmenitySerializer(many=True)
-    imagesOfProperty = PropertyImageSerializer(many=True)
-    host = HostSerializer()
+# class PropertyViewSerializer(serializers.ModelSerializer):
+#     amenities = AmenitySerializer(many=True)
+#     imagesOfProperty = PropertyImageSerializer(many=True)
+#     host = HostSerializer()
 
-    class Meta:
-        model = Property
-        #rating field?
-        fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty']
+#     class Meta:
+#         model = Property
+#         #rating field?
+#         fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty']
 
-    def get_images(self, obj):
-        return PropertyImageSerializer(obj.imagesOfProperty.all(), many=True).data
+#     def get_images(self, obj):
+#         return PropertyImageSerializer(obj.imagesOfProperty.all(), many=True).data
 
     
 

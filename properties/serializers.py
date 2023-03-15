@@ -4,10 +4,33 @@ from django.core.validators import validate_email
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 
-from .models import Property, Amenity, PropertyImage, Reservation
+from .models import Property, Amenity, PropertyImage, Reservation, Availability
 from accounts.models import User
 
 from datetime import datetime
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Availability
+        fields = ['id', 'start_date', 'end_date', 'price_per_night']
+
+    # add validation for start_date and end_date
+    def validate_start_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The start date must be in the future.')
+        return value
+    
+    def validate_end_date(self, value):
+        if value < datetime.now().date():
+            raise serializers.ValidationError('The end date must be in the future.')
+        
+        start_date = self.initial_data.get('start_date')
+        if start_date:
+            if value < datetime.strptime(start_date, '%Y-%m-%d').date():
+                raise serializers.ValidationError('The end date must be later than the start date.')
+
+        return value
 
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
@@ -75,10 +98,41 @@ class ReservationCancelSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('You can only cancel a pending reservation.')
         return value
 
+
+class HostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','email','phone_number','avatar']
+
+class AmenitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenity
+        fields = ['id', 'name']
+
+#property details
+
+#old
+# class PropertyDetailSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Property
+#         fields = '__all__'
+
 class PropertyDetailSerializer(serializers.ModelSerializer):
+    amenities = AmenitySerializer(many=True)
+    imagesOfProperty = propertyImageCreator(many=True)
+    availabilitiesOfProperty = AvailabilitySerializer(many=True)
+    host = HostDetailSerializer()
+
     class Meta:
         model = Property
-        fields = '__all__'
+        #rating field?
+        fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty']
+
+    def get_images(self, obj):
+        return propertyImageCreator(obj.imagesOfProperty.all(), many=True).data
+
+    def get_availability(self, obj):
+        return AvailabilitySerializer(obj.availabilitiesOfProperty.all(), many=True).data
 
 class CompletedReservationSerializer(serializers.ModelSerializer):
     property_name = serializers.CharField(source='property.name')
@@ -87,11 +141,6 @@ class CompletedReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address']
-
-class HostDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name','last_name','email','phone_number','avatar']
 
 class ReservationListSerializer(serializers.ModelSerializer):
     property_name = serializers.CharField(source='property.name')

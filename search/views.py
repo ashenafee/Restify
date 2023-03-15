@@ -2,7 +2,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.filters import OrderingFilter
 
 from properties.models import Property
-from .serializers import PropertySearchSerializer, PropertyViewSerializer
+from .serializers import PropertySearchSerializer
 from rest_framework.serializers import ValidationError
 
 class PropertySearchView(ListAPIView):
@@ -35,13 +35,13 @@ class PropertySearchView(ListAPIView):
         return queryset
 
 
-class PropertyView(RetrieveAPIView):
-    serializer_class = PropertyViewSerializer
+# class PropertyView(RetrieveAPIView):
+#     serializer_class = PropertyViewSerializer
 
-    def get_queryset(self):
-        return Property.objects.prefetch_related('imagesOfProperty')
+#     def get_queryset(self):
+#         return Property.objects.prefetch_related('imagesOfProperty')
 
-    def get_object(self):
-        id = self.kwargs['property_id']
-        return Property.objects.get(id=id)
+#     def get_object(self):
+#         id = self.kwargs['property_id']
+#         return Property.objects.get(id=id)
 

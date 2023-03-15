@@ -10,15 +10,18 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied, NotFound
-from .models import Property, Reservation, PropertyImage
+from .models import Property, Reservation, PropertyImage, Availability
 from .permissions import IsOwner
 from datetime import date
-from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer
+from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer, AvailabilitySerializer
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from notifications.models import ReservationNotification, CancellationNotification
+from rest_framework.generics import RetrieveAPIView
 
+# ---------- PROPERTY GENERAL -------------
 
+# create a property
 class propertyCreateView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -36,7 +39,128 @@ class propertyCreateView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
-        
+#update property info    
+class PropertyUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = Property.objects.all()
+    serializer_class = propertyEditorSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        id = self.kwargs['property_id']
+        return Property.objects.get(id=id)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        user = request.user
+
+        if user != instance.host:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+#delete property
+class PropertyDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, property_id):
+        try:
+            to_delete_property = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            return Response({"error": "Property not found."})
+        if self.request.user != to_delete_property.host:
+            return Response({"error": "Not owner of property"}) 
+        property_name = to_delete_property.name
+        property_address = to_delete_property.address
+        to_delete_property.delete()
+        response_data = {'message': 'Property deleted successfully.', 'name': property_name, 'address': property_address}
+        return Response(response_data, status=status.HTTP_200_OK)
+
+#view property details
+class PropertyDetailView(RetrieveAPIView):
+    serializer_class = PropertyDetailSerializer
+
+    def get_queryset(self):
+        Property.objects.prefetch_related('imagesOfProperty')
+        return Property.objects.prefetch_related('availabilitiesOfProperty')
+
+    def get_object(self):
+        idFromURL = self.kwargs['property_id']
+        return Property.objects.get(id=idFromURL)
+    
+
+# ---------- PROPERTY AVAILABILITY -------------
+
+# setting availability for a property
+class availabilityCreateView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = AvailabilitySerializer
+
+    def post(self, request, property_id):
+        try:
+            propertyWeNeed = Property.objects.get(id=property_id)
+        except Property.DoesNotExist:
+            raise NotFound('Property not found.')
+
+        # Check if the current user is the owner of the property
+        if not request.user == propertyWeNeed.host:
+            raise PermissionDenied('You are not the owner of this property.')
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(property=propertyWeNeed)
+        return Response(serializer.data)
+
+#updating availability for a property
+class availabilityUpdateView(RetrieveAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = AvailabilitySerializer
+
+    def get_object(self):
+        availabilityWeNeed = self.kwargs['availability_id']
+        return Availability.objects.get(id=availabilityWeNeed)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        user = request.user
+
+        if user != instance.property.host:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+#deleting availability for a property
+class availabilityDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, availability_id):
+        try:
+            to_delete_availability = Availability.objects.get(id=availability_id)
+        except Availability.DoesNotExist:
+            return Response({"error": "Availability not found."})
+        if self.request.user != to_delete_availability.property.host:
+            return Response({"error": "Not owner of property"}) 
+        to_delete_availability.delete()
+        response_data = {'message': 'Availability deleted successfully.'}
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+# ---------- PROPERTY IMAGES -------------
+
+#create images for a property   
 class propertyImageCreateView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -59,21 +183,7 @@ class propertyImageCreateView(APIView):
         serializer.save(property=property)
         return Response(serializer.data)
 
-class propertyImageDeleteView(APIView):
-    permission_class = [IsAuthenticated]
-
-    def delete(self, request, image_id):
-        try:
-            to_delete_image = PropertyImage.objects.get(id=image_id)
-        except PropertyImage.DoesNotExist:
-            return Response({"error": "Image not found."})
-        if self.request.user != to_delete_image.property.host:
-            return Response({"error": "Not owner of property"}) 
-        image_name = to_delete_image.name
-        to_delete_image.delete()
-        response_data = {'message': 'Image deleted successfully.', 'name': image_name}
-        return Response(response_data, status=status.HTTP_200_OK)
-    
+#update images for a property    
 class PropertyImageUpdateView(generics.RetrieveUpdateAPIView):
     queryset = PropertyImage.objects.all()
     serializer_class = propertyImageEditorSerializer
@@ -97,6 +207,25 @@ class PropertyImageUpdateView(generics.RetrieveUpdateAPIView):
     
     def post(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+
+#delete images for a property
+class propertyImageDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, image_id):
+        try:
+            to_delete_image = PropertyImage.objects.get(id=image_id)
+        except PropertyImage.DoesNotExist:
+            return Response({"error": "Image not found."})
+        if self.request.user != to_delete_image.property.host:
+            return Response({"error": "Not owner of property"}) 
+        image_name = to_delete_image.name
+        to_delete_image.delete()
+        response_data = {'message': 'Image deleted successfully.', 'name': image_name}
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+# ---------- PROPERTY RESERVATIONS -------------
 
 # For users to create a pending reservation
 class ReservationCreateView(APIView):
@@ -139,34 +268,9 @@ class ReservationCreateView(APIView):
         notification.save()
 
         return Response(serializer.data)
-    
-class PropertyUpdateView(generics.RetrieveUpdateAPIView):
-    queryset = Property.objects.all()
-    serializer_class = propertyEditorSerializer
-    permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        id = self.kwargs['property_id']
-        return Property.objects.get(id=id)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
-        user = request.user
-
-        if user != instance.host:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-    
-    def post(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-    
 
 # Updating reservation for the property owner
-
 class ReservationUpdateStateView(APIView):
     serializer_class = ReservationUpdateStateSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -199,16 +303,6 @@ class ReservationUpdateStateView(APIView):
 
     def post(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-    
-class PropertyDetailView(APIView):
-    def get(self, request, property_id):
-        try:
-            property = Property.objects.get(id=property_id)
-        except Property.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = PropertyDetailSerializer(property)
-        return Response(serializer.data)
 
 
 class ReservationCancelView(APIView):
@@ -261,32 +355,6 @@ class ReservationHistoryView(generics.ListAPIView):
         completed_reservations = Reservation.objects.filter(guest=user, state=Reservation.COMPLETED, end_date__lt=today).order_by('-end_date')[:4]
         return completed_reservations   
 
-class HostDetailsView(APIView):
-    def get(self, request, property_id):
-        try:
-            property = Property.objects.get(id=property_id)
-        except Property.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = HostDetailSerializer(property.host)
-        return Response(serializer.data)
-    
-class PropertyDeleteView(APIView):
-    permission_class = [IsAuthenticated]
-
-    def delete(self, request, property_id):
-        try:
-            to_delete_property = Property.objects.get(id=property_id)
-        except Property.DoesNotExist:
-            return Response({"error": "Property not found."})
-        if self.request.user != to_delete_property.host:
-            return Response({"error": "Not owner of property"}) 
-        property_name = to_delete_property.name
-        property_address = to_delete_property.address
-        to_delete_property.delete()
-        response_data = {'message': 'Property deleted successfully.', 'name': property_name, 'address': property_address}
-        return Response(response_data, status=status.HTTP_200_OK)
-    
 class ReservationListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReservationListSerializer
@@ -309,3 +377,28 @@ class ReservationListView(generics.ListAPIView):
             reservations = reservations.filter(state=state)
 
         return reservations.order_by('-end_date')
+
+
+# class HostDetailsView(APIView):
+#     def get(self, request, property_id):
+#         try:
+#             property = Property.objects.get(id=property_id)
+#         except Property.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#         serializer = HostDetailSerializer(property.host)
+#         return Response(serializer.data)
+
+
+# view property details 
+
+# old    
+# class PropertyDetailView(APIView):
+#     def get(self, request, property_id):
+#         try:
+#             property = Property.objects.get(id=property_id)
+#         except Property.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#         serializer = PropertyDetailSerializer(property)
+#         return Response(serializer.data)
