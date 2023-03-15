@@ -131,6 +131,9 @@ dmypy.json
 # PyCharm specific
 .idea/
 
+# VS Code Specific
+.vscode/
+
 # Migrations
 **/migrations/*.py
 !**/migrations/__init__.py
