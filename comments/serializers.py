@@ -2,73 +2,148 @@ from rest_framework import serializers
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-
+from .models import HostComment, GuestComment, Comment, Reply, GuestReply, HostReply
+from properties.models import Reservation, Property
 from accounts.models import User
+from accounts.serializers import UserSerializer
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+class CommentSerializer(serializers.ModelSerializer):
 
-from properties.models import Reservation
-from .models import GuestComment, PropertyComment, Reply
-
-
-class ReplySerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.username', read_only=True)
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    rating = serializers.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    text = serializers.CharField()
 
     class Meta:
-        model = Reply
-        fields = '__all__'
+        abstract = True
+
+    def create(self, validated_data):
+        raise NotImplementedError
+
+
+class HostCommentSerializer(serializers.ModelSerializer):
+
+    guest = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    reservation = serializers.PrimaryKeyRelatedField(queryset=Reservation.objects.all())
+    type = serializers.CharField(default='comment')
+
+    class Meta:
+        model = HostComment
+        fields = ['id', 'author', 'guest', 'reservation', 'rating', 'text', 'type']
+
+    def validate_reservation(self, value):
+        if value.state != 'Completed':
+            raise serializers.ValidationError('Reservation is not complete.')
+        if HostComment.objects.filter(reservation=value).exists():
+            raise serializers.ValidationError('This reservation has already been commented on.')
+        if value.property.host != self.context['request'].user:
+            raise serializers.ValidationError('You are not the host of this reservation.')
+        return value
+    
+    def validate_guest(self, value):
+        reservation = self.initial_data['reservation']
+
+        # See if the reservation exists
+        reservation = get_object_or_404(Reservation, pk=reservation)
+
+        if value != reservation.guest:
+            raise serializers.ValidationError('This user is not the guest of this reservation.')
+        return value
+    
+    def create(self, validated_data):
+        return HostComment.objects.create(**validated_data)
 
 
 class GuestCommentSerializer(serializers.ModelSerializer):
-    replies = ReplySerializer(many=True, read_only=True)
-    author_name = serializers.CharField(source='author.username', read_only=True)
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    
+    host = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())
 
     class Meta:
         model = GuestComment
-        fields = '__all__'
+        fields = ['id', 'author', 'host', 'property', 'rating', 'text']
 
+    def validate_property(self, value):
+        if GuestComment.objects.filter(property=value, author=self.context['request'].user).exists():
+            raise serializers.ValidationError('You have already commented on this property.')
+        if not Reservation.objects.filter(property=value, 
+                                          guest=self.context['request'].user, 
+                                          state__in=['Completed', 'Cancelled']).exists():
+            raise serializers.ValidationError('You have not stayed at this property.')
+        return value
+    
+    def validate_host(self, value):
+        property = self.initial_data['property']
 
-    def validate_reservation(self, reservation):
-        if reservation.state != Reservation.COMPLETED:
-            raise serializers.ValidationError('You cannot write a comment for an incomplete reservation')
-        return reservation
+        # See if the property exists
+        property = get_object_or_404(Property, pk=property)
 
-    def validate(self, data):
-        view = self.context.get('view')
-        guest_id = view.kwargs.get('user_id')
+        if value != property.host:
+            raise serializers.ValidationError('This user is not the host of this property.')
+        return value
+    
+    def create(self, validated_data):
+        return GuestComment.objects.create(**validated_data)
+    
 
-        request = self.context.get('request')
+class ReplySerializer(serializers.ModelSerializer):
 
-        # Check if a user is a host, meaning check if a user has a property - then they can write a comment for a guest
-        if request.user.properties.exists():
-            # Get all the reservations that belong to any of the properties owned by the user
-            reservations = Reservation.objects.filter(property__in=request.user.properties.all())
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    text = serializers.CharField()
 
-            # Filter reservations that have status completed
-            reservations_completed = reservations.filter(state=Reservation.COMPLETED)
-
-            # Get the ids of the guests that have completed reservations
-            guests_from_reservations = [reservation.guest.id for reservation in reservations_completed]
-
-            # Write a comment for a selected guest
-            guest_to_be_commented = get_object_or_404(User, id=guest_id)
-
-            # Check if the guest_id is from the list of guestsFromReservations
-            if guest_to_be_commented.id not in guests_from_reservations:
-                raise serializers.ValidationError('You cannot write a comment for this guest')
-        else:
-            raise serializers.ValidationError('You do not have permission to leave a rating for this guest.')
-
-        return data
-
-
-
-
-class PropertyCommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PropertyComment
-        fields = '__all__'
+        abstract = True
+
+    def create(self, validated_data):
+        raise NotImplementedError
 
 
+class HostReplySerializer(serializers.ModelSerializer):
+    """
+    Serialize the host's response to the guest's comment.
+    """
 
+    comment = serializers.PrimaryKeyRelatedField(queryset=GuestComment.objects.all())
+
+    class Meta:
+        model = HostReply
+        fields = ['id', 'author', 'comment', 'text']
+
+    def validate_comment(self, value):
+        if value.author == self.context['request'].user:
+            raise serializers.ValidationError('You cannot reply to your own comment.')
+        
+        # Check if the user has already replied to the guest's comment
+        if HostReply.objects.filter(comment__author=value.author, author=self.context['request'].user).exists():
+            raise serializers.ValidationError('You have already replied to this comment.')
+
+        return value
+    
+    def create(self, validated_data):
+        return HostReply.objects.create(**validated_data)
+
+
+class GuestReplySerializer(serializers.ModelSerializer):
+    """
+    Serialize the guest's response to the host's comment.
+    """
+
+    comment = serializers.PrimaryKeyRelatedField(queryset=HostComment.objects.all())
+
+    class Meta:
+        model = GuestReply
+        fields = ['id', 'author', 'comment', 'text']
+
+    def validate_comment(self, value):
+        if value.author == self.context['request'].user:
+            raise serializers.ValidationError('You cannot reply to your own comment.')
+        
+        # Check if the user has already replied to the host's comment
+        if GuestReply.objects.filter(comment__author=value.author, author=self.context['request'].user).exists():
+            raise serializers.ValidationError('You have already replied to this comment.')
+
+        return value
+    
+    def create(self, validated_data):
+        return GuestReply.objects.create(**validated_data)

@@ -31,4 +31,5 @@ urlpatterns = [
     path('ratings/', include('ratings.urls')),
     path('search/', include('search.urls')),
     path('notifications/', include('notifications.urls')),
+    path('comments/', include('comments.urls')),
 ]
