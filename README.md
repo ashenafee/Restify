@@ -64,9 +64,9 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [x] User can leave a rating/comment for each completed booking
     - [x] Host can respond to a rating/comment
     - [x] User can only respond to host's follow-up comments
-- [ ] Notifications
+- [x] Notifications
     - [x] Hosts are notified when a user requests to book their property, rates it, posts a comment, or requests a cancellation
-    - [ ] Users are notified when a host approves/denies a booking request or when bookings are coming soon
+    - [x] Users are notified when a host approves/denies a booking request or when bookings are coming soon
 
 
 --**Marking scheme for P2:**--
@@ -92,10 +92,10 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     
 - [ ] Comments (18 marks)
     - [ ] View comments (8 marks) 
-        - [ ] For Guest/Property (6 marks)
+        - [x] For Guest/Property (6 marks) - Ash
         - [ ] Can distinguish reply from comment (2 marks)
         - [ ] -2 marks without pagination support
-    - [ ] Write comments/reply (10 marks)
+    - [x] Write comments/reply (10 marks) - Ash
         Note: remember the requirements on who can comment/reply and how many times.
         
 - [x] Reservations (20 marks)
@@ -111,14 +111,14 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Terminate (1 mark)
         
 - [ ] Notifications (15 marks)
-    - [ ] List of notifications (8 marks)
-        - [ ] -2 marks without pagination support
-    - [ ] Read notification (2 marks)
+    - [x] List of notifications (8 marks) - Ash
+        - [x] -2 marks without pagination support - Ash
+    - [x] Read notification (2 marks) - Ash
     - [ ] Clear notification (1 marks)
         - [ ] It is intentionally vague here on when you can/should clear notification, e.g., automatically when read.
-    - [ ] Receiving notifications (4 marks)
-        - [x] Host: new reservation, cancellation request
-        - [ ] Guest: approved reservation or cancellation request
+    - [x] Receiving notifications (4 marks) - Ash
+        - [x] Host: new reservation, cancellation request - Ash
+        - [x] Guest: approved reservation or cancellation request - Ash
 
 
 ## Credits
