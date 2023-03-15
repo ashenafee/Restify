@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Property, Amenity, PropertyImage, Reservation, Availability
+from comments.models import HostComment, GuestComment
 from accounts.models import User
 
 from datetime import datetime
@@ -109,6 +110,13 @@ class AmenitySerializer(serializers.ModelSerializer):
         model = Amenity
         fields = ['id', 'name']
 
+class PropertyCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GuestComment
+        fields = ['id', 'author', 'rating', 'text', ]
+
+
 #property details
 
 #old
@@ -122,11 +130,11 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     imagesOfProperty = propertyImageCreator(many=True)
     availabilitiesOfProperty = AvailabilitySerializer(many=True)
     host = HostDetailSerializer()
+    commentsOftheProperty = PropertyCommentSerializer(many=True)
 
     class Meta:
         model = Property
-        #rating field?
-        fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty']
+        fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
 
     def get_images(self, obj):
         return propertyImageCreator(obj.imagesOfProperty.all(), many=True).data
