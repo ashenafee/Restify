@@ -37,7 +37,7 @@ class propertyCreateSerializer(ModelSerializer):
     class Meta:
         model = Property
         fields = ['name', 'address', 'description', 'guests', 'beds', 'bathrooms',
-                  'location','rating', 'amenities']
+                  'location', 'amenities']
 
     def validate(self, data):
         amenities = data.get('amenities')
