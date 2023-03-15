@@ -28,6 +28,11 @@ class propertyImageCreator(ModelSerializer):
         model = PropertyImage
         fields =['name','image','default']
 
+class propertyImageEditorSerializer(ModelSerializer):
+    class Meta:
+        model = PropertyImage
+        fields = ['name','image','default']
+
 class reservationCreator(ModelSerializer):
     state = serializers.CharField(default=Reservation.PENDING)
     class Meta:

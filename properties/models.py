@@ -3,7 +3,6 @@ from django.db import models
 from accounts.models import User
 from django.core.exceptions import ValidationError
 
-
 #similar to Movie model from midterm
 class Amenity(models.Model):
     name = models.CharField(max_length=50)
@@ -92,3 +91,21 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"({self.property}) {self.guest} - {self.start_date} - {self.end_date}"
+    
+
+    def save(self, *args, **kwargs):
+        if self.start_date > self.end_date:
+            raise ValidationError('Start date must be before end date.')
+        availabilities = self.property.availabilitiesOfProperty.filter(
+            start_date__lte=self.start_date,
+            end_date__gte=self.end_date
+        )
+        if not availabilities.exists():
+            raise ValidationError('This property is not available at this date')
+        if Reservation.objects.filter(
+            property=self.property,
+            start_date__lte=self.end_date,
+            end_date__gte=self.start_date,
+            ).exclude(id=self.id).first() is not None:
+            raise ValidationError('There is already an existing reservation at this date for this property')
+        super().save(*args, **kwargs)

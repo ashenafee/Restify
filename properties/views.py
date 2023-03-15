@@ -10,10 +10,10 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied, NotFound
-from .models import Property, Reservation
+from .models import Property, Reservation, PropertyImage
 from .permissions import IsOwner
 from datetime import date
-from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer
+from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from notifications.models import ReservationNotification, CancellationNotification
@@ -54,6 +54,44 @@ class propertyImageCreateView(APIView):
         serializer.save(property=property)
         return Response(serializer.data)
 
+class propertyImageDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, image_id):
+        try:
+            to_delete_image = PropertyImage.objects.get(id=image_id)
+        except PropertyImage.DoesNotExist:
+            return Response({"error": "Image not found."})
+        if self.request.user != to_delete_image.property.host:
+            return Response({"error": "Not owner of property"}) 
+        image_name = to_delete_image.name
+        to_delete_image.delete()
+        response_data = {'message': 'Image deleted successfully.', 'name': image_name}
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+class PropertyImageUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = PropertyImage.objects.all()
+    serializer_class = propertyImageEditorSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        id = self.kwargs['image_id']
+        return PropertyImage.objects.get(id=id)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        user = request.user
+
+        if user != instance.property.host:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 # For users to create a pending reservation
 class ReservationCreateView(APIView):
