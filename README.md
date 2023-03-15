@@ -46,9 +46,9 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [x] User signup/login/logout/edit
     - [x] Host leave rating/comment about a guest
     - [x] Host view ratings/comments about a potential guest
-- [ ] Property creation & administration
+- [x] Property creation & administration
     - [x] User can create property listings
-    - [ ] Host can set a listing's availability and pricing
+    - [x] Host can set a listing's availability and pricing
     - [x] Host can edit general information of a listing
     - [x] Host can approve/deny booking requests and cancellation requests
     - [x] Host can terminate a booking at any time
