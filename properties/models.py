@@ -23,7 +23,7 @@ class Property(models.Model):
     beds = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
     location = models.CharField(max_length=200)
-    rating = models.DecimalField(max_digits=1, decimal_places=1, default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
+    rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
 
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
