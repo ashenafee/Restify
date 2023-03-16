@@ -10,6 +10,11 @@ from accounts.models import User
 
 from datetime import datetime
 
+class AmenityCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenity
+        fields = ['name']
+
 class AvailabilitySerializer(serializers.ModelSerializer):
 
     class Meta:

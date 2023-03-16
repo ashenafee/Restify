@@ -10,15 +10,42 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import PermissionDenied, NotFound
-from .models import Property, Reservation, PropertyImage, Availability
+from .models import Property, Reservation, PropertyImage, Availability, Amenity
 from .permissions import IsOwner
 from datetime import date
-from .serializers import ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer, AvailabilitySerializer
+from .serializers import AmenityCreateSerializer, ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer, AvailabilitySerializer
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from notifications.models import ReservationNotification, CancellationNotification
 from rest_framework.generics import RetrieveAPIView
 
+# ---------- Amenity General --------------
+
+class AmenityCreateView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = AmenityCreateSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+
+            serializer.save(host=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)  
+    
+class AmenityDeleteView(APIView):
+    permission_class = [IsAuthenticated]
+
+    def delete(self, request, amenity_id):
+        try:
+            to_delete_amenity = Amenity.objects.get(id=amenity_id)
+        except Amenity.DoesNotExist:
+            return Response({"error": "Amenity not found."})
+        amenity_name = to_delete_amenity.name
+        to_delete_amenity.delete()
+        response_data = {'message': 'Amenity deleted successfully.', 'name': amenity_name}
+        return Response(response_data, status=status.HTTP_200_OK)
 # ---------- PROPERTY GENERAL -------------
 
 # create a property
