@@ -84,5 +84,9 @@ class ClearNotificationView(APIView):
         except Notification.DoesNotExist:
             return JsonResponse({'message': 'Notification does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         
+        # Check if the notification belongs to the user
+        if notif.user != request.user:
+            return JsonResponse({'message': 'Notification does not belong to the user'}, status=status.HTTP_400_BAD_REQUEST)
+
         notif.delete()
         return JsonResponse({'message': 'Notification deleted'}, status=status.HTTP_200_OK)
