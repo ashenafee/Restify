@@ -5,6 +5,8 @@ from properties.models import Property
 from .serializers import PropertySearchSerializer
 from rest_framework.serializers import ValidationError
 
+from django.db.models import Avg
+
 class PropertySearchView(ListAPIView):
     serializer_class = PropertySearchSerializer
     filter_backends = [OrderingFilter]
@@ -31,6 +33,15 @@ class PropertySearchView(ListAPIView):
 
         if start_date and end_date:
             queryset = queryset.filter(availabilitiesOfProperty__start_date__lte=end_date, availabilitiesOfProperty__end_date__gte=start_date)
+
+        sort_by = self.request.query_params.get('sort', None)
+        order_by = self.request.query_params.get('order', None)
+        if sort_by == 'rating':
+            queryset = queryset.annotate(avg_rating=Avg('commentsOftheProperty__rating'))
+            if order_by == 'asc':
+                queryset = queryset.order_by('avg_rating')
+            elif order_by == 'desc':
+                queryset = queryset.order_by('-avg_rating')
 
         return queryset
 

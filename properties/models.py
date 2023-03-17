@@ -12,7 +12,6 @@ class Amenity(models.Model):
     def __str__(self):
         return self.name
 
-
 # Create your models here.
 class Property(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='properties')
@@ -23,7 +22,7 @@ class Property(models.Model):
     beds = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
     location = models.CharField(max_length=200)
-    rating = models.DecimalField(decimal_places=2, default=0.0, max_digits=3, blank=True)
+    #rating = models.DecimalField(decimal_places=2, default=0.0, max_digits=3, blank=True)
 
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
@@ -58,7 +57,6 @@ class Availability(models.Model):
             if self.start_date > self.end_date:
                 raise ValidationError('Start date must be before end date.')
         super().save(*args, **kwargs)
-
 
 class Reservation(models.Model):
     PENDING = 'Pending'
