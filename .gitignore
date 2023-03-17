@@ -137,3 +137,9 @@ dmypy.json
 # Migrations
 **/migrations/*.py
 !**/migrations/__init__.py
+
+# DS_Store
+.DS_Store
+
+# Testing data
+sample_dbs/

@@ -1,7 +1,21 @@
 #!/bin/bash
 
+# Remove all __pycache__ directories
+find . -name __pycache__ -type d -exec rm -r {} +
+
+# Keep the repository up to date
+if [[ $OSTYPE == linux-gnu* ]]; then
+    sudo apt-get update
+fi
+
 # Create a virtual environment
-python -m venv venv
+if [[ $OSTYPE == linux-gnu* ]]; then
+    # Install packages
+    sudo apt install python3-venv -y
+    python3 -m venv venv
+else
+    python3 -m venv venv
+fi
 
 # Activate the virtual environment
 source venv/bin/activate
@@ -18,9 +32,11 @@ KEY=$(chars='abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'; python -c "imp
 # Create a .env file with SECRET_KEY
 echo "SECRET_KEY=$KEY" > .env
 
-# Install additional apt packages
-sudo apt-get update
-sudo apt-get install python3-dev python3-pil python3-venv -y
+# Check if running on Ubuntu
+if [[ $OSTYPE == linux-gnu* ]]; then
+    # Install additional apt packages
+    sudo apt-get install python3-dev python3-pil python3-venv -y
+fi
 
 # Make migrations
 python manage.py makemigrations

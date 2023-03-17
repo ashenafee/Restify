@@ -14,6 +14,7 @@ Restify is a web-application, much like AirBNB or Bookings.com which allows user
 - Book properties
 - Manage bookings
 - Manage properties
+- Leave reviews
 
 
 ## Version History
@@ -80,21 +81,21 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [x] Search result (18 marks) - KATE
         - [x] Pagination support (3 marks)
         - [x] Must support at least 4 filters, e.g., location, available dates, number of guests, amenities available (10 marks)
-        - [ ] Must support at least 2 order-by (5 marks) - I'll add 1 more sort later
+        - [x] Must support at least 2 order-by (5 marks)
     - [x] Delete (2 marks) - Jason
 
-- [x] User (17 marks)
-    - [x] Authentication (5 marks)
-    - [x] Token based authentication (2 marks) 
-    - [x] Login (2 mark)
-    - [x] Logout (1 mark)
-    - [x] Signup/update profile (12 marks)
+- [x] User (17 marks) - Ash
+    - [x] Authentication (5 marks) - Ash
+    - [x] Token based authentication (2 marks) - Ash
+    - [x] Login (2 mark) - Ash
+    - [x] Logout (1 mark) - Ash
+    - [x] Signup/update profile (12 marks) - Ash
     
-- [ ] Comments (18 marks)
-    - [ ] View comments (8 marks) 
+- [x] Comments (18 marks) - Ash
+    - [x] View comments (8 marks) - Ash
         - [x] For Guest/Property (6 marks) - Ash
-        - [ ] Can distinguish reply from comment (2 marks)
-        - [ ] -2 marks without pagination support
+        - [x] Can distinguish reply from comment (2 marks) - Ash
+        - [x] -2 marks without pagination support - Ash
     - [x] Write comments/reply (10 marks) - Ash
         Note: remember the requirements on who can comment/reply and how many times.
         
@@ -110,7 +111,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Approve/Deny Cancel (2 marks)
         - [x] Terminate (1 mark)
         
-- [x] Notifications (15 marks)
+- [x] Notifications (15 marks) - Ash
     - [x] List of notifications (8 marks) - Ash
         - [x] -2 marks without pagination support - Ash
     - [x] Read notification (2 marks) - Ash
@@ -133,6 +134,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
 - Figma
     - [Planning](https://www.figma.com/file/YRL2J8DXMkf9TjoVeqc121/Restify?node-id=0%3A1&t=T6iVhlTHlZ59OLB1-1)
     - [Design](https://www.figma.com/file/H31fLA6S9HD2z4CoH7sjNV/Restify-design?node-id=0%3A1&t=cbD3qu6tmhFL1Rt2-0)
+- Postman
 
 ### Team
 

@@ -24,6 +24,7 @@ class Property(models.Model):
     location = models.CharField(max_length=200)
     #rating = models.DecimalField(decimal_places=2, default=0.0, max_digits=3, blank=True)
 
+
     #one property can have many amenities and one amenity can be in many properties
     amenities = models.ManyToManyField(Amenity, blank = True)
 
@@ -44,7 +45,8 @@ class Availability(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='availabilitiesOfProperty')
     start_date = models.DateField()
     end_date = models.DateField()
-    price_per_night = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2, 
+                                          validators=[MinValueValidator(0.01)])
 
     def __str__(self):
         return f"{self.property}: {self.start_date} - {self.end_date}"
