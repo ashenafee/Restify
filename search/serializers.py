@@ -5,6 +5,8 @@ from PIL import Image
 from accounts.models import User
 from properties.models import Amenity, Availability, Property, PropertyImage
 from datetime import datetime
+from comments.models import HostComment, GuestComment
+from django.db.models import Avg
 
 
 
@@ -35,12 +37,31 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 
         return value
 
+class PropertyImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyImage
+        fields =['name','image','default']
+
+class PropertyCommentSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.first_name')
+
+    class Meta:
+        model = GuestComment
+        fields = ['id', 'author_name', 'rating', 'text', ]
+
 class PropertySearchSerializer(serializers.ModelSerializer):
     amenities = AmenitySerializer(many=True)
+    imagesOfProperty = PropertyImageSerializer(many=True)
+    commentsOftheProperty = PropertyCommentSerializer(many=True)
+
+    #calculate average rating
+    rating = serializers.SerializerMethodField()
+    def get_rating(self, obj):
+        return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
 
     class Meta:
         model = Property
-        fields = ['id', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities',]
+        fields = ['id', 'imagesOfProperty', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities', 'rating', 'commentsOftheProperty']
 
     def validate(self, data):
         amenities = data.get('amenities')
@@ -51,16 +72,11 @@ class PropertySearchSerializer(serializers.ModelSerializer):
         return data
 
 
-class HostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email',
-                  'phone_number', 'avatar']
-
-class PropertyImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PropertyImage
-        fields =['name','image','default']
+# class HostSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name', 'email',
+#                   'phone_number', 'avatar']
 
 
 # class PropertyViewSerializer(serializers.ModelSerializer):

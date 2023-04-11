@@ -7,6 +7,7 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from .models import Property, Amenity, PropertyImage, Reservation, Availability
 from comments.models import HostComment, GuestComment
 from accounts.models import User
+from django.db.models import Avg
 
 from datetime import datetime
 
@@ -37,6 +38,13 @@ class AvailabilitySerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('The end date must be later than the start date.')
 
         return value
+
+class PropertyCommentSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.first_name')
+
+    class Meta:
+        model = GuestComment
+        fields = ['id', 'author_name', 'rating', 'text', ]
 
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
@@ -115,12 +123,6 @@ class AmenitySerializer(serializers.ModelSerializer):
         model = Amenity
         fields = ['id', 'name']
 
-class PropertyCommentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = GuestComment
-        fields = ['id', 'author', 'rating', 'text', ]
-
 
 #property details
 
@@ -137,9 +139,14 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     host = HostDetailSerializer()
     commentsOftheProperty = PropertyCommentSerializer(many=True)
 
+    #calculate average rating
+    rating = serializers.SerializerMethodField()
+    def get_rating(self, obj):
+        return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
+
     class Meta:
         model = Property
-        fields = ['id', 'host', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
+        fields = ['id', 'host', 'rating', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
 
     def get_images(self, obj):
         return propertyImageCreator(obj.imagesOfProperty.all(), many=True).data
