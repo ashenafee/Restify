@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # PyCharm specific
-.idea/
+../.idea/
 
 # VS Code Specific
 .vscode/
