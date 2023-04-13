@@ -1,5 +1,4 @@
 import './App.css';
-import Navbar from "./components/Navbar";
 import SignupPage from "./components/Signup";
 import {AuthProvider} from "./context/AuthContext";
 

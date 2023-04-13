@@ -5,13 +5,13 @@ source backend/venv/bin/activate
 
 # Start the Django backend server
 start_backend() {
-  cd backend
+  cd backend || exit
   python manage.py runserver
 }
 
 # Start the React frontend server
 start_frontend() {
-  cd frontend
+  cd frontend || exit
   npm start
 }
 
