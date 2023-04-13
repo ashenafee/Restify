@@ -1,0 +1,29 @@
+footer {
+    background-color:  rgb(244, 244, 244);
+
+    border-top: #FF8967;
+    color: #FFF;
+    font-weight: 500;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p{
+    color: #FF8967;
+    font-size: 14px;
+    text-align: rigth;
+}
+
+.restify-logo {
+    color: #FF8967;
+    font-weight: bold;
+}
+
+.restify-logo:hover {
+    color: #000000;
+    text-decoration: none;
+}
