@@ -1,9 +1,21 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
+.align-items-center {
+  /* Center the child elements vertically */
+  display: flex;
+  align-items: center;
+}
+
+.justify-content-center {
+  /* Center the child elements horizontally */
+  display: flex;
+  justify-content: center;
+}
+
 .form-signin {
     width: 100%;
     max-width: 330px;
-    padding: 15px;
+    padding: 1rem;
     margin: 0 auto;
   }
   
@@ -11,4 +23,10 @@
     color: red;
     font-size: 0.8rem;
     margin-top: 0.25rem;
+  }
+
+  .formcontainer {
+    /* Add padding to the container to ensure the footer does not overlap the content */
+    padding-bottom: 64px;
+    min-height: 100vh;
   }
