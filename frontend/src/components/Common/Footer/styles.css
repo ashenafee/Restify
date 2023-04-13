@@ -6,6 +6,10 @@ footer {
     font-weight: 500;
     padding-top: 2rem;
     padding-bottom: 2rem;
+
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 footer p{

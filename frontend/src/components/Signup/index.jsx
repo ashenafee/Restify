@@ -69,8 +69,8 @@ const SignupPage = () => {
   };
   
     return (
-    <div className="d-flex flex-column vh-100">
-        <div className="container d-flex flex-column align-items-center justify-content-center vh-100">
+    <div>
+        <div className="formcontainer flex-column align-items-center justify-content-center">
             <H1 value={"Welcome to Restify!"}/>
             <form onSubmit={handleSignup} className='form-signin'>
                 <FormInput
