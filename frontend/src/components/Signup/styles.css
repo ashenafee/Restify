@@ -1,0 +1,14 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+  }
+  
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
