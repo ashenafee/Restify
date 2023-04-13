@@ -413,7 +413,7 @@ class ReservationListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         today = date.today()
-        reservations = Reservation.objects.filter(end_date__lt=today).order_by('-end_date')
+        reservations = Reservation.objects
         role = self.request.query_params.get('role')
         if role == 'host':
             reservations = reservations.filter(property__host   =user)
