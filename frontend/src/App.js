@@ -1,18 +1,10 @@
-import './App.css';
-import RestifyNavbar from "./components/Navbar";
-import HomepageSearchBar from "./components/HomepageSearchBar";
+import Router from "./components/Router";
 
 function App() {
     return (
         <div className="App">
-            <RestifyNavbar />
-            <HomepageSearchBar />
+            <Router />
         </div>
-
-        // for this we should create router later to be able to navigate between pages
-        //       <AuthProvider>
-        //         <SignupPage />
-        //       </AuthProvider>
     );
 }
 
