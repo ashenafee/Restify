@@ -146,7 +146,7 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = ['id', 'host', 'rating', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
+        fields = ['id', 'host',  'address', 'rating', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
 
     def get_images(self, obj):
         return propertyImageCreator(obj.imagesOfProperty.all(), many=True).data

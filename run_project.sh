@@ -1,11 +1,16 @@
 #!/bin/bash
 
-# Activate the Python virtual environment for the Django backend
-source backend/venv/bin/activate
-
 # Start the Django backend server
 start_backend() {
   cd backend || exit
+
+  # Activate the Python virtual environment
+  source venv/bin/activate
+
+  # Make and run migrations for Django backend
+  python manage.py makemigrations
+  python manage.py migrate
+
   python manage.py runserver
 }
 
