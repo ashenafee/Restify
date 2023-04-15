@@ -153,6 +153,10 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
 
     def get_availability(self, obj):
         return AvailabilitySerializer(obj.availabilitiesOfProperty.all(), many=True).data
+    
+    def get_imagesOfProperty(self, obj):
+            request = self.context.get('request')
+            return [request.build_absolute_uri(image.image.url) for image in obj.imagesOfProperty.all()]
 
 class CompletedReservationSerializer(serializers.ModelSerializer):
     property_name = serializers.CharField(source='property.name')
