@@ -123,12 +123,13 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
 
 --**Marking scheme for P3:**--
 - [ ] General
--1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
-This includes incorrect permission.
-See P2 rubrics for more detail.
--1 mark for poor UI/UX.
-See P1 rubrics for more detail.
-You will not be marked for concurrency bugs, e.g., what happens if a new property is added when a user is flipping through search results.
+    - 1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
+    This includes incorrect permission.
+    See P2 rubrics for more detail.
+    - 1 mark for poor UI/UX.
+    See P1 rubrics for more detail.
+    You will not be marked for concurrency bugs, e.g., what happens if a new property is added when a user is flipping through search results.
+    - Ash made navbar
 
 - [ ] Reservation (40 marks)
     - [ ] Responsive design (3 marks)
@@ -167,7 +168,7 @@ You will not be marked for concurrency bugs, e.g., what happens if a new propert
         - [ ] At least 3 images per property (2 marks)
         - [ ] Any number of images (2 marks)
     - [ ] View property detail (8 marks)
-    - [ ] Search page (10 marks)
+    - [ ] Search page (10 marks) - Ash made search bar
         - [ ] Pagination support (4 marks) 
         - [ ] Filters (4 marks)
         - [ ] Order-by (2 marks)
