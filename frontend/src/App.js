@@ -24,7 +24,6 @@ function App() {
                     <SignupPage />
                   </AuthProvider>
                 }/>
-                />
                 <Route 
                     path="/reservation/details/" 
                     element={<ReservationDetail />}
