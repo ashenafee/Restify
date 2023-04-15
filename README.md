@@ -167,7 +167,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [ ] Support for images (4 marks)
         - [ ] At least 3 images per property (2 marks)
         - [ ] Any number of images (2 marks)
-    - [ ] View property detail (8 marks)
+    - [x] View property detail (8 marks) - Jason
     - [ ] Search page (10 marks) - Ash made search bar
         - [ ] Pagination support (4 marks) 
         - [ ] Filters (4 marks)
