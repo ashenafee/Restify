@@ -1,21 +1,29 @@
 import './App.css';
-import RestifyNavbar from "./components/Navbar";
-import HomepageSearchBar from "./components/HomepageSearchBar";
+import RestifyNavbar from "./components/Common/Navbar";
+import SignupPage from "./components/Signup";
 import PropertyDetail from './components/Property/propertyDetail';
+import HomepageSearchBar from "./components/HomepageSearchBar";
+import {AuthProvider} from "./context/AuthContext";
 import ReservationDetail from './components/Reservation/reservationDetail'
 import PropertyReserve from './components/Property/propertyReserve';
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-
 function App() {
-    return (
-        <BrowserRouter>
+  return (
+          <BrowserRouter>
             <RestifyNavbar />
             <Routes>
-                <Route path="/search/" element={<HomepageSearchBar />}/>
-                <Route
+                <Route path="/search" element={<HomepageSearchBar />}/>
+                {/* <Route
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
+                />  */}
+                <Route path="/signup" element={
+                  <AuthProvider>
+                    <SignupPage />
+                  </AuthProvider>
+                }/>
                 />
                 <Route 
                     path="/reservation/details/" 
@@ -25,15 +33,9 @@ function App() {
                     path="/property/:property_id/reserve"
                     element={<PropertyReserve />}
                 />
-
             </Routes>
-        </BrowserRouter>
-
-        // for this we should create router later to be able to navigate between pages
-        //       <AuthProvider>
-        //         <SignupPage />
-        //       </AuthProvider>
-    );
+          </BrowserRouter>
+  );
 }
 
 export default App;
