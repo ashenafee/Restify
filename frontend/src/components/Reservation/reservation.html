@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/reservation.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <!-- Navigation Bar Begin -->
+    <nav id="navbar-index" class="navbar mx-5">
+
+        <div class="d-flex flex-row justify-content-between w-100">
+
+            <a class="navbar-brand restify-logo" href="index.html">Restify</a>
+
+            <!-- Interactive Buttons Begin -->
+            <div class="d-flex flex-row align-items-center">
+                <!-- Notifications Begin -->
+                <div class="dropdown">
+                    <i class="bi bi-bell notif-icon mx-1"></i>
+                    <i class="bi bi-bell-fill notif-icon-fill mx-1" type="button" id="notificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <div id="notification-dropdown" class="dropdown-menu dropdown-menu-right my-3" aria-labelledby="notificationButton">
+                        <div class="dropdown-item dropdown-card">
+                            <h6>New login</h6>
+                            <a class="stretched-link" href="#">Review details</a>
+                        </div>
+                        <div class="dropdown-item dropdown-card">
+                            <h6>Booking starting soon!</h6>
+                            <a class="stretched-link" href="#">Check-in</a>
+                        </div>
+                        <div class="dropdown-item dropdown-card">
+                            <h6>You've got a guest!</h6>
+                            <a class="stretched-link" href="#">Review their stay</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notifications End -->
+
+                <button id="my-rentals-btn" class="btn btn-outline-danger my-2 mx-2" type="submit">My Rental Units</button>
+                <i id="my-rentals-icon" class="bi bi-house-check mx-2"></i>
+                <i id="my-rentals-icon-fill" class="bi bi-house-check-fill mx-2"></i>
+
+
+                <!-- Profile Menu Begin -->
+                <div class="dropdown">
+                    <div class="d-flex align-items-center" type="button" id="profileButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img id="profile-pic-navbar" src="../images/profile-pic.png" alt="Profile Picture">
+                        <a id="user-fn" class="mx-2" href="profile/profile.html">John</a>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-right my-3" aria-labelledby="profileButton">
+                        <div class="dropdown-item dropdown-card account-dropdown-item">
+                            <a class="stretched-link" href="profile/profile.html">Manage Profile</a>
+                        </div>
+                        <div class="dropdown-item dropdown-card account-dropdown-item">
+                            <a class="stretched-link" href="reservation.html">My Reservations</a>
+                        </div>
+                        <div class="dropdown-item dropdown-card account-dropdown-item">
+                            <a class="stretched-link" href="profile/myproperty.html">My Properties</a>
+                        </div>
+                        <div class="dropdown-item dropdown-card account-dropdown-item">
+                            <a class="stretched-link" href="#">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Menu End -->
+            </div>
+            <!-- Interactive Buttons End -->
+        </div>
+        
+    </nav>
+    <!-- Navigation Bar End -->
+
+    <div class ="container">
+        <h1>My Reservation</h1>
+        <div class ="trips-flexbox">
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">27 July, 2023 - 31 July, 2023</p>
+                        <p class="active-booking">Approved</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form onclick="return confirm('Are you sure?')" >
+                            <button class = "cancel-booking-button" href="booking.html">Request Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">20 July, 2023 - 25 July, 2023</p>
+                        <p class="denied-booking">Denied</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form action="leave-comment.html">
+                            <button class = "leave-comment-button" href="leave-comment.html">Leave Comment</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">31 July, 2023 - 10 August, 2023</p>
+                        <p class="pending-booking">Pending</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form onclick="return confirm('Are you sure?')">
+                            <button class = "cancel-booking-button" href="booking.html">Request Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">31 July, 2023 - 10 August, 2023</p>
+                        <p class="denied-booking">Terminated</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form action="leave-comment.html">
+                            <button class = "leave-comment-button" href="leave-comment.html">Leave Comment</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">31 July, 2023 - 10 August, 2023</p>
+                        <p class="denied-booking">Expired</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form action="property.html">
+                            <button class = "leave-comment-button" href="leave-comment.html">Leave Comment</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <img class="booking-picture" src="../images/house2.jpg" alt="Booking Picture">
+                    </div>
+                    <div class="col">
+
+                        <h3>Downtown House By John</h3>
+                        <p class="booking-date">31 July, 2023 - 10 August, 2023</p>
+                        <p class="denied-booking">Canceled</p>
+                    </div>
+                    <div class="col">
+                        <form action="booking-details.html">
+                            <button class = "to-property-button" href="booking.html">Go to booking details</button>
+                        </form>
+                        <form action="property.html">
+                            <button class = "leave-comment-button" href="leave-comment.html">Leave Comment</button>
+                        </form>
+                    </div>
+                </div>
+
+
+        </div>
+        <form action="index.html">
+            <button class = "find-trip-button" href="booking.html">Find a new booking</button>
+        </form>
+        <form action="index.html">
+            <button class = "find-trip-button" href="booking.html">Past booking</button>
+        </form>
+    </div>   
+    <!-- Footer Begin -->
+    <footer id="index-footer" class="navbar fixed-bottom px-5 footer">
+        <div class="d-flex flex-row justify-content-center align-items-center">
+            <a href="index.html" class="restify-logo mx-2">Restify</a>
+        </div>
+        <div class="d-flex flex-row justify-content-center align-items-center">
+            <p class="mx-2">© 2023 Restify</p>
+        </div>
+    </footer>
+    <!-- Footer End -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

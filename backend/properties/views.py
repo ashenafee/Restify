@@ -424,7 +424,7 @@ class ReservationListView(generics.ListAPIView):
         state = self.request.query_params.get('state')
         if state:
             reservations = reservations.filter(state=state)
-
+        Property.objects.prefetch_related('reservationsOfProperty')
         return reservations.order_by('-end_date')
 
 
