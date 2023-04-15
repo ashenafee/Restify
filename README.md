@@ -152,8 +152,8 @@ You will not be marked for concurrency bugs, e.g., what happens if a new propert
 
 - [ ] Account (20 marks)
     - [ ] Responsive design (3 marks)
-    - [ ] Login (4 marks)
-    - [ ] Logout (1 marks)
+    - [ ] Login (4 marks) - Ash
+    - [ ] Logout (1 marks) - Ash
     - [ ] Signup/update (12 marks)
         - [x] Basic registration (10 marks) - Kate
         - [ ] Profile avatar support (2 marks)
