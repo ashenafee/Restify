@@ -160,13 +160,13 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [ ] Profile avatar support (2 marks)
 
 - [ ] Property (42 marks)
-    - [ ] Responsive design (3 marks)
-    - [ ] Support for different availability/prices (4 marks)
+    - [x] Responsive design (3 marks)
+    - [x] Support for different availability/prices (4 marks)
         - [ ] As part of view/create/update
         - [ ] This is considered a bonus feature for its difficulty
-    - [ ] Support for images (4 marks)
-        - [ ] At least 3 images per property (2 marks)
-        - [ ] Any number of images (2 marks)
+    - [x] Support for images (4 marks)
+        - [x] At least 3 images per property (2 marks)
+        - [x] Any number of images (2 marks)
     - [x] View property detail (8 marks) - Jason
     - [ ] Search page (10 marks) - Ash made search bar
         - [ ] Pagination support (4 marks) 
