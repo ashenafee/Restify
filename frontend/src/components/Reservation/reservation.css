@@ -1,0 +1,92 @@
+.booking-picture{
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+.trips-flexbox{
+    border-color:lightsalmon;
+    border-style: solid;
+    padding: 20px;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+.find-trip-button{
+    font-size:30px;
+    color:#FFF;
+    background-color: #FF8967;
+    border-color:#FFF;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.find-trip-button:hover{
+    background-color: #FFF;
+    color:#FF8967;
+    border-color:#FF8967;
+}
+
+
+.to-property-button{
+    font-size:18px;
+    color:#FFF;
+    background-color: #FF8967;
+    border-color:#FFF;
+    padding:10px;
+    margin-bottom:3px;
+}
+
+.to-property-button:hover{
+    background-color: #FFF;
+    color:#FF8967;
+    border-color:#FF8967;
+}
+
+.leave-comment-button{
+    font-size:18px;
+    color:#FFF;
+    background-color: #FF8967;
+    border-color:#FFF;
+    padding:10px
+}
+
+.leave-comment-button:hover{
+    background-color: #FFF;
+    color:#FF8967;
+    border-color:#FF8967;
+}
+
+.cancel-booking-button{
+    font-size:18px;
+    color:#FFF;
+    background-color: red;
+    border-color:white;
+    padding:10px
+}
+
+.cancel-booking-button:hover{
+    background-color: #FFF;
+    color:red;
+    border-color:red;
+}
+
+.booking-date{
+    font-size:16px;
+    font-weight:400px;
+}
+
+.active-booking{
+    font-size:20px;
+    color:green;
+}
+
+.denied-booking{
+    font-size:20px;
+    color:red;
+}
+
+.pending-booking{
+    font-size:20px;
+    color:#ffcc00;
+}

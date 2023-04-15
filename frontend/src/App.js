@@ -2,6 +2,8 @@ import './App.css';
 import RestifyNavbar from "./components/Navbar";
 import HomepageSearchBar from "./components/HomepageSearchBar";
 import PropertyDetail from './components/Property/propertyDetail';
+import ReservationDetail from './components/Reservation/reservationDetail'
+import PropertyReserve from './components/Property/propertyReserve';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
@@ -15,6 +17,15 @@ function App() {
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
                 />
+                <Route 
+                    path="/reservation/details/" 
+                    element={<ReservationDetail />}
+                />
+                <Route
+                    path="/property/:property_id/reserve"
+                    element={<PropertyReserve />}
+                />
+
             </Routes>
         </BrowserRouter>
 
