@@ -121,6 +121,88 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Host: new reservation, cancellation request - Ash
         - [x] Guest: approved reservation or cancellation request - Ash
 
+--**Marking scheme for P3:**--
+- [ ] General
+    - 1 mark per improper or lack of error handling, e.g., invalid email address, password mismatch, etc.
+    This includes incorrect permission.
+    See P2 rubrics for more detail.
+    - 1 mark for poor UI/UX.
+    See P1 rubrics for more detail.
+    You will not be marked for concurrency bugs, e.g., what happens if a new property is added when a user is flipping through search results.
+    - Ash made navbar
+
+- [ ] Reservation (40 marks)
+    - [ ] Responsive design (3 marks)
+    - [ ] Pagination support (4 marks) 
+    - [ ] Filter by user type, i.e., host or guest (8 marks, 4 each)
+            This can be implemented in different ways, e.g.:
+            1. Two separate pages, one for reservation as guest or as host.
+            2. One page, with options to filter or two separate tabs, row, etc.
+    - [ ] Sort/Filter/Organize reservations by state (4 marks)
+        - [ ] Bugs with combining search and pagination should be deducted from pagination support
+    - [ ] Reservation actions (21 marks)
+        - [ ] Reserve (9 marks)
+            - [ ] basic functionality (3 marks)
+            - [ ] ability to reserve timeslots occupied by cancelled/terminated reservations (2 marks)
+            - [ ] ability to reserve across multiple availability/price ranges (4 marks)
+    - [ ] Cancel (3 marks)
+    - [ ] Approve/Deny Pending (3 mark)
+    - [ ] Approve/Deny Cancel (3 marks)
+    - [ ] Terminate (3 mark)
+    - [ ] It should be clear to the user what the consequence of each action is, e.g., warn user with a dialog box or a paragraph for each action.
+
+- [ ] Account (20 marks)
+    - [ ] Responsive design (3 marks)
+    - [ ] Login (4 marks) - Ash
+    - [ ] Logout (1 marks) - Ash
+    - [ ] Signup/update (12 marks)
+        - [x] Basic registration (10 marks) - Kate
+        - [ ] Profile avatar support (2 marks)
+
+- [ ] Property (42 marks)
+    - [ ] Responsive design (3 marks)
+    - [ ] Support for different availability/prices (4 marks)
+        - [ ] As part of view/create/update
+        - [ ] This is considered a bonus feature for its difficulty
+    - [ ] Support for images (4 marks)
+        - [ ] At least 3 images per property (2 marks)
+        - [ ] Any number of images (2 marks)
+    - [x] View property detail (8 marks) - Jason
+    - [ ] Search page (10 marks) - Ash made search bar
+        - [ ] Pagination support (4 marks) 
+        - [ ] Filters (4 marks)
+        - [ ] Order-by (2 marks)
+    - [ ] Create/update (11 marks)
+    - [ ] Delete (2 marks)
+        - [ ] Remember to give a big warning
+        - [ ] Consider what should happen to existing reservations
+
+- [ ] Comment/Rating (26 marks)
+    - [ ] Responsive design (3 marks)
+    - [ ] Pagination support (4 marks) 
+    - [ ] Comments for past guests (7 marks) 
+        - [ ] Basic system (5 marks)
+            - [ ] Should have host name, date/time, message
+            - [ ] Should be sorted in some ways, e.g., by time of post
+        - [ ] with rating system (2 marks)
+    - [ ] Comments for properties (12 marks)
+        - [ ] Basic system (5 mark)
+            - [ ] Same as above
+        - [ ] With rating system (2 marks)
+        - [ ] Reply system is worth (5 marks)
+
+- [ ] Notifications (32 marks)
+    - [ ] Responsive design (3 marks)
+    - [ ] Pagination support (4 marks) 
+    - [ ] View/List notifications (8 marks)
+        - [ ] This may be shown as a component and not a whole page.
+    - [ ] Clear notification (3 marks)
+        - [ ] Can be implemented in various ways. Please explain to the TA how notification can be cleared.
+    - [ ] Receiving notifications (12 marks)
+        - [ ] Host: new reservation, cancellation request, new comment on owned property (2 each, 6 total)
+        - [ ] Guest: result of reservation or cancellation request (2 each, 4 total)
+        - [ ] Bonus: Guest receives notification when a reservation is about to come up (2 marks)
+
 
 ## Credits
 
