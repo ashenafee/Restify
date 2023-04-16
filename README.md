@@ -156,7 +156,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [ ] Login (4 marks) - Ash
     - [ ] Logout (1 marks) - Ash
     - [ ] Signup/update (12 marks)
-        - [x] Basic registration (10 marks) - Kate
+        - [x] Basic registration (10 marks) - Kate, add profile update
         - [ ] Profile avatar support (2 marks)
 
 - [ ] Property (42 marks)
@@ -172,7 +172,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Pagination support (4 marks) 
         - [x] Filters (4 marks)
         - [x] Order-by (2 marks) - Add price!
-    - [ ] Create/update (11 marks)
+    - [ ] Create/update (11 marks) - Kate
     - [ ] Delete (2 marks)
         - [ ] Remember to give a big warning
         - [ ] Consider what should happen to existing reservations
@@ -191,7 +191,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [ ] With rating system (2 marks)
         - [ ] Reply system is worth (5 marks)
 
-- [ ] Notifications (32 marks)
+- [ ] Notifications (32 marks) - Ash
     - [ ] Responsive design (3 marks)
     - [ ] Pagination support (4 marks) 
     - [ ] View/List notifications (8 marks)
