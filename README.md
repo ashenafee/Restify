@@ -145,7 +145,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
             - [ ] basic functionality (3 marks)
             - [ ] ability to reserve timeslots occupied by cancelled/terminated reservations (2 marks)
             - [ ] ability to reserve across multiple availability/price ranges (4 marks)
-    - [ ] Cancel (3 marks)
+    - [x] Cancel (3 marks)
     - [ ] Approve/Deny Pending (3 mark)
     - [ ] Approve/Deny Cancel (3 marks)
     - [ ] Terminate (3 mark)
