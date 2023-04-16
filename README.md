@@ -132,20 +132,20 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - Ash made navbar
 
 - [ ] Reservation (40 marks)
-    - [ ] Responsive design (3 marks)
-    - [ ] Pagination support (4 marks) 
-    - [ ] Filter by user type, i.e., host or guest (8 marks, 4 each)
+    - [x] Responsive design (3 marks)
+    - [x] Pagination support (4 marks) 
+    - [x] Filter by user type, i.e., host or guest (8 marks, 4 each)
             This can be implemented in different ways, e.g.:
             1. Two separate pages, one for reservation as guest or as host.
             2. One page, with options to filter or two separate tabs, row, etc.
-    - [ ] Sort/Filter/Organize reservations by state (4 marks)
+    - [x] Sort/Filter/Organize reservations by state (4 marks)
         - [ ] Bugs with combining search and pagination should be deducted from pagination support
     - [ ] Reservation actions (21 marks)
-        - [ ] Reserve (9 marks)
-            - [ ] basic functionality (3 marks)
+        - [x] Reserve (9 marks)
+            - [x] basic functionality (3 marks)
             - [ ] ability to reserve timeslots occupied by cancelled/terminated reservations (2 marks)
             - [ ] ability to reserve across multiple availability/price ranges (4 marks)
-    - [ ] Cancel (3 marks)
+    - [x] Cancel (3 marks)
     - [ ] Approve/Deny Pending (3 mark)
     - [ ] Approve/Deny Cancel (3 marks)
     - [ ] Terminate (3 mark)
