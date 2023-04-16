@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './property.css';
+import { Link } from 'react-router-dom';
+
 
 function PropertyDetail() {
   const { property_id } = useParams();
@@ -19,6 +21,8 @@ function PropertyDetail() {
     }
     fetchProperty();
   }, [property_id]);
+
+
   return (
     <>
       <div className="container">
@@ -62,9 +66,10 @@ function PropertyDetail() {
             </h2>
             <p style={{ fontSize: '10px' }}>Tax and other fees not included</p> */}
             <form action="booking.html">
-              <button className="rent-button" href="booking.html">
+            <Link to={`/property/${property_id}/reserve`} className="rent-button">
                 Rent
-              </button>
+              </Link>
+
             </form>
           </div>
         </div>

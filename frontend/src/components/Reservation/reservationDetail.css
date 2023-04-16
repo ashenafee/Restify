@@ -1,0 +1,207 @@
+
+
+.restify-logo {
+    color: #FF8967;
+    font-weight: bold;
+}
+
+.restify-logo:hover {
+    color: #FFF;
+}
+
+.notif-icon {
+    color: #FF8967;
+}
+
+#my-rentals-btn {
+    color: #FF8967;
+    border: 1px solid #FF8967;
+}
+
+#my-rentals-btn:hover {
+    color: #FFF;
+    background-color: #FF8967;
+}
+
+#profile-pic-navbar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+#user-fn {
+    margin: 0;
+}
+
+#profile-pic {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right:10px;
+}
+
+
+.btn-theme {
+    color: #c3c3c3;
+    background-color: #FFF;
+}
+
+.btn-theme:hover {
+    color: #FFF;
+    background-color: #FF8967;
+}
+
+.property-image {
+    width:40vh;
+    height: 40vh;
+    justify-self: center;
+    align-self: center;
+}
+
+.price-tag{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.rent-button{
+    font-size:30px;
+    color:#FFF;
+    background-color: #FF8967;
+    border-color:#FFF;
+}
+
+.rent-button:hover{
+    background-color: #FFF;
+    color:#FF8967;
+    border-color:#FF8967;
+}
+
+.col{
+    margin:10px;
+}
+
+.row{
+    margin:10px;
+}
+
+.comment-section{
+    border-color: #FF8967;
+    margin-bottom: 5px;
+    border-style: solid;
+    padding-left: 5px;
+    padding-top:5px;
+}
+
+.rating-number{
+    font-size: 16px;
+    color:#FF8967;
+}
+
+.renter-info{
+    display:flex;
+    flex-wrap:wrap;
+    background-color: rgba(255,160,122,0.5);
+    padding:5px;
+    justify-content: center;
+    align-content: center;
+}
+
+.line-break {
+    width: 100%;
+  }
+  
+
+  .slideshow {
+    width: 45vh;
+    height: 45vh;
+    background-color: #eeeeee;
+    margin: auto;
+    position: relative;
+  }
+  
+  .slideshow-images {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .slideshow-images li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    animation-name: slide;
+    animation-duration: 20s;
+    animation-direction: normal;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    opacity: 0;
+  }
+  
+  .slideshow-images li:first-child {
+    opacity: 1;
+    animation-delay: 0s;
+  }
+  
+  .slideshow-images li:nth-child(2) {
+    animation-delay: 5s;
+  }
+  
+  .slideshow-images li:nth-child(3) {
+    animation-delay: 10s;
+  }
+  
+  .slideshow-images li:nth-child(4) {
+    animation-delay: 15s;
+  }
+  
+  @keyframes slide {
+    0% {
+      opacity: 0;
+    }
+    12.5% {
+      opacity: 1;
+    }
+    25% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .leave-comment-button{
+    font-size:18px;
+    color:#FFF;
+    background-color: #FF8967;
+    border-color:#FFF;
+    padding:10px
+}
+
+.leave-comment-button:hover{
+    background-color: #FFF;
+    color:#FF8967;
+    border-color:#FF8967;
+}
+
+.cancel-booking-button{
+    font-size:18px;
+    color:#FFF;
+    background-color: red;
+    border-color:white;
+    padding:10px
+}
+
+.cancel-booking-button:hover{
+    background-color: #FFF;
+    color:red;
+    border-color:red;
+}

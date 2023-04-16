@@ -9,8 +9,10 @@ function PropertyReserve() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [availability, setAvailability] = useState('');
-  const [hasClickedCheck, setHasClickCheck] = useState(false)
+  const [hasClickedCheck, setHasClickCheck] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
+  const [reservationSuccesful, setReservationSucess] = useState(false);
+  const [hasClickedReserve, setHasClickReserve] = useState(false);
 
   useEffect(() => {
     async function fetchProperty() {
@@ -43,6 +45,41 @@ function PropertyReserve() {
     });
     setHasClickCheck(true);
     setIsAvailable(available);
+    setHasClickReserve(false);
+  };
+  const handleRentConfirmation = async (e) => {
+    const access_token = localStorage.getItem('access_token');
+    e.preventDefault();
+    if (!access_token) {
+      history.push('/login');
+      return;
+    }
+    const startDateTime = new Date(startDate);
+    const endDateTime = new Date(endDate);
+
+    const reservationData = new URLSearchParams();
+    reservationData.append('property_id', property_id);
+    const startDateFormatted = new Date(startDateTime).toISOString().slice(0, 10);
+    const endDateFormatted = new Date(endDateTime).toISOString().slice(0, 10);
+    reservationData.append('start_date', startDateFormatted);
+    reservationData.append('end_date', endDateFormatted);
+
+    const response = await fetch(`http://localhost:8000/properties/reservation/${property_id}/add/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${access_token}`,
+      },
+      body: reservationData.toString(),
+    });
+
+    if (response.ok) {
+      setReservationSucess(true)
+      setHasClickReserve(true)
+    } else {
+      setReservationSucess(false)
+      setHasClickReserve(true)
+    }
   };
   return (
     <>
@@ -96,10 +133,10 @@ function PropertyReserve() {
         <div className="row">
             <form>
                 <label htmlFor="start-date">Select a start date</label>
-                <input type="datetime-local" id="start-date" onChange={(e) => setStartDate(e.target.value)}></input>
+                <input type="date" id="start-date" onChange={(e) => setStartDate(e.target.value)}></input>
                 <br></br><br></br>
                 <label htmlFor="end-date">Select an end date</label>
-                <input type="datetime-local" id="end-date" onChange={(e) => setEndDate(e.target.value)}></input>
+                <input type="date" id="end-date" onChange={(e) => setEndDate(e.target.value)}></input>
                 <br></br><br></br>
                 <button className="rent-button" id="check-availability-button" onClick={checkAvailability}>Check Availability</button>
             </form>
@@ -107,12 +144,19 @@ function PropertyReserve() {
                 <form action="booking.html">
                     <p>The property is available at the given date</p>
                     <p>Price per night: {availability.price_per_night}</p>
-                    <button className="rent-button" id="rent-confirmation-button">
+                    {hasClickedReserve && !reservationSuccesful ? null : 
+                    <button onClick={handleRentConfirmation} className="rent-button" id="rent-confirmation-button">
                         Rent
                     </button>
+                    }
+                    {reservationSuccesful ? (
+                      <h3>Reservation Succesful</h3>
+                    ) : (
+                      hasClickedReserve && <h3>This time has been already been taken</h3>
+                    )}
                 </form>
                 ) : (
-                hasClickedCheck && <p id="availability-error-check">The property is not available at the given date</p>
+                hasClickedCheck && <h3 id="availability-error-check">The property is not available at the given date</h3>
                 )}
         </div>
       </div>

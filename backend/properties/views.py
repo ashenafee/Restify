@@ -13,7 +13,7 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from .models import Property, Reservation, PropertyImage, Availability, Amenity
 from .permissions import IsOwner
 from datetime import date
-from .serializers import AmenityCreateSerializer, ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer, AvailabilitySerializer
+from .serializers import ReservationDetailSerializer, AmenityCreateSerializer, ReservationCancelSerializer, propertyCreateSerializer, propertyImageCreator, reservationCreator, propertyEditorSerializer, ReservationUpdateStateSerializer, PropertyDetailSerializer,CompletedReservationSerializer, HostDetailSerializer, ReservationListSerializer, propertyImageEditorSerializer, AvailabilitySerializer
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from notifications.models import ReservationNotification, CancellationNotification
@@ -390,6 +390,8 @@ class ReservationCancelView(APIView):
             type='cancellation'
         )
         notification.save()
+        reservation.state = "Pending"
+        reservation.save()
 
         return Response({
             "detail": "Cancellation request sent to the property owner."
@@ -427,6 +429,14 @@ class ReservationListView(generics.ListAPIView):
         Property.objects.prefetch_related('reservationsOfProperty')
         return reservations.order_by('-end_date')
 
+
+class ReservationDetailView(RetrieveAPIView):
+    serializer_class = ReservationDetailSerializer
+
+
+    def get_object(self):
+        idFromURL = self.kwargs['reservation_id']
+        return Reservation.objects.get(id=idFromURL)
 
 # class HostDetailsView(APIView):
 #     def get(self, request, property_id):

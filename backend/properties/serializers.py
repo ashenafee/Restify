@@ -172,10 +172,18 @@ class ReservationListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address']
+        fields = ['id', 'start_date', 'end_date', 'property_name', 'property_address', 'state']
 
 
 class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ['id', 'name', 'address', 'description', 'location', 'beds', 'guests', 'bathrooms']
+
+class ReservationDetailSerializer(serializers.ModelSerializer):
+    property_name = serializers.CharField(source='property.name')
+    property_address = serializers.CharField(source='property.address')
+    property_id = serializers.CharField(source='property.id')
+    class Meta:
+        model = Reservation
+        fields =['id', 'start_date', 'end_date', 'property_name', 'property_address', 'state', 'property_id']
