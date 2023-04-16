@@ -153,8 +153,8 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
 
 - [ ] Account (20 marks)
     - [ ] Responsive design (3 marks)
-    - [ ] Login (4 marks) - Ash
-    - [ ] Logout (1 marks) - Ash
+    - [...] Login (4 marks) - Ash
+    - [...] Logout (1 marks) - Ash
     - [ ] Signup/update (12 marks)
         - [x] Basic registration (10 marks) - Kate, add profile update
         - [ ] Profile avatar support (2 marks)
@@ -192,16 +192,16 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [ ] Reply system is worth (5 marks)
 
 - [ ] Notifications (32 marks) - Ash
-    - [ ] Responsive design (3 marks)
-    - [ ] Pagination support (4 marks) 
-    - [ ] View/List notifications (8 marks)
-        - [ ] This may be shown as a component and not a whole page.
-    - [ ] Clear notification (3 marks)
-        - [ ] Can be implemented in various ways. Please explain to the TA how notification can be cleared.
-    - [ ] Receiving notifications (12 marks)
-        - [ ] Host: new reservation, cancellation request, new comment on owned property (2 each, 6 total)
-        - [ ] Guest: result of reservation or cancellation request (2 each, 4 total)
-        - [ ] Bonus: Guest receives notification when a reservation is about to come up (2 marks)
+    - [...] Responsive design (3 marks)
+    - [...] Pagination support (4 marks) 
+    - [x] View/List notifications (8 marks)
+        - [x] This may be shown as a component and not a whole page.
+    - [...] Clear notification (3 marks)
+        - [...] Can be implemented in various ways. Please explain to the TA how notification can be cleared.
+    - [x] Receiving notifications (12 marks)
+        - [x] Host: new reservation, cancellation request, new comment on owned property (2 each, 6 total)
+        - [x] Guest: result of reservation or cancellation request (2 each, 4 total)
+        - [x] Bonus: Guest receives notification when a reservation is about to come up (2 marks)
 
 
 ## Credits
