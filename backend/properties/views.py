@@ -410,7 +410,7 @@ class ReservationListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReservationListSerializer
     pagination_class = PageNumberPagination
-    page_size = 4
+    page_size = 5
 
     def get_queryset(self):
         user = self.request.user
