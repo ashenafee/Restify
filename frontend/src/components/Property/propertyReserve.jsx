@@ -50,10 +50,6 @@ function PropertyReserve() {
   const handleRentConfirmation = async (e) => {
     const access_token = localStorage.getItem('access_token');
     e.preventDefault();
-    if (!access_token) {
-      history.push('/login');
-      return;
-    }
     const startDateTime = new Date(startDate);
     const endDateTime = new Date(endDate);
 

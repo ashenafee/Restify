@@ -37,10 +37,6 @@ function ReservationDetail() {
   const handleCancel = async (e) => {
     const access_token = localStorage.getItem('access_token');
     e.preventDefault();
-    if (!access_token) {
-      history.push('/login');
-      return;
-    }
 
     if (!window.confirm("Are you sure you want to cancel?")) {
         return;
