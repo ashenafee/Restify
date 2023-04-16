@@ -1,8 +1,10 @@
 import React from "react";
 import './styles.css';
+import { useNavigate } from 'react-router-dom';
 
 const PropertyCard = ({ property }) => {
-  const { name, location, rating, availabilitiesOfProperty, imagesOfProperty } = property;
+  const { id, name, location, rating, availabilitiesOfProperty, imagesOfProperty } = property;
+  const navigate = useNavigate();
 
   // remove later
   const renderAvailability = () => {
@@ -20,8 +22,13 @@ const PropertyCard = ({ property }) => {
     }
   };
 
+  const handleCardClick = () => {
+    // Redirect to property details page on card click
+    navigate(`/property/${id}/details`);
+  };
+
   return (
-    <div className="card mb-4 box-shadow">
+    <div className="card mb-4 box-shadow" onClick={handleCardClick}>
     {/* show the first image of the imagesOfProperty */}
     <div
       className="image-container card-img-top"
@@ -39,26 +46,10 @@ const PropertyCard = ({ property }) => {
         <p>Location: {location}</p>
         <p>Rating: {rating}</p>
 
-        {/* remove later */}
         {renderAvailability()}
       </div>
     </div>
   );
 };
-
-// const PropertyGrid = ({ properties }) => {
-//     return (
-//       <Container>
-//         <Row>
-//           {/* Loop through properties array and render PropertyCard component */}
-//           {properties.map((property) => (
-//             <Col key={property.id} xs={12} sm={6} md={4} lg={4} xl={4}>
-//               <PropertyCard property={property} />
-//             </Col>
-//           ))}
-//         </Row>
-//       </Container>
-//     );
-//   };
 
 export default PropertyCard;

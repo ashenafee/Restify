@@ -5,3 +5,7 @@
     height: 35vh;
     position: relative;
   }
+
+  .card{
+    cursor: pointer;
+  }

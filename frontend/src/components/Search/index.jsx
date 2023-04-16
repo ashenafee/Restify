@@ -12,6 +12,9 @@ import Col from "react-bootstrap/Col";
 
 import SortButton from '../SortDropdown'; 
 
+import { useNavigate } from 'react-router-dom';
+
+
 const PropertySearch = () => {
 const [location, setLocation] = useState('');
 const [guests, setGuests] = useState('');
@@ -26,6 +29,7 @@ const [nextPageUrl, setNextPageUrl] = useState('');
 const [prevPageUrl, setPrevPageUrl] = useState(''); 
 
 const { properties, setProperties } = useContext(PropertyContext);
+const navigate = useNavigate(); // use useHistory hook to get access to history object
 
 // Fetch properties from backend on component mount
 useEffect(() => {
@@ -198,13 +202,19 @@ return (
     </div>
 
     <Container>
-        <Row>
-          {properties.map((property) => (
-            <Col key={property.id} xs={12} sm={6} md={4} lg={4} xl={4}>
-              <PropertyCard property={property} />
-            </Col>
-          ))}
-        </Row>
+    <Row>
+        {properties.map((property) => (
+        <Col key={property.id} xs={12} sm={6} md={4} lg={4} xl={4}>
+            <PropertyCard
+            property={property}
+            onClick={() => {
+                // Redirect to property details page on card click
+                navigate(`/properties/property/${property.id}/view/`);
+            }}
+            />
+        </Col>
+        ))}
+    </Row>
     </Container>
 
     <div className='container d-flex'>

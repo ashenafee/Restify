@@ -28,7 +28,13 @@ const [authenticated, setAuthenticated] = useState(false);
                 <Route
                     path="/"
                     element={
-                        authenticated ? <HomepageSearchBar /> : <Navigate to="/login" />
+                        authenticated 
+                        ?
+                          <PropertyContextProvider>
+                            <PropertySearch />
+                          </PropertyContextProvider>
+                         : 
+                         <Navigate to="/login" />
                     }
                 />
                 {/* Route to the login page */}
