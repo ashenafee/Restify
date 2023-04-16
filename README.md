@@ -168,10 +168,10 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] At least 3 images per property (2 marks)
         - [x] Any number of images (2 marks)
     - [x] View property detail (8 marks) - Jason
-    - [ ] Search page (10 marks) - Kate
-        - [ ] Pagination support (4 marks) 
+    - [ ] Search page (10 marks) - Kate 
+        - [x] Pagination support (4 marks) 
         - [x] Filters (4 marks)
-        - [x] Order-by (2 marks)
+        - [x] Order-by (2 marks) - Add price!
     - [ ] Create/update (11 marks)
     - [ ] Delete (2 marks)
         - [ ] Remember to give a big warning
