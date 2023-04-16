@@ -4,6 +4,8 @@ from .views import *
 app_name = 'properties'
 
 urlpatterns = [
+    path('amenities/', AmenityList.as_view(), name='amenity_list'),
+
     path('property/add/', propertyCreateView.as_view(), name='property_create'),
     path('property/<int:property_id>/availability/', availabilityCreateView.as_view(), name='availability_create'),
     path('property/<int:property_id>/<int:availability_id>/availability_update/', availabilityUpdateView.as_view(), name='availability_update'),

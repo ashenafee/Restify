@@ -15,6 +15,10 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {useState} from "react";
 import LoginPage from './components/Login';
 
+import CreatePropertyForm from './components/Property/propertyCreate'; 
+
+import { PropertyCreateProvider } from "./context/PropertyCreateContext";
+
 
 function App() {
 
@@ -50,11 +54,12 @@ const [authenticated, setAuthenticated] = useState(false);
                         )
                     }
                 />
-
+                {/* Route to the property details page */}
                 <Route
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
                 /> 
+                {/* Route to the signup page */}
                 <Route
                     path="/signup"
                     element={
@@ -68,6 +73,7 @@ const [authenticated, setAuthenticated] = useState(false);
                         )
                     }
                 />
+                {/* Route to the catalog page */}
                 <Route
                     path="/catalog"
                     element={
@@ -76,13 +82,23 @@ const [authenticated, setAuthenticated] = useState(false);
                     </PropertyContextProvider>
                     }
                 />
+                {/* Route to the reservation details page */}
                 <Route 
                     path="/reservation/details/" 
                     element={<ReservationDetail />}
                 />
+                {/* Route to the property reserve page */}
                 <Route
                     path="/property/:property_id/reserve"
                     element={<PropertyReserve />}
+                />
+
+                <Route
+                    path="/property/create"
+                    element={<PropertyCreateProvider>
+                        <CreatePropertyForm />
+                    </PropertyCreateProvider>
+                    }
                 />
             </Routes>
           </BrowserRouter>
