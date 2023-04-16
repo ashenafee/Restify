@@ -2,10 +2,21 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.filters import OrderingFilter
 
 from properties.models import Property
+from properties.models import Availability
 from .serializers import PropertySearchSerializer
 from rest_framework.serializers import ValidationError
+from django.db.models import OuterRef, Subquery
 
 from django.db.models import Avg
+
+from django.db.models import Q
+from django.utils import timezone
+from datetime import datetime
+
+from django.db.models import F, Sum, Case, When, IntegerField, ExpressionWrapper, Window, DurationField
+from django.db.models.functions import Coalesce, Lag
+from datetime import timedelta
+
 
 class PropertySearchView(ListAPIView):
     serializer_class = PropertySearchSerializer
@@ -31,8 +42,30 @@ class PropertySearchView(ListAPIView):
             if start_date > end_date:
                 raise ValidationError('Start date must be before end date.')
 
-        if start_date and end_date:
-            queryset = queryset.filter(availabilitiesOfProperty__start_date__lte=end_date, availabilitiesOfProperty__end_date__gte=start_date)
+            # Calculate the duration of the requested period
+            requested_duration = (datetime.strptime(end_date, '%Y-%m-%d') - datetime.strptime(start_date, '%Y-%m-%d')).days
+
+            # Aggregate the overlapping availabilities durations
+            queryset = queryset.annotate(
+                overlapping_duration=Sum(
+                    Case(
+                        When(
+                            availabilitiesOfProperty__start_date__lte=end_date,
+                            availabilitiesOfProperty__end_date__gte=start_date,
+                            then=ExpressionWrapper(
+                                F('availabilitiesOfProperty__end_date') - F('availabilitiesOfProperty__start_date') + 1,
+                                output_field=IntegerField()
+                            )
+                        ),
+                        default=0,
+                        output_field=IntegerField()
+                    )
+                )
+            )
+
+            # Filter properties that have availabilities that collectively cover the requested time period
+            queryset = queryset.filter(overlapping_duration__gte=requested_duration)
+
 
         sort_by = self.request.query_params.get('sort', None)
         order_by = self.request.query_params.get('order', None)
