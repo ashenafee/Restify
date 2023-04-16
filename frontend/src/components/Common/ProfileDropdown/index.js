@@ -1,64 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { Image, NavDropdown } from "react-bootstrap";
-
+import { useContext } from 'react';
+import { AuthContext } from '../../../context/AuthContext';
 
 function ProfileDropdown() {
-
-    const [user, setUser] = useState(null);
-    const fetchUser = async (accessToken) => {
-        try {
-            const response = await fetch("http://localhost:8000/accounts/edit/", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`,
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setUser(data);
-            } else {
-
-                // Remove the invalid access token from local storage
-                localStorage.removeItem("access_token");
-
-                // Refresh the access token
-                const refreshToken = localStorage.getItem("refresh_token");
-                const response = await fetch("http://localhost:8000/api/token/refresh/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        refresh: refreshToken
-                    })
-                });
-
-                // If the refresh token is invalid, log the user out
-                if (response.status === 200) {
-                    const data = await response.json();
-                    localStorage.setItem("access_token", data.access);
-                    await fetchUser(data.access);
-                }
-
-                setUser(null);
-            }
-        } catch (error) {
-            console.error(error);
-            setUser(null);
-        }
-    };
-
+    const { user } = useContext(AuthContext);
+    const [username, setUsername] = useState(user ? user.username : "Profile");
 
     useEffect(() => {
-        const accessToken = localStorage.getItem("access_token");
-        if (accessToken) {
-            fetchUser(accessToken);
-        } else {
-            setUser(null);
-        }
-    }, []);
+        setUsername(user ? user.username : "Profile");
+
+        console.log(user);
+    }, [user]);
 
     const loggedInMenu = (
         <>
@@ -88,7 +41,6 @@ function ProfileDropdown() {
             </NavDropdown>
         </>
     );
-
 }
 
 export default ProfileDropdown;

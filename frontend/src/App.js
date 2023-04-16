@@ -11,23 +11,57 @@ import {AuthProvider} from "./context/AuthContext";
 import ReservationDetail from './components/Reservation/reservationDetail'
 import PropertyReserve from './components/Property/propertyReserve';
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import {useState} from "react";
+import LoginPage from './components/Login';
+
 
 function App() {
+
+const [authenticated, setAuthenticated] = useState(false);
+
   return (
           <BrowserRouter>
             <RestifyNavbar />
             <Routes>
-                <Route path="/search" element={<HomepageSearchBar />}/>
+                {/* Route to the homepage */}
+                <Route
+                    path="/"
+                    element={
+                        authenticated ? <HomepageSearchBar /> : <Navigate to="/login" />
+                    }
+                />
+                {/* Route to the login page */}
+                <Route
+                    path="/login"
+                    element={
+                        authenticated ? (
+                                <Navigate to="/" />
+                        ) : (
+                            <AuthProvider>
+                                <LoginPage setAuthenticated={setAuthenticated} />
+                            </AuthProvider>
+                        )
+                    }
+                />
+
                 <Route
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
                 /> 
-                <Route path="/signup" element={
-                  <AuthProvider>
-                    <SignupPage />
-                  </AuthProvider>
-                }/>
+                <Route
+                    path="/signup"
+                    element={
+                        authenticated ? (
+                                <Navigate to="/" />
+
+                        ) : (
+                            <AuthProvider>
+                                <SignupPage />
+                            </AuthProvider>
+                        )
+                    }
+                />
                 <Route
                     path="/catalog"
                     element={

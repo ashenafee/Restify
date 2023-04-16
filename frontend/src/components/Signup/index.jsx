@@ -10,7 +10,7 @@ import './styles.css';
 
 import { AuthContext, AuthProvider } from "../../context/AuthContext";
 
-const SignupPage = () => {
+const SignupPage = (props) => {
     const { signup } = useContext(AuthContext); // Access the signup function from AuthContext
 
   const [formData, setFormData] = useState({
@@ -42,6 +42,8 @@ const SignupPage = () => {
         const response = await signup(formData); // Call the signup function with the form data
         console.log("Signup successful!", response);
         // Handle successful signup, e.g. redirect to dashboard or show success message
+
+          props.handleSignup();
       } catch (error) {
         console.error("Failed to signup", error);
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 // import SignupForm from "../SignupForm";
-import RestifyNavbar from "../Navbar";
+import RestifyNavbar from "../Common/Navbar";
 
 // Kate's signup page
 import SignupPage from "../Signup";
@@ -22,7 +22,7 @@ function App() {
                         authenticated ? (
                             <Navigate to="/" />
                         ) : (
-                            <SignupPage />
+                            <SignupPage handleSignup={handleSignup} />
                         )
                     }
                 />
