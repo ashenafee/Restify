@@ -19,8 +19,8 @@
 
 .btn-stroke{
     padding: 15px 22px;  
-    background: white;
-    border-color: FF8967;
+    border-color: #FF8967;
+    border-width: 2px;
     color: #FF8967;
     font-size: 16px;
     font-weight: 500;
