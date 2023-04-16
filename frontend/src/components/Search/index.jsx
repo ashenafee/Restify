@@ -22,6 +22,9 @@ const [end_date, setEndDate] = useState('');
 const [sort, setSort] = useState('');
 const [order, setOrder] = useState('');
 
+const [nextPageUrl, setNextPageUrl] = useState(''); 
+const [prevPageUrl, setPrevPageUrl] = useState(''); 
+
 const { properties, setProperties } = useContext(PropertyContext);
 
 // Fetch properties from backend on component mount
@@ -30,51 +33,53 @@ fetchProperties();
 }, []);
 
 useEffect(() => {
-// Only call fetchProperties if sort and order are not empty
 if (sort && order) {
     fetchProperties();
 }
 }, [sort, order]); // Watch for changes in sort and order
 
 // Fetch properties from backend based on search criteria
-const fetchProperties = async () => {
-try {
-    let url = 'http://localhost:8000/search/catalog/';
-    const queryParams = [];
+const fetchProperties = async (url = null) => {
+    try {
+        // Construct the final URL with query parameters
+        let finalUrl = 'http://localhost:8000/search/catalog/';
+        const queryParams = [];
+        if (url) {
+            finalUrl = url; // If URL for pagination
+        }
 
-    // Add search criteria as query parameters
-    if (location) {
-    queryParams.push(`location=${location}`);
-    }
-    if (guests) {
-    queryParams.push(`guests=${guests}`);
-    }
-    if (amenities) {
-    queryParams.push(`amenities=${amenities}`);
-    }
-    if (start_date) {
-    queryParams.push(`start_date=${start_date}`);
-    }
-    if (end_date) {
-    queryParams.push(`end_date=${end_date}`);
-    }
+        if (location) {
+            queryParams.push(`location=${location}`);
+        }
+        if (guests) {
+            queryParams.push(`guests=${guests}`);
+        }
+        if (amenities) {
+            queryParams.push(`amenities=${amenities}`);
+        }
+        if (start_date) {
+            queryParams.push(`start_date=${start_date}`);
+        }
+        if (end_date) {
+            queryParams.push(`end_date=${end_date}`);
+        }
+        if (sort && order) {
+            if (sort === 'price' || sort === 'rating') {
+                queryParams.push(`sort=${sort}`);
+                queryParams.push(`order=${order}`);
+            }
+        }
 
-    if (sort && order) {
-    // Only allow one sort criteria at a time
-    if (sort === 'price' || sort === 'rating') {
-        queryParams.push(`sort=${sort}`);
-        queryParams.push(`order=${order}`);
-    }
-    }
+        if (queryParams.length > 0) {
+            finalUrl += `?${queryParams.join('&')}`;
+        }
 
-    // Construct the final URL with query parameters
-    if (queryParams.length > 0) {
-    url += `?${queryParams.join('&')}`;
-    }
+        const response = await fetch(finalUrl);
+        const data = await response.json();
+        setProperties(data.results);
 
-    const response = await fetch(url);
-    const data = await response.json();
-    setProperties(data.results);
+    setNextPageUrl(data.next);
+    setPrevPageUrl(data.previous);
 
 } catch (error) {
     console.error('Error fetching properties:', error);
@@ -104,6 +109,18 @@ setOrder('');
 
 fetchProperties();
 };
+
+const handleNextPage = () => {
+    if (nextPageUrl) {
+      fetchProperties(nextPageUrl);
+    }
+  };
+  
+  const handlePrevPage = () => {
+    if (prevPageUrl) {
+      fetchProperties(prevPageUrl);
+    }
+  };
 
 return (
     <div>
@@ -161,12 +178,12 @@ return (
     />
     </div>
 
-    <div>
+    <div className='d-flex'>
     <ButtonFilled
         value="Search"
         onClick={handleSearch}
     />    
-
+    <div className='mx-2'></div>
     <ButtonStroke
         value="Reset"
         onClick={handleReset}
@@ -182,7 +199,6 @@ return (
 
     <Container>
         <Row>
-          {/* Loop through properties array and render PropertyCard component */}
           {properties.map((property) => (
             <Col key={property.id} xs={12} sm={6} md={4} lg={4} xl={4}>
               <PropertyCard property={property} />
@@ -190,7 +206,14 @@ return (
           ))}
         </Row>
     </Container>
-</div>
+
+    <div className='container d-flex'>
+    <ButtonStroke onClick={handlePrevPage} value = {"< Previous"}/>
+    {/* a little gap */}
+    <div className='mx-2'></div>
+    <ButtonStroke onClick={handleNextPage} value = {"Next >"}/>
+  </div>
+</div >
     <Footer />
 </div>
 );
