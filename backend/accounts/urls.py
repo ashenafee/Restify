@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import LoginView, LogoutView, SignupView, EditProfileView
+from .views import LoginView, LogoutView, SignupView, EditProfileView, ViewHostedProperties
 #from comments.views import CommentforGuestWriteView, PropertyCommentCreateAPIView, GuestCommentListAPIView
 
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('signup/', SignupView.as_view(), name='signup'),
     path('edit/', EditProfileView.as_view(), name='edit_profile'),
+    path('properties/', ViewHostedProperties.as_view(), name='hosted_properties')
 ]
 
 

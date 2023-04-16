@@ -101,3 +101,32 @@ class EditProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ViewHostedProperties(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        properties = user.properties.all()
+
+        # Return the properties
+        data = []
+        for property in properties:
+            data.append({
+                'id': property.id,
+                'host': property.host.id,
+                'name': property.name,
+                'address': property.address,
+                'description': property.description,
+                'guests': property.guests,
+                'beds': property.beds,
+                'bathrooms': property.bathrooms,
+                'location': property.location,
+            })
+
+            # TODO: Not sure how to deal with Amenities
+
+        return Response(data)

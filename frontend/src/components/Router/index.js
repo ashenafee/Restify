@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import SignupForm from "../SignupForm";
+// import SignupForm from "../SignupForm";
 import RestifyNavbar from "../Navbar";
 
 // Kate's signup page
-// import SignupPage from "../Signup";
+import SignupPage from "../Signup";
 
 function App() {
     const [authenticated, setAuthenticated] = useState(false);
@@ -22,7 +22,7 @@ function App() {
                         authenticated ? (
                             <Navigate to="/" />
                         ) : (
-                            <SignupForm />
+                            <SignupPage />
                         )
                     }
                 />
