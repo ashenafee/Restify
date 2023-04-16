@@ -42,6 +42,11 @@ class PropertySearchView(ListAPIView):
                 queryset = queryset.order_by('avg_rating')
             elif order_by == 'desc':
                 queryset = queryset.order_by('-avg_rating')
+        if sort_by == 'price':
+            if order_by == 'asc':
+                queryset = queryset.order_by('availabilitiesOfProperty__price_per_night')
+            elif order_by == 'desc':
+                queryset = queryset.order_by('-availabilitiesOfProperty__price_per_night')
 
         return queryset
 

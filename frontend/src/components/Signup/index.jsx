@@ -1,7 +1,7 @@
 import React, {  useContext, useState  } from 'react';
 
 import FormInput from "../Common/FormInput"; // Import the reusable FormInput component
-import ButtonFilled from '../Common/Button';
+import { ButtonFilled } from '../Common/Button';
 import { H1 } from "../Common/Headers";
 import Footer from '../Common/Footer';
 

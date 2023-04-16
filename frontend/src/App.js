@@ -1,6 +1,10 @@
 import './App.css';
 import RestifyNavbar from "./components/Common/Navbar";
 import SignupPage from "./components/Signup";
+
+import PropertySearch from "./components/Search";
+import { PropertyContextProvider } from "./context/PropertyContext";
+
 import PropertyDetail from './components/Property/propertyDetail';
 import HomepageSearchBar from "./components/HomepageSearchBar";
 import {AuthProvider} from "./context/AuthContext";
@@ -15,15 +19,23 @@ function App() {
             <RestifyNavbar />
             <Routes>
                 <Route path="/search" element={<HomepageSearchBar />}/>
-                {/* <Route
+                <Route
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
-                />  */}
+                /> 
                 <Route path="/signup" element={
                   <AuthProvider>
                     <SignupPage />
                   </AuthProvider>
                 }/>
+                <Route
+                    path="/catalog"
+                    element={
+                      <PropertyContextProvider>
+                      <PropertySearch />
+                    </PropertyContextProvider>
+                    }
+                />
                 <Route 
                     path="/reservation/details/" 
                     element={<ReservationDetail />}
