@@ -16,3 +16,21 @@
 
     margin-top: 1rem;
 }
+
+.btn-stroke{
+    padding: 15px 22px;  
+    background: white;
+    border-color: FF8967;
+    color: #FF8967;
+    font-size: 16px;
+    font-weight: 500;
+
+    width: inherit;
+
+    border-radius: 10px;
+
+    border-width: 0;
+    cursor: pointer;
+
+    margin-top: 1rem;
+}

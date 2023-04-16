@@ -14,4 +14,16 @@ const ButtonFilled = ({ value, type, onClick }) => {
     );
   };
 
-export default ButtonFilled;
+  const ButtonStroke = ({ value, type, onClick }) => {
+    return (
+      <button
+        className="btn-stroke"
+        type={type}
+        onClick={onClick}
+      >
+        {value}
+      </button>
+    );
+  };
+
+export {ButtonFilled, ButtonStroke};
