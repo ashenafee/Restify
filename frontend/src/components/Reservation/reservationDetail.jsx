@@ -41,6 +41,10 @@ function ReservationDetail() {
       history.push('/login');
       return;
     }
+
+    if (!window.confirm("Are you sure you want to cancel?")) {
+        return;
+    }
   
     try {
       const response = await fetch(`http://localhost:8000/properties/reservation/${reservation_id}/cancel/`, {
