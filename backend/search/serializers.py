@@ -53,15 +53,16 @@ class PropertySearchSerializer(serializers.ModelSerializer):
     amenities = AmenitySerializer(many=True)
     imagesOfProperty = PropertyImageSerializer(many=True)
     commentsOftheProperty = PropertyCommentSerializer(many=True)
+    availabilitiesOfProperty = AvailabilitySerializer(many=True)
 
-    #calculate average rating
     rating = serializers.SerializerMethodField()
+
     def get_rating(self, obj):
         return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
 
     class Meta:
         model = Property
-        fields = ['id', 'imagesOfProperty', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities', 'rating', 'commentsOftheProperty']
+        fields = ['id', 'imagesOfProperty', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities', 'rating', 'commentsOftheProperty', 'availabilitiesOfProperty']
 
     def validate(self, data):
         amenities = data.get('amenities')
