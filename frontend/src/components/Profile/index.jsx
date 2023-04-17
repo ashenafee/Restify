@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ButtonFilled } from '../Common/Button';
+import FormInput from '../Common/FormInput';
+import Footer from '../Common/Footer';
+import jwtDecode from 'jwt-decode';
+import { useNavigate } from "react-router-dom";
+
 
 const UserProfilePage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     first_name: '',
@@ -22,6 +29,37 @@ const UserProfilePage = () => {
 });
 
   const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (token) {
+      // Decode JWT to get user information
+      const decodedToken = jwtDecode(token);
+
+      // Check if user is authorized based on decoded token
+      if (decodedToken && decodedToken.exp > Date.now() / 1000) {
+        console.log("logged in effect")
+        // User is authorized, setLoggedIn to true
+        setLoggedIn(true);
+      } else {
+        // User is not authorized, setLoggedIn to false and navigate to login page
+        console.log("not logged in effect")
+        setLoggedIn(false);
+        setTimeout(() => {
+            navigate("/login");
+        }, 2000); // 2 seconds delay
+      }
+    } else {
+      // JWT does not exist, setLoggedIn to false and navigate to login page
+      console.log("not logged in effect")
+      setLoggedIn(false);
+      setTimeout(() => {
+        navigate("/login");
+    }, 2000); // 2 seconds delay
+    }
+  }, []);
+
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -54,56 +92,93 @@ const UserProfilePage = () => {
     }
   }
 
-  useEffect(() => {
-    const access_token = localStorage.getItem('access_token');
-    console.log ("user token on load \n" + access_token)
-    if (access_token) {
-        console.log("logged in effect")
-      setLoggedIn(true);
-    } else {
-        console.log("not logged in effect")
-      setLoggedIn(false);
-    }
-  }, []);
-
   return (
     <div>
-      <h1>User Profile</h1>
-      <p className='my=3'>All field are required!</p>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input type="text" name="username" value={formData.username} onChange={handleChange} />
-        </label>
-        <label>
-          First Name:
-          <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} />
-        </label>
-        <label>
-          Last Name:
-          <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} />
-        </label>
-        <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
-        </label>
-        <label>
-          Phone Number:
-          <input type="text" name="phone_number" value={formData.phone_number} onChange={handleChange} />
-        </label>
-        <label>
-          Avatar:
-          <input type="file" name="avatar" onChange={handleChange} />
-        </label>
-        <ButtonFilled
-                    value="Update Profile"
-                    type="submit"
-                    onClick={() => {
-                        window.location.reload();
-                        console.log("Button clicked!");
-                    }}
-                />
-        </form>
+    {loggedIn ? (
+      <div>
+        <div className='container my-5'>
+          <h1>User Profile</h1>
+          <p className='my=3'>All field are required!</p>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Username:
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              placeholder="Change username"
+              type="text"
+              value={formData.username}
+              name = "username"
+              onChange={handleChange}
+            />
+            <label>
+              First Name:
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              placeholder="Change first name"
+              type="text"
+              value={formData.first_name}
+              name = "first_name"
+              onChange={handleChange}
+            />
+            <label>
+              Last Name:
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              placeholder="Change last name"
+              type="text"
+              value={formData.last_name}
+              name = "last_name"
+              onChange={handleChange}
+            />
+            <label>
+              Email:
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              placeholder="Change email"
+              type="email"
+              value={formData.email}
+              name = "email"
+              onChange={handleChange}
+            />
+            <label>
+              Phone Number:
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              placeholder="Change phone_number"
+              type="tel"
+              value={formData.phone_number}
+              name = "phone_number"
+              onChange={handleChange}
+            />
+            <label>
+              Avatar:
+              {/* <input type="file" name="avatar" onChange={handleChange} /> */}
+            </label>
+            <FormInput
+              className = "mt-1 mb-3"
+              type="file"
+              value={formData.avatar}
+              name = "avatar"
+              onChange={handleChange}
+            />
+            <ButtonFilled
+                value="Update Profile"
+                type="submit"
+                onClick={() => {
+                    window.location.reload();
+                    console.log("Button clicked!");
+                }}
+            />
+            </form>
+        </div>   
+      <Footer />
+      </div> 
+    ) : ( <p className="text-center">You are not authorized. Redirecting to login page...</p> )}
     </div>
   );
 }
