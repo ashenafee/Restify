@@ -9,9 +9,8 @@ const PropertyCard = ({ property }) => {
             <p>Address: {property.address}</p>
             <p>Location: {property.location}</p>
             
-            {/* change link later */}
-            <Link to={`/property/${property.id}/details`}>
-                View Details
+            <Link to={`/property/${property.id}/update`}>
+                Manage Property
             </Link>
         </div>
     );
