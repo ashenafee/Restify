@@ -50,6 +50,7 @@ function ReservationDetailList() {
   const handleFilterSubmit = async (e) => {
     e.preventDefault();
     const access_token = localStorage.getItem("access_token");
+  
     const { role, state } = filterState;
     let url = "http://localhost:8000/properties/reservation/list/?page=1";
     setCurrentPage(1);

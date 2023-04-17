@@ -1,38 +1,66 @@
 import './App.css';
+
+// Navbar
 import RestifyNavbar from "./components/Common/Navbar";
-import SignupPage from "./components/Signup";
 
-import PropertySearch from "./components/Search";
-import { PropertyContextProvider } from "./context/PropertyContext";
-
-import PropertyDetail from './components/Property/propertyDetail';
-import HomepageSearchBar from "./components/HomepageSearchBar";
+// Auth
 import { AuthContext, AuthProvider } from "./context/AuthContext";
-import ReservationDetailList from './components/Reservation/reservationDetailList';
+import SignupPage from "./components/Signup";
+import LoginPage from './components/Login';
+
+// Search 
+import { PropertyContextProvider } from "./context/PropertyContext";
+import PropertySearch from "./components/Search";
+
+// property details from user pov
+import PropertyDetail from './components/Property/propertyDetail';
+// reservation of the property from user pov
 import PropertyReserve from './components/Property/propertyReserve';
+
+// Profile sections
+
+// edit profile page (Manage Profile)
+import UserProfilePage from './components/Profile/updateProfile';
+
+// see a list of reservations as a user or host
+import ReservationDetailList from './components/Reservation/reservationDetailList'; 
+// see a specific reservation as a user or host
 import ReservationDetail from './components/Reservation/reservationDetail';
 
+// list of existing properties
+import MyProperties from './components/Profile/propertyList';
+// create new property
+import { PropertyCreateProvider } from './context/PropertyCreateContext';
+import CreatePropertyForm from './components/Profile/propertyCreate';
+// update property
+
+
+// not used
+import HomepageSearchBar from "./components/HomepageSearchBar";
+
+// React
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
-import LoginPage from './components/Login';
+
 
 function App() {
     const { token } = useContext(AuthContext);
     const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        if (localStorage.getItem('access_token') !== null) {
-            setAuthenticated(true);
-        } else {
-            setAuthenticated(false);
-        }
-    }, [token]);
+    // doesn't work for me
+    // useEffect(() => {
+    //     if (localStorage.getItem('access_token') !== null) {
+    //         setAuthenticated(true);
+    //     } else {
+    //         setAuthenticated(false);
+    //     }
+    // }, [token]);
 
     return (
         <BrowserRouter>
             <RestifyNavbar />
             <Routes>
-                {/* Route to the homepage */}
+                {/* Route to the homepage (search) */}
                 <Route
                     path="/"
                     element={
@@ -45,6 +73,7 @@ function App() {
                             <Navigate to="/login" />
                     }
                 />
+
                 {/* Route to the login page */}
                 <Route
                     path="/login"
@@ -59,10 +88,22 @@ function App() {
                     }
                 />
 
+                {/* Temporary signup */}
                 <Route
-                    path="/property/:property_id/details"
-                    element={<PropertyDetail/>}
+                    path="/signup"
+                    element={
+                        authenticated ? (
+                                <Navigate to="/" />
+
+                        ) : (
+                            <AuthProvider>
+                                <SignupPage />
+                            </AuthProvider>
+                        )
+                    }
                 />
+
+                {/* Ash's sign up that doesn't work for me */}
                 <Route
                     path="/signup"
                     element={
@@ -76,6 +117,8 @@ function App() {
                         )
                     }
                 />
+
+                {/* catalog */}
                 <Route
                     path="/catalog"
                     element={
@@ -83,20 +126,52 @@ function App() {
                             <PropertySearch />
                         </PropertyContextProvider>
                     }
-                />
+                /> 
+                {/* property details */}
                 <Route
-                    path="/reservation/:reservation_id/detail"
-                    element={<ReservationDetail/>}
+                    path="/property/:property_id/details"
+                    element={<PropertyDetail/>}
                 />
+                {/* make reservation */}
+                <Route
+                    path="/property/:property_id/reserve"
+                    element={<PropertyReserve />}
+                />
+
+                {/* my reservations */}
                 <Route
                     path="/reservation/details/list/"
                     element={<ReservationDetailList />}
                 />
                 <Route
-                    path="/property/:property_id/reserve"
-                    element={<PropertyReserve />}
+                    path="/reservation/:reservation_id/detail"
+                    element={<ReservationDetail/>}
+                />
+
+                {/* profile edit */}
+                <Route
+                    path="/profile/edit"
+                    element = {
+                        <   UserProfilePage />
+                    }
+                />
+                {/* my properties */}
+                <Route
+                    path="/profile/properties"
+                    element = {
+                        <   MyProperties />
+                    }
+                />
+                {/* property create */}
+                <Route
+                    path="/property/create"
+                    element={<PropertyCreateProvider>
+                        <CreatePropertyForm />
+                    </PropertyCreateProvider>
+                    }
                 />
             </Routes>
+            
         </BrowserRouter>
     );
 }
