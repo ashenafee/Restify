@@ -4,13 +4,16 @@ import { ButtonFilled } from '../Common/Button';
 import { Link } from 'react-router-dom';
 import FormInput from "../Common/FormInput"; // Import the reusable FormInput component
 import Footer from '../Common/Footer';
+import { useNavigate } from "react-router-dom";
 
+import jwtDecode from 'jwt-decode';
 
 import { PropertyCreateContext, PropertyCreateProvider } from "../../context/PropertyCreateContext";
 
 
 const CreatePropertyForm = (props) => {
     const { createProperty } = useContext(PropertyCreateContext); 
+    const navigate = useNavigate();
 
     const [amenities, setAmenities] = useState([]);
 
@@ -44,14 +47,32 @@ const CreatePropertyForm = (props) => {
     const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => {
-        const access_token = localStorage.getItem('access_token');
-        console.log ("property token \n" + access_token)
-        if (access_token) {
+        const token = localStorage.getItem('access_token');
+    
+        if (token) {
+          // Decode JWT to get user information
+          const decodedToken = jwtDecode(token);
+    
+          // Check if user is authorized based on decoded token
+          if (decodedToken && decodedToken.exp > Date.now() / 1000) {
             console.log("logged in effect")
-          setLoggedIn(true);
-        } else {
+            // User is authorized, setLoggedIn to true
+            setLoggedIn(true);
+          } else {
+            // User is not authorized, setLoggedIn to false and navigate to login page
             console.log("not logged in effect")
+            setLoggedIn(false);
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000); // 2 seconds delay
+          }
+        } else {
+          // JWT does not exist, setLoggedIn to false and navigate to login page
+          console.log("not logged in effect")
           setLoggedIn(false);
+          setTimeout(() => {
+            navigate("/login");
+        }, 2000); // 2 seconds delay
         }
       }, []);
 
@@ -130,6 +151,8 @@ const CreatePropertyForm = (props) => {
 
   return (
     <div>
+    {loggedIn ? (
+    <div> 
       <h1>Create Property</h1>
       {success && <div>Property created successfully!</div>}
       {loggedIn ? (
@@ -264,6 +287,10 @@ const CreatePropertyForm = (props) => {
         </div>
       )}
       <Footer />
+    </div> 
+    ) : (
+        <p className="text-center">You are not authorized. Redirecting to login page...</p>
+    )}
     </div>
   );
 }
