@@ -66,7 +66,7 @@ function ProfileDropdown() {
 
     const handleManageProfile = () => {
         // Redirect to the login page
-        redirect("/manage-profile");
+        redirect("/profile/edit");
     }
 
     const handleMyReservations = () => {

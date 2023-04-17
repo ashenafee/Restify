@@ -48,13 +48,40 @@ function App() {
     const { token } = useContext(AuthContext);
     const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        if (localStorage.getItem('access_token') !== null) {
-            setAuthenticated(true);
+    // Create an async function to check if the refresh token is valid
+    const checkToken = async () => {
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (refreshToken !== null) {
+            const response = await fetch("http://localhost:8000/api/token/refresh/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    refresh: refreshToken,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("access_token", data.access);
+                setAuthenticated(true);
+            } else {
+                setAuthenticated(false);
+                localStorage.removeItem("refresh_token");
+                localStorage.removeItem("access_token");
+            }
         } else {
             setAuthenticated(false);
         }
-    }, [token]);
+    };
+
+    // Check the token on page load
+    useEffect(() => {
+        checkToken().then(() => {
+            console.log("Token checked");
+        });
+    });
 
     return (
         <BrowserRouter>
