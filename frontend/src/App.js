@@ -20,7 +20,7 @@ import PropertyReserve from './components/Property/propertyReserve';
 // Profile sections
 
 // edit profile page (Manage Profile)
-import UserProfilePage from './components/Profile';
+import UserProfilePage from './components/Profile/updateProfile';
 
 // see a list of reservations as a user or host
 import ReservationDetailList from './components/Reservation/reservationDetailList'; 
@@ -28,10 +28,10 @@ import ReservationDetailList from './components/Reservation/reservationDetailLis
 import ReservationDetail from './components/Reservation/reservationDetail';
 
 // list of existing properties
-import MyProperties from './components/HostPropertyList/propertyList';
+import MyProperties from './components/Profile/propertyList';
 // create new property
 import { PropertyCreateProvider } from './context/PropertyCreateContext';
-import CreatePropertyForm from './components/Property/propertyCreate';
+import CreatePropertyForm from './components/Profile/propertyCreate';
 // update property
 
 
