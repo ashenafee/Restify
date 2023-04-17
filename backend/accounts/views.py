@@ -114,7 +114,15 @@ class ViewHostedProperties(APIView):
 
         # Return the properties
         data = []
+
         for property in properties:
+            amenity_data = []
+            for amenity in property.amenities.all():
+                amenity_data.append({
+                    'id': amenity.id,
+                    'name': amenity.name,
+                })
+
             data.append({
                 'id': property.id,
                 'host': property.host.id,
@@ -125,6 +133,7 @@ class ViewHostedProperties(APIView):
                 'beds': property.beds,
                 'bathrooms': property.bathrooms,
                 'location': property.location,
+                'amenities': amenity_data,
             })
 
             # TODO: Not sure how to deal with Amenities

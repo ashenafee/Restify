@@ -53,8 +53,13 @@ function ProfileDropdown() {
         }
     }, [authenticated, user]);
 
+
     const handleManageProfileClick = () => {
         window.location.href = '/profile/edit';
+      };
+
+      const handleMyPropertiesClick = () => {
+        window.location.href = '/profile/properties';
       };
 
     const loggedInMenu = (
@@ -65,7 +70,7 @@ function ProfileDropdown() {
             <NavDropdown.Item>
                 My Reservations
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item onClick={handleMyPropertiesClick}>
                 My Properties
             </NavDropdown.Item>
             <NavDropdown.Divider />
