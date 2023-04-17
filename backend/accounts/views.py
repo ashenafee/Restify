@@ -95,12 +95,17 @@ class EditProfileView(APIView):
 
     def put(self, request, *args, **kwargs):
         user = self.request.user
-        serializer = self.serializer_class(user, data=request.data,
-                                           partial=True)
+        data = request.data.copy()
+        serializer = self.serializer_class(user, data=data, partial=True)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class ViewHostedProperties(APIView):

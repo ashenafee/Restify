@@ -108,7 +108,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if User.objects.filter(phone_number=value).exists():
             raise ValidationError('Phone number already exists')
 
-        if not value.isdigit():
+        if not value.isdigit() and value != '':
             raise ValidationError('Phone number must be digits')
 
         return value
