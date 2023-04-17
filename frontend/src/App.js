@@ -48,14 +48,13 @@ function App() {
     const { token } = useContext(AuthContext);
     const [authenticated, setAuthenticated] = useState(false);
 
-    // doesn't work for me
-    // useEffect(() => {
-    //     if (localStorage.getItem('access_token') !== null) {
-    //         setAuthenticated(true);
-    //     } else {
-    //         setAuthenticated(false);
-    //     }
-    // }, [token]);
+    useEffect(() => {
+        if (localStorage.getItem('access_token') !== null) {
+            setAuthenticated(true);
+        } else {
+            setAuthenticated(false);
+        }
+    }, [token]);
 
     return (
         <BrowserRouter>

@@ -64,19 +64,36 @@ function ProfileDropdown() {
         redirect("/login");
     };
 
+    const handleManageProfile = () => {
+        // Redirect to the login page
+        redirect("/manage-profile");
+    }
+
+    const handleMyReservations = () => {
+        // Redirect to the login page
+        redirect("/my-reservations");
+    }
+
+    const handleMyProperties = () => {
+        // Redirect to the login page
+        redirect("/my-properties");
+    }
+
     const loggedInMenu = (
         <>
-            <NavDropdown.Item>
+            <NavDropdown.Item onClick={handleManageProfile}>
                 Manage Profile
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item onClick={handleMyReservations}>
                 My Reservations
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item onClick={handleMyProperties}>
                 My Properties
             </NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item onClick={handleLogout}>Log Out</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>
+                Log Out
+            </NavDropdown.Item>
         </>
     );
 
