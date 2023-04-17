@@ -53,9 +53,13 @@ function ProfileDropdown() {
         }
     }, [authenticated, user]);
 
+    const handleManageProfileClick = () => {
+        window.location.href = '/profile/edit';
+      };
+
     const loggedInMenu = (
         <>
-            <NavDropdown.Item>
+            <NavDropdown.Item onClick={handleManageProfileClick}>
                 Manage Profile
             </NavDropdown.Item>
             <NavDropdown.Item>
