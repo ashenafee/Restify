@@ -5,6 +5,9 @@ import SignupPage from "./components/Signup";
 import PropertySearch from "./components/Search";
 import { PropertyContextProvider } from "./context/PropertyContext";
 
+import { PropertyCreateProvider } from './context/PropertyCreateContext';
+import CreatePropertyForm from './components/Property/propertyCreate';
+
 import PropertyDetail from './components/Property/propertyDetail';
 import HomepageSearchBar from "./components/HomepageSearchBar";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
@@ -16,17 +19,22 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
 import LoginPage from './components/Login';
 
+import UserProfilePage from './components/Profile';
+
+import MyProperties from './components/HostPropertyList';
+
 function App() {
     const { token } = useContext(AuthContext);
     const [authenticated, setAuthenticated] = useState(false);
 
-    useEffect(() => {
-        if (localStorage.getItem('access_token') !== null) {
-            setAuthenticated(true);
-        } else {
-            setAuthenticated(false);
-        }
-    }, [token]);
+    // doesn't work for me
+    // useEffect(() => {
+    //     if (localStorage.getItem('access_token') !== null) {
+    //         setAuthenticated(true);
+    //     } else {
+    //         setAuthenticated(false);
+    //     }
+    // }, [token]);
 
     return (
         <BrowserRouter>
@@ -63,6 +71,23 @@ function App() {
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
                 />
+
+                {/* Temporary signup */}
+                <Route
+                    path="/signup"
+                    element={
+                        authenticated ? (
+                                <Navigate to="/" />
+
+                        ) : (
+                            <AuthProvider>
+                                <SignupPage />
+                            </AuthProvider>
+                        )
+                    }
+                />
+
+                {/* Ash's sign up that doesn't work for me */}
                 <Route
                     path="/signup"
                     element={
@@ -96,7 +121,30 @@ function App() {
                     path="/property/:property_id/reserve"
                     element={<PropertyReserve />}
                 />
+
+                <Route
+                    path="/property/create"
+                    element={<PropertyCreateProvider>
+                        <CreatePropertyForm />
+                    </PropertyCreateProvider>
+                    }
+                />
+
+                <Route
+                    path="/profile/edit"
+                    element = {
+                        <   UserProfilePage />
+                    }
+                />
+
+                <Route
+                    path="/profile/properties"
+                    element = {
+                        <   MyProperties />
+                    }
+                />
             </Routes>
+            
         </BrowserRouter>
     );
 }
