@@ -25,7 +25,7 @@ const CreatePropertyForm = (props) => {
         beds: "",
         bathrooms: "",
         description: "",
-        images: [],
+        // images: [],
         amenities: [],
       });
 
@@ -39,7 +39,7 @@ const CreatePropertyForm = (props) => {
         beds: "",
         bathrooms: "",
         description: "",
-        images: "",
+        // images: "",
         amenities: "",
     });
 
@@ -94,16 +94,22 @@ const CreatePropertyForm = (props) => {
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setSuccess(true);
         try {
             const response = await createProperty(formData); 
-            setSuccess(true);
+            
             console.log("Property almost created!", response);
     
             if (typeof props.handleSubmit === 'function') {
                 props.handleSubmit();
               }
+
+            setTimeout(() => {
+                navigate("/profile/properties")
+            }, 2000); // 2 seconds delay
+
           } catch (error) {
+            setSuccess(false);
             console.error("Failed to create a property ", error);
     
             if (error.response && error.response.data) {
@@ -114,9 +120,9 @@ const CreatePropertyForm = (props) => {
                 address: errorData.address ? errorData.address.join(" ") : "",
                 guests: errorData.guests ? errorData.guests.join(" ") : "",
                 beds: errorData.beds ? errorData.beds.join(" ") : "",
-                baths: errorData.baths ? errorData.baths.join(" ") : "",
+                bathrooms: errorData.bathrooms ? errorData.bathrooms.join(" ") : "",
                 description: errorData.description ? errorData.description.join(" ") : "",
-                images: errorData.images ? errorData.images.join(" ") : "",
+                // images: errorData.images ? errorData.images.join(" ") : "",
                 amenities: errorData.amenities ? errorData.amenities.join(" ") : "",
                 });
             }
@@ -154,8 +160,6 @@ const CreatePropertyForm = (props) => {
     {loggedIn ? (
     <div> 
       <h1>Create Property</h1>
-      {success && <div>Property created successfully!</div>}
-      {loggedIn ? (
         <div className="container">
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
@@ -233,7 +237,7 @@ const CreatePropertyForm = (props) => {
                 className = "my-3"
                 placeholder="Bathrooms"
                 type="number"
-                value={formData.baths}
+                value={formData.bathrooms}
                 onChange={handleChange}
                 name="bathrooms"
                 required={true}
@@ -254,7 +258,7 @@ const CreatePropertyForm = (props) => {
           Images:
           <input type="file" multiple onChange={handleImages} />
         </label> */}
-        {errors.images && <p className="error-message">{errors.images}</p>}
+        {/* {errors.images && <p className="error-message">{errors.images}</p>} */}
         <br />
         <label>
             Amenities:
@@ -277,15 +281,9 @@ const CreatePropertyForm = (props) => {
                         console.log("Button clicked!");
                     }}
                 />
+        {success && <p className="success-message">Property created successfully!</p>}
         </form> 
-        </div>) : (
-        <div>
-        <h3>Not logged in</h3>
-        <Link to={`/login/`} className="to-property-button">
-        Log in
-        </Link>
         </div>
-      )}
       <Footer />
     </div> 
     ) : (

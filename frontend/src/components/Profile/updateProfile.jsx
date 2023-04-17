@@ -20,6 +20,7 @@ const UserProfilePage = () => {
   });
 
   const [errors, setErrors] = useState({
+    nonfielderrors: "",
     username: '',
     first_name: '',
     last_name: '',
@@ -88,7 +89,20 @@ const UserProfilePage = () => {
       });
       console.log(response.data);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update p ", error);
+    
+      if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          setErrors({
+          nonfielderrors: errorData.non_field_errors ? errorData.non_field_errors.join(" ") : "",
+          username: errorData.username ? errorData.username.join(" ") : "",
+          first_name: errorData.first_name ? errorData.first_name.join(" ") : "",
+          last_name: errorData.last_name ? errorData.last_name.join(" ") : "",
+          email: errorData.email ? errorData.email.join(" ") : "",
+          phone_number: errorData.phone_number ? errorData.phone_number.join(" ") : "",
+          avatar: errorData.avatar ? errorData.avatar.join(" ") : "",
+          });
+      }
     }
   }
 
@@ -111,6 +125,7 @@ const UserProfilePage = () => {
               name = "username"
               onChange={handleChange}
             />
+            {errors.username && <p className="error-message">{errors.username}</p>}
             <label>
               First Name:
             </label>
@@ -122,6 +137,7 @@ const UserProfilePage = () => {
               name = "first_name"
               onChange={handleChange}
             />
+            {errors.first_name && <p className="error-message">{errors.first_name}</p>}
             <label>
               Last Name:
             </label>
@@ -133,6 +149,7 @@ const UserProfilePage = () => {
               name = "last_name"
               onChange={handleChange}
             />
+            {errors.last_name && <p className="error-message">{errors.last_name}</p>}
             <label>
               Email:
             </label>
@@ -144,17 +161,19 @@ const UserProfilePage = () => {
               name = "email"
               onChange={handleChange}
             />
+            {errors.email && <p className="error-message">{errors.email}</p>}
             <label>
               Phone Number:
             </label>
             <FormInput
               className = "mt-1 mb-3"
-              placeholder="Change phone_number"
+              placeholder="Change phone number"
               type="tel"
               value={formData.phone_number}
               name = "phone_number"
               onChange={handleChange}
             />
+            {errors.phone_number && <p className="error-message">{errors.phone_number}</p>}
             <label>
               Avatar:
               {/* <input type="file" name="avatar" onChange={handleChange} /> */}
@@ -166,6 +185,7 @@ const UserProfilePage = () => {
               name = "avatar"
               onChange={handleChange}
             />
+            {errors.avatar && <p className="error-message">{errors.avatar}</p>}
             <ButtonFilled
                 value="Update Profile"
                 type="submit"
@@ -174,6 +194,7 @@ const UserProfilePage = () => {
                     console.log("Button clicked!");
                 }}
             />
+            {errors.nonfielderrors && <p className="error-message">{errors.nonfielderrors}</p>}
             </form>
         </div>   
       <Footer />

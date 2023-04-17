@@ -108,7 +108,7 @@ class reservationCreator(ModelSerializer):
 class propertyEditorSerializer(ModelSerializer):
     class Meta:
         model = Property
-        fields = ['description', 'guests', 'beds', 'bathrooms', 'amenities', 'location']
+        fields = ['name', 'location', 'address', 'description', 'guests', 'beds', 'bathrooms', 'amenities']
 
 class ReservationUpdateStateSerializer(serializers.ModelSerializer):
     class Meta:

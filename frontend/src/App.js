@@ -33,6 +33,7 @@ import MyProperties from './components/Profile/propertyList';
 import { PropertyCreateProvider } from './context/PropertyCreateContext';
 import CreatePropertyForm from './components/Profile/propertyCreate';
 // update property
+import PropertyUpdate from './components/Profile/propertyManage';
 
 
 // not used
@@ -168,6 +169,13 @@ function App() {
                     element={<PropertyCreateProvider>
                         <CreatePropertyForm />
                     </PropertyCreateProvider>
+                    }
+                />
+                {/* property update */}
+                <Route
+                    path="/property/:property_id/update"
+                    element={
+                        <PropertyUpdate />
                     }
                 />
             </Routes>
