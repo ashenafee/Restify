@@ -14,7 +14,7 @@ from datetime import datetime
 class AmenityCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
-        fields = ['name']
+        fields = ['id', 'name']
 
 class AvailabilitySerializer(serializers.ModelSerializer):
 
@@ -53,11 +53,24 @@ class propertyCreateSerializer(ModelSerializer):
                   'location', 'amenities']
 
     def validate(self, data):
+        guests = data.get('guests')
+        beds = data.get('beds')
+        bathrooms = data.get('bathrooms')
+        
+        if guests is not None and guests < 0:
+            raise serializers.ValidationError('Number of guests cannot be negative.')
+        
+        if beds is not None and beds < 0:
+            raise serializers.ValidationError('Number of beds cannot be negative.')
+        
+        if bathrooms is not None and bathrooms < 0:
+            raise serializers.ValidationError('Number of bathrooms cannot be negative.')
+            
         amenities = data.get('amenities')
         if amenities:
             for amenity in amenities:
                 if not Amenity.objects.filter(id=amenity.id).exists():
-                    raise serializers.ValidationError('Amenity with id={} does not exist.'.format(amenity.id))
+                    raise serializers.ValidationError('Amenity with id={} does not exist.'.format(amenity.id))        
         return data
 
 class propertyImageCreator(ModelSerializer):

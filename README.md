@@ -155,9 +155,9 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
     - [ ] Responsive design (3 marks)
     - [...] Login (4 marks) - Ash
     - [...] Logout (1 marks) - Ash
-    - [ ] Signup/update (12 marks)
-        - [x] Basic registration (10 marks) - Kate, add profile update
-        - [ ] Profile avatar support (2 marks)
+    - [x] Signup/update (12 marks)
+        - [x] Basic registration (10 marks)
+        - [x] Profile avatar support (2 marks)
 
 - [ ] Property (42 marks)
     - [x] Responsive design (3 marks)
