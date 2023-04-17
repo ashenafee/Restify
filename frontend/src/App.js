@@ -8,8 +8,9 @@ import { PropertyContextProvider } from "./context/PropertyContext";
 import PropertyDetail from './components/Property/propertyDetail';
 import HomepageSearchBar from "./components/HomepageSearchBar";
 import {AuthProvider} from "./context/AuthContext";
-import ReservationDetail from './components/Reservation/reservationDetail'
+import ReservationDetailList from './components/Reservation/reservationDetailList'
 import PropertyReserve from './components/Property/propertyReserve';
+import ReservationDetail from './components/Reservation/reservationDetail';
 
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {useState} from "react";
@@ -82,10 +83,15 @@ const [authenticated, setAuthenticated] = useState(false);
                     </PropertyContextProvider>
                     }
                 />
+
                 {/* Route to the reservation details page */}
+                <Route
+                    path="/reservation/:reservation_id/detail"
+                    element={<ReservationDetail/>}
+                />
                 <Route 
-                    path="/reservation/details/" 
-                    element={<ReservationDetail />}
+                    path="/reservation/details/list/" 
+                    element={<ReservationDetailList />}
                 />
                 {/* Route to the property reserve page */}
                 <Route

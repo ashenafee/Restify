@@ -90,3 +90,26 @@
     font-size:20px;
     color:#ffcc00;
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination-button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #333;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-align: center;
+    transition: all
+  }
+
+  .pagination-button.active {
+    background-color: #007bff;
+    color: #fff;
+  }
