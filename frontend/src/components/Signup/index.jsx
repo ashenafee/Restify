@@ -156,7 +156,6 @@ const SignupPage = (props) => {
                     value="Sign me up!"
                     type="submit"
                     onClick={() => {
-                        // Define your click event handler logic here
                         console.log("Button clicked!");
                     }}
                 />

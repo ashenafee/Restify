@@ -122,6 +122,7 @@ export const AuthProvider = ({children}) => {
                 // Fetch user data
                 await fetchUser();
 
+                console.log(accessToken)
                 return response.data;
             } else {
                 throw new Error("Invalid username or password.");
