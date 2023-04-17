@@ -22,7 +22,7 @@ export const PropertyCreateProvider = ({children}) => {
                 console.log("this is access_token in Context", access_token)
                 const headers = {
                   Authorization: `Bearer ${access_token}`,
-                  'Content-Type': 'multipart/form-data',
+                //   'Content-Type': 'multipart/form-data',
                 };
 
                 const response = await axios.post('http://localhost:8000/properties/property/add/', formData, {
