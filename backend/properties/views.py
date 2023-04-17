@@ -33,6 +33,10 @@ class AmenityCreateView(APIView):
             serializer.save(host=request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=400)  
+
+class AmenityList(generics.ListCreateAPIView):
+    queryset = Amenity.objects.all()
+    serializer_class = AmenityCreateSerializer
     
 class AmenityDeleteView(APIView):
     permission_class = [IsAuthenticated]
