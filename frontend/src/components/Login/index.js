@@ -20,6 +20,7 @@ const LoginPage = (props) => {
         try {
             await login(username, password).then(() => {
                 props.setAuthenticated(true);
+                console.log("Login successful!");
                 return <Navigate to="/" />;
             });
         } catch (error) {

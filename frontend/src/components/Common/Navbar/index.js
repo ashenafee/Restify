@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NotificationIcon from "../NotificationIcon";
 import RentalUnitsPopover from "../RentalUnitsPopover";
 import ProfileDropdown from "../ProfileDropdown";
-import {AuthProvider} from "../../../context/AuthContext";
 
 function RestifyNavbar() {
     return (
@@ -16,9 +15,7 @@ function RestifyNavbar() {
                 <div className="d-flex flex-row align-items-center">
                     <NotificationIcon />
                     <RentalUnitsPopover />
-                    <AuthProvider>
-                        <ProfileDropdown />
-                    </AuthProvider>
+                    <ProfileDropdown />
                 </div>
             </Container>
         </Navbar>

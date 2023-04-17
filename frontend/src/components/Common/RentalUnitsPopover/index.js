@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, OverlayTrigger, Popover } from "react-bootstrap";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function RentalUnitsPopover() {
-    const [rentalUnits, setRentalUnits] = useState([]);
+    const [rentalUnits, setRentalUnits] = useState(null);
 
     const fetchRentalUnits = async (accessToken) => {
         try {
@@ -16,12 +17,10 @@ function RentalUnitsPopover() {
 
             if (response.ok) {
                 const data = await response.json();
-                setRentalUnits(data.results);
-            } else {
-                console.error("Failed to fetch rental units");
+                setRentalUnits(data);
             }
         } catch (error) {
-            console.error(error);
+            // Pass
         }
     };
 
@@ -37,26 +36,46 @@ function RentalUnitsPopover() {
         <Popover id="popover-basic">
             <Popover.Header as="h3">My Rental Units</Popover.Header>
             <Popover.Body>
-                {rentalUnits !== undefined ? (
-                    rentalUnits.map((unit) => (
-                        <div key={unit.id}>
-                            <strong>{unit.name}</strong>
-                            <p>{unit.address}, {unit.city}, {unit.country}</p>
-                        </div>
-                    ))
+                {rentalUnits === null ?
+                    (
+                        <p>No rental units available.</p>
                 ) : (
-                    <p>No rental units available.</p>
-                )}
+                        rentalUnits.map((unit) => (
+                            <div key={unit.id}>
+                                <strong>{unit.name}</strong>
+                                <p>{unit.address}, {unit.location}</p>
+                                {/* Use Bootstrap icons to display the number of guests, bedrooms, and bathrooms */}
+                                <p>
+                                    <i className="bi bi-people-fill"></i> {unit.guests} guests
+                                    <i className="bi bi-bed-fill ms-3"></i> {unit.bedrooms} bedrooms
+                                    <i className="bi bi-bath-fill ms-3"></i> {unit.bathrooms} bathrooms
+                                </p>
+                            </div>
+                )))}
             </Popover.Body>
         </Popover>
     );
 
-    return (
-        <OverlayTrigger trigger="click" placement="bottom" overlay={rentalUnitsPopover}>
-            <Button variant="outline-light" className="ms-2 py-3">
-                My Rental Units
-            </Button>
+    const isLoggedIn = localStorage.getItem("access_token") !== null;
+
+    const renderButton = () => (
+        <Button
+            variant="outline-light"
+            className="ms-2 py-3"
+            style={{
+                cursor: isLoggedIn ? "pointer" : "not-allowed",
+            }}
+        >
+            My Rental Units
+        </Button>
+    );
+
+    return isLoggedIn ? (
+        <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={rentalUnitsPopover}>
+            {renderButton()}
         </OverlayTrigger>
+    ) : (
+        renderButton()
     );
 }
 

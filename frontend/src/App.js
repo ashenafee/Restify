@@ -7,35 +7,36 @@ import { PropertyContextProvider } from "./context/PropertyContext";
 
 import PropertyDetail from './components/Property/propertyDetail';
 import HomepageSearchBar from "./components/HomepageSearchBar";
-import {AuthProvider} from "./context/AuthContext";
+import {AuthContext, AuthProvider} from "./context/AuthContext";
 import ReservationDetailList from './components/Reservation/reservationDetailList'
 import PropertyReserve from './components/Property/propertyReserve';
 import ReservationDetail from './components/Reservation/reservationDetail';
 
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import {useState} from "react";
+import {useContext, useState} from "react";
 import LoginPage from './components/Login';
 
-
 function App() {
+    const { token } = useContext(AuthContext);
+    const [authenticated, setAuthenticated] = useState(
+        localStorage.getItem('access_token') !== null
+    );
 
-const [authenticated, setAuthenticated] = useState(false);
-
-  return (
-          <BrowserRouter>
+    return (
+        <BrowserRouter>
             <RestifyNavbar />
             <Routes>
                 {/* Route to the homepage */}
                 <Route
                     path="/"
                     element={
-                        authenticated 
-                        ?
-                          <PropertyContextProvider>
-                            <PropertySearch />
-                          </PropertyContextProvider>
-                         : 
-                         <Navigate to="/login" />
+                        authenticated
+                            ?
+                            <PropertyContextProvider>
+                                <PropertySearch />
+                            </PropertyContextProvider>
+                            :
+                            <Navigate to="/login" />
                     }
                 />
                 {/* Route to the login page */}
@@ -43,7 +44,7 @@ const [authenticated, setAuthenticated] = useState(false);
                     path="/login"
                     element={
                         authenticated ? (
-                                <Navigate to="/" />
+                            <Navigate to="/" />
                         ) : (
                             <AuthProvider>
                                 <LoginPage setAuthenticated={setAuthenticated} />
@@ -55,12 +56,12 @@ const [authenticated, setAuthenticated] = useState(false);
                 <Route
                     path="/property/:property_id/details"
                     element={<PropertyDetail/>}
-                /> 
+                />
                 <Route
                     path="/signup"
                     element={
-                        authenticated ? (
-                                <Navigate to="/" />
+                        token ? (
+                            <Navigate to="/" />
 
                         ) : (
                             <AuthProvider>
@@ -72,17 +73,17 @@ const [authenticated, setAuthenticated] = useState(false);
                 <Route
                     path="/catalog"
                     element={
-                      <PropertyContextProvider>
-                      <PropertySearch />
-                    </PropertyContextProvider>
+                        <PropertyContextProvider>
+                            <PropertySearch />
+                        </PropertyContextProvider>
                     }
                 />
                 <Route
                     path="/reservation/:reservation_id/detail"
                     element={<ReservationDetail/>}
                 />
-                <Route 
-                    path="/reservation/details/list/" 
+                <Route
+                    path="/reservation/details/list/"
                     element={<ReservationDetailList />}
                 />
                 <Route
@@ -90,8 +91,8 @@ const [authenticated, setAuthenticated] = useState(false);
                     element={<PropertyReserve />}
                 />
             </Routes>
-          </BrowserRouter>
-  );
+        </BrowserRouter>
+    );
 }
 
 export default App;
