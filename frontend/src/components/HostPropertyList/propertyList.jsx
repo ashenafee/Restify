@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import PropertyCard from "./propertyCard";
+import { Container, Row, Col } from "react-bootstrap";
+import { H1 } from "../Common/Headers";
 
 const MyProperties = () => {
     const [properties, setProperties] = useState([]);
@@ -20,23 +20,26 @@ const MyProperties = () => {
 
     return (
         <div>
-            <h1>My Properties</h1>
-            <div className="property-cards">
+            <H1 value={"My Properties"} />
+
+            <div>
                 {Array.isArray(properties) && properties.length > 0 ? (
-                    properties.map((property) => (
-                        <div key={property.id} className="property-card">
-                            <h2>{property.name}</h2>
-                            <p>Address: {property.address}</p>
-                            <p>Location: {property.location}</p>
-                            <Link to={`/property/${property.id}/details`}>
-                                View Details
-                            </Link>
-                        </div>
-                    ))
+                    // if properties exist
+                    <Container>
+                        <Row>
+                            {properties.map((property) => (
+                                <Col key={property.id} xs={12} sm={6} md={4} lg={4} xl={4}>
+                                    <PropertyCard property={property} />
+                                </Col>
+                            ))}
+                        </Row>
+                    </Container>
                 ) : (
-                    <p>No properties found</p>
+                    // if no properties exist
+                    <p className="text-center">No properties found</p>
                 )}
             </div>
+
         </div>
     );
 };
