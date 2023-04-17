@@ -7,20 +7,26 @@ import { PropertyContextProvider } from "./context/PropertyContext";
 
 import PropertyDetail from './components/Property/propertyDetail';
 import HomepageSearchBar from "./components/HomepageSearchBar";
-import {AuthContext, AuthProvider} from "./context/AuthContext";
-import ReservationDetailList from './components/Reservation/reservationDetailList'
+import { AuthContext, AuthProvider } from "./context/AuthContext";
+import ReservationDetailList from './components/Reservation/reservationDetailList';
 import PropertyReserve from './components/Property/propertyReserve';
 import ReservationDetail from './components/Reservation/reservationDetail';
 
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import {useContext, useState} from "react";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useContext, useEffect, useState } from "react";
 import LoginPage from './components/Login';
 
 function App() {
     const { token } = useContext(AuthContext);
-    const [authenticated, setAuthenticated] = useState(
-        localStorage.getItem('access_token') !== null
-    );
+    const [authenticated, setAuthenticated] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem('access_token') !== null) {
+            setAuthenticated(true);
+        } else {
+            setAuthenticated(false);
+        }
+    }, [token]);
 
     return (
         <BrowserRouter>

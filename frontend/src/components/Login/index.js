@@ -21,6 +21,10 @@ const LoginPage = (props) => {
             await login(username, password).then(() => {
                 props.setAuthenticated(true);
                 console.log("Login successful!");
+
+                // Send a signal to ProfileDropdown to update the username
+                window.dispatchEvent(new Event('newLogin'));
+
                 return <Navigate to="/" />;
             });
         } catch (error) {

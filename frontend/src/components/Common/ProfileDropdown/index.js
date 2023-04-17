@@ -6,18 +6,66 @@ import { AuthContext } from "../../../context/AuthContext";
 function ProfileDropdown() {
     const { user } = useContext(AuthContext);
     const [username, setUsername] = useState(user ? user.username : "Profile");
+    const [authenticated, setAuthenticated] = useState(
+        localStorage.getItem("access_token") !== null
+    );
+
+    // Handle the signal from the login page
+    window.addEventListener("newLogin", () => {
+        // Update the username
+        fetchUsername();
+
+        // Update the authentication status
+        setAuthenticated(true);
+    });
+
+    function fetchUsername() {
+        // Get the access token from localStorage
+        const accessToken = localStorage.getItem("access_token");
+
+        // Get the user's username from the API
+        fetch("http://localhost:8000/accounts/edit/", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            }
+        }).then((response) => {
+            if (response.status !== 200) {
+                console.error("Failed to fetch user");
+                return;
+            }
+            return response.json();
+        }).then((data) => {
+            if (!data) {
+                return;
+            }
+            setUsername(data.username);
+        });
+    }
 
     useEffect(() => {
-        setUsername(user ? user.username : "Profile");
-    }, [user]);
+
+        if (authenticated) {
+            fetchUsername();
+        } else {
+            setUsername("Profile");
+        }
+    }, [authenticated, user]);
 
     const loggedInMenu = (
         <>
-            <NavDropdown.Item href="#">Manage Profile</NavDropdown.Item>
-            <NavDropdown.Item href="#">My Reservations</NavDropdown.Item>
-            <NavDropdown.Item href="#">My Properties</NavDropdown.Item>
+            <NavDropdown.Item>
+                Manage Profile
+            </NavDropdown.Item>
+            <NavDropdown.Item>
+                My Reservations
+            </NavDropdown.Item>
+            <NavDropdown.Item>
+                My Properties
+            </NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="#">Log Out</NavDropdown.Item>
+            <NavDropdown.Item>Log Out</NavDropdown.Item>
         </>
     );
 
@@ -29,16 +77,21 @@ function ProfileDropdown() {
 
     return (
         <>
-            <Image className="ms-2" src="https://via.placeholder.com/50" roundedCircle />
+            <Image
+                className="ms-2"
+                src="https://via.placeholder.com/50"
+                roundedCircle
+            />
             <NavDropdown
                 className="ms-2 text-bg-primary"
                 title={username}
-                id="basic-nav-dropdown"
+                id="profile-dropdown"
             >
-                {user ? loggedInMenu : loggedOutMenu}
+                {authenticated ? loggedInMenu : loggedOutMenu}
             </NavDropdown>
         </>
     );
 }
+
 
 export default ProfileDropdown;

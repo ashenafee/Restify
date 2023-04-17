@@ -11,8 +11,6 @@ export const AuthProvider = ({children}) => {
     // Fetch user data from backend
     const fetchUser = async () => {
 
-        console.log("Fetching user...");
-
         // Tokens
         const accessToken = localStorage.getItem('access_token');
         const refreshToken = localStorage.getItem('refresh_token');
@@ -28,10 +26,7 @@ export const AuthProvider = ({children}) => {
             });
 
             if (response.status === 200) {
-                console.log("User fetched successfully");
                 setUser(response.data);
-            } else {
-                console.log("Error fetching user data");
             }
         } catch (error) {
             // If the access token is expired, try to get a new access token using the refresh token
@@ -52,8 +47,6 @@ export const AuthProvider = ({children}) => {
                         // Add the tokens to storage
                         localStorage.setItem('access_token', accessToken);
                         localStorage.setItem('refresh_token', refreshToken);
-                    } else {
-                        console.log("Error fetching user data");
                     }
                 } catch (error) {
                     console.error(error);
@@ -122,7 +115,6 @@ export const AuthProvider = ({children}) => {
                 // Fetch user data
                 await fetchUser();
 
-                console.log(accessToken)
                 return response.data;
             } else {
                 throw new Error("Invalid username or password.");
