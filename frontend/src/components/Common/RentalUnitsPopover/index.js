@@ -24,6 +24,15 @@ function RentalUnitsPopover() {
         }
     };
 
+    // Handle the message from the login page
+    window.addEventListener("newLogin", () => {
+        const accessToken = localStorage.getItem("access_token");
+
+        if (accessToken) {
+            fetchRentalUnits(accessToken);
+        }
+    });
+
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token");
 

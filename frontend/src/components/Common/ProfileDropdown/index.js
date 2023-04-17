@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, NavDropdown } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { redirect } from "react-router-dom";
 
 function ProfileDropdown() {
     const { user } = useContext(AuthContext);
@@ -53,6 +54,16 @@ function ProfileDropdown() {
         }
     }, [authenticated, user]);
 
+    const handleLogout = () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        setAuthenticated(false);
+        setUsername("Profile");
+
+        // Redirect to the login page
+        redirect("/login");
+    };
+
     const loggedInMenu = (
         <>
             <NavDropdown.Item>
@@ -65,7 +76,7 @@ function ProfileDropdown() {
                 My Properties
             </NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item>Log Out</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>Log Out</NavDropdown.Item>
         </>
     );
 
@@ -92,6 +103,5 @@ function ProfileDropdown() {
         </>
     );
 }
-
 
 export default ProfileDropdown;

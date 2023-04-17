@@ -29,6 +29,14 @@ function NotificationIcon() {
         </Button>
     ));
 
+    // Respond to the message from the login page
+    window.addEventListener("newLogin", () => {
+        const accessToken = localStorage.getItem("access_token");
+
+        if (accessToken) {
+            fetchNotifications(accessToken);
+        }
+    });
 
     const fetchNotifications = (accessToken) => {
         fetch("http://localhost:8000/notifications/list/", {
@@ -65,7 +73,9 @@ function NotificationIcon() {
                                     <strong>{type}</strong>
                                     <div>{text}</div>
                                 </div>
-                                <small className="text-muted">{date.toLocaleString()}</small>
+                                <small className="text-muted">
+                                    {date.toLocaleString()}
+                                </small>
                             </div>
                         </Dropdown.Item>
                     );
@@ -98,18 +108,17 @@ function NotificationIcon() {
     }, []);
 
     return (
-        <Dropdown>
+        <Dropdown show={hovered}>
             <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                 {hovered ? <BellFill /> : <Bell />}
             </Dropdown.Toggle>
             {isLoggedIn && (
                 <Dropdown.Menu>
-                    {
-                        notifications.length > 0 ? notifications :
-                        <Dropdown.Item href="#">
-                            No notifications
-                        </Dropdown.Item>
-                    }
+                    {notifications.length > 0 ? (
+                        notifications
+                    ) : (
+                        <Dropdown.Item href="#">No notifications</Dropdown.Item>
+                    )}
                 </Dropdown.Menu>
             )}
         </Dropdown>
