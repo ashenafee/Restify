@@ -16,7 +16,7 @@ const UserProfilePage = () => {
     last_name: '',
     email: '',
     phone_number: '',
-    avatar: null // Update to null as avatar will be a file
+    avatar: '' // Update to null as avatar will be a file
   });
 
   const [errors, setErrors] = useState({
