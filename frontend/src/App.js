@@ -34,6 +34,8 @@ import { PropertyCreateProvider } from './context/PropertyCreateContext';
 import CreatePropertyForm from './components/Profile/propertyCreate';
 // update property
 import PropertyUpdate from './components/Profile/propertyManage';
+// add photos to property
+import PropertyImages from './components/Profile/propertyImages';
 
 
 // not used
@@ -82,7 +84,6 @@ function App() {
         checkToken().then(() => {
             console.log("Token checked");
         });
-
         // Respond to the "loggedOut" message
         window.addEventListener("loggedOut", () => {
             console.log("Logged out");
@@ -196,6 +197,20 @@ function App() {
                     path="/property/:property_id/update"
                     element={
                         <PropertyUpdate />
+                    }
+                />
+                {/* property add images */}
+                <Route
+                    path="/property/:property_id/images"
+                    element={
+                        <PropertyImages />
+                    }
+                />
+                {/* set property availability */}
+                <Route
+                    path="/property/:property_id/availability"
+                    element={
+                        <PropertyImages />
                     }
                 />
             </Routes>

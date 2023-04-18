@@ -130,12 +130,34 @@ const CreatePropertyForm = (props) => {
     }
 
     const handleChange = (e) => {
-        console.log("Change called");
-    
-        setFormData({
-            ...formData, [e.target.name]: e.target.value
-         });
-      };
+      const { name, value, type, checked } = e.target;
+      if (type === "checkbox") {
+          // For checkbox fields, update the `amenities` array based on whether the checkbox is checked or not
+          if (checked) {
+              // If checkbox is checked, add the amenity object to the `amenities` array
+              setFormData(prevFormData => ({
+                  ...prevFormData,
+                  amenities: [
+                      ...prevFormData.amenities,
+                      { id: parseInt(value) } // assuming the `value` attribute of the checkbox is the ID of the amenity
+                  ]
+              }));
+          } else {
+              // If checkbox is unchecked, remove the amenity object from the `amenities` array
+              setFormData(prevFormData => ({
+                  ...prevFormData,
+                  amenities: prevFormData.amenities.filter(amenity => amenity.id !== parseInt(value))
+              }));
+          }
+      } else {
+          // For other fields, update the `formData` object based on the field name and value
+          setFormData(prevFormData => ({
+              ...prevFormData,
+              [name]: value
+          }));
+      }
+  };
+  
 
     const handleDescription = (e) => {
     setFormData({ ...formData, description: e.target.value });

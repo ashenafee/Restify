@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { ButtonFilled } from '../Common/Button';
+import { ButtonFilled, ButtonStroke } from '../Common/Button';
 import FormInput from '../Common/FormInput';
 import Footer from '../Common/Footer';
 import jwtDecode from 'jwt-decode';
@@ -23,7 +23,7 @@ const PropertyUpdate = () => {
     bathrooms: "",
     description: "",
     // images: [],
-    amenities: [],
+    // amenities: [],
   });
 
   const [errors, setErrors] = useState({
@@ -36,7 +36,7 @@ const PropertyUpdate = () => {
     bathrooms: "",
     description: "",
     // images: "",
-    amenities: "",
+    // amenities: "",
 });
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -72,14 +72,29 @@ const PropertyUpdate = () => {
     }
   }, []);
 
-  const handleDescription = (e) => {
-    setFormData({ ...formData, description: e.target.value });
-    };
+    // get amenities list
+    useEffect(() => {
+        const fetchAmenities = async () => {
+            try {
+            const response = await fetch("http://localhost:8000/properties/amenities/");
+            const data = await response.json();
+            setAmenities(data.results);
+            } catch (error) {
+            console.error("Failed to fetch amenities:", error);
+            }
+        };
+        fetchAmenities();
+        }, []);
 
-const handleAmenities = (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => Number(option.value));
-    setFormData({ ...formData, amenities: selectedOptions });
-    };
+    const handleDescription = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        };
+        
+    // const handleAmenities = (event) => {
+    //     const selectedOptions = Array.from(event.target.selectedOptions, (option) => Number(option.value));
+    //     setFormData({ ...formData, amenities: selectedOptions });
+    //     };
+                      
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -91,24 +106,22 @@ const handleAmenities = (event) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(true);
-    // const formDataWithFile = new FormData();
-    // formDataWithFile.append('name', formData.name);
-    // formDataWithFile.append('address', formData.address);
-    // formDataWithFile.append('guests', formData.last_nguestsame);
-    // formDataWithFile.append('beds', formData.beds);
-    // formDataWithFile.append('bathrooms', formData.bathrooms);
-    // formDataWithFile.append('description', formData.description);
-    // formDataWithFile.append('amenities', formData.amenities);
     try {
         const access_token = localStorage.getItem('access_token');
         //const propertyId = props.match.params.propertyId; // Get the property id from the URL params
-        const response = await axios.put(`http://localhost:8000/properties/property/${property_id}/edit/`, formData, {
+        const response = await axios.post(`http://localhost:8000/properties/property/${property_id}/edit/`, formData, {
           headers: {
             Authorization: `Bearer ${access_token}`,
             'Content-Type': 'multipart/form-data'
-          }
+          },
+          data: formData // pass formData as the data parameter
         });
         console.log(response.data);
+
+        setTimeout(() => {
+            navigate("/profile/properties")
+        }, 2000); // 2 seconds delay
+
       } catch (error) {
         setSuccess(false);
         console.error("Failed to update a property ", error);
@@ -128,6 +141,10 @@ const handleAmenities = (event) => {
             });
         }
     }
+  }
+
+  const handleNavigateToImages = async (e) => { 
+    navigate('/property/:property_id/images')
   }
 
   return (
@@ -235,7 +252,7 @@ const handleAmenities = (event) => {
             <input type="file" multiple onChange={handleImages} />
             </label> */}
             {/* {errors.images && <p className="error-message">{errors.images}</p>} */}
-            <br />
+            {/* <br />
             <label>
                 Amenities:
                 <select multiple value={formData.amenities} onChange={handleAmenities}>
@@ -247,18 +264,19 @@ const handleAmenities = (event) => {
                 </select>
                 {errors.amenities && <p className="error-message">{errors.amenities}</p>}
                 <br />
-            </label>
+            </label> */}
             <br />
             {errors.nonfielderrors && <p className="error-message">{errors.nonfielderrors}</p>}
             <ButtonFilled
-                        value="Create Property"
+                        value="Update Property"
                         type="submit"
                         onClick={() => {
                             console.log("Button clicked!");
                         }}
                     />
-            {success && <p className="success-message">Property created successfully!</p>}
+            {success && <p className="success-message">Property update successfully!</p>}
             </form> 
+            <ButtonStroke value="Set images >" onClick={handleNavigateToImages} />
         </div>   
       <Footer />
       </div> 

@@ -146,9 +146,9 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
             - [ ] ability to reserve timeslots occupied by cancelled/terminated reservations (2 marks)
             - [ ] ability to reserve across multiple availability/price ranges (4 marks)
     - [x] Cancel (3 marks)
-    - [ ] Approve/Deny Pending (3 mark)
-    - [ ] Approve/Deny Cancel (3 marks)
-    - [ ] Terminate (3 mark)
+    - [x] Approve/Deny Pending (3 mark)
+    - [x] Approve/Deny Cancel (3 marks)
+    - [x] Terminate (3 mark)
     - [ ] It should be clear to the user what the consequence of each action is, e.g., warn user with a dialog box or a paragraph for each action.
 
 - [ ] Account (20 marks)
@@ -172,7 +172,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Pagination support (4 marks) 
         - [x] Filters (4 marks)
         - [x] Order-by (2 marks)
-    - [ ] Create/update (11 marks) - Kate
+    - [x] Create/update (11 marks) - Kate
     - [ ] Delete (2 marks)
         - [ ] Remember to give a big warning
         - [ ] Consider what should happen to existing reservations

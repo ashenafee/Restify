@@ -10,6 +10,7 @@ function ProfileDropdown() {
     const [authenticated, setAuthenticated] = useState(
         localStorage.getItem("access_token") !== null
     );
+    const navigate = useNavigate();
 
     const navigate = useNavigate();
 
