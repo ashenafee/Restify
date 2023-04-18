@@ -45,6 +45,7 @@ import HomepageSearchBar from "./components/HomepageSearchBar";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
 import ManageProfile from "./components/ManageProfile";
+import Reviews from "./components/Reviews";
 
 
 function App() {
@@ -245,6 +246,9 @@ function ProfileRoutes() {
 
             {/* Properties */}
             <Route path="/properties" element={<MyProperties />} />
+
+            {/* Reviews */}
+            <Route path="/reviews" element={<Reviews />} />
         </Routes>
     );
 }

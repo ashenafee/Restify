@@ -35,8 +35,6 @@ function ProfileDropdown() {
             }
         }).then((response) => {
 
-            console.log(response);
-
             if (response.status !== 200) {
                 console.error("Failed to fetch user");
                 return;
