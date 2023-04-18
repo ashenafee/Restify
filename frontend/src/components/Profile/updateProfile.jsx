@@ -132,7 +132,6 @@ const UserProfilePage = () => {
                 <div>
                     <div className='container my-5'>
                         <h1>User Profile</h1>
-                        <p className='my=3'>All field are required!</p>
                         <form onSubmit={handleSubmit}>
                             <label>
                                 Username:

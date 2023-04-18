@@ -106,9 +106,10 @@ const PropertyUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(true);
+
     try {
         const access_token = localStorage.getItem('access_token');
-        //const propertyId = props.match.params.propertyId; // Get the property id from the URL params
+
         const response = await axios.post(`http://localhost:8000/properties/property/${property_id}/edit/`, formData, {
           headers: {
             Authorization: `Bearer ${access_token}`,
@@ -144,7 +145,7 @@ const PropertyUpdate = () => {
   }
 
   const handleNavigateToImages = async (e) => { 
-    navigate('/property/:property_id/images')
+    navigate(`/property/${property_id}/images`);
   }
 
   return (
