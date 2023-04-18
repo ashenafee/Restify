@@ -4,6 +4,7 @@ from django.db import models
 from accounts.models import User
 from properties.models import Property
 
+from django.utils import timezone
 
 # As a host, I can leave rating and comment about a user who has had a completed
 # reservation to one of my properties, viewable by other hosts.
@@ -31,12 +32,14 @@ class Rating(models.Model):
     comment = models.TextField(blank=True, null=True,
                                help_text='Comment left by the host')
 
+    created_at = models.DateTimeField(default=timezone.now,
+            help_text='Time when the comment was created')
 
     def __str__(self):
         return f'{self.host.username} rated {self.guest.username} ' \
                f'{self.rating} stars'
 
-
+#comment and rating left by a guest for a host(his property)
 class HostRating(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='host_ratings_received',
@@ -57,10 +60,13 @@ class HostRating(models.Model):
     comment = models.TextField(blank=True, null=True,
                                help_text='Comment left by the guest')
 
+    created_at = models.DateTimeField(default=timezone.now,
+            help_text='Time when the comment was created')
+
     def __str__(self):
         return f'{self.guest.username} rated {self.host.username} {self.rating} stars'
 
-
+#comment and rating left by a host for a guest
 class GuestRating(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='guest_ratings_given',
@@ -77,6 +83,9 @@ class GuestRating(models.Model):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1),
                                                      MaxValueValidator(5)],
                                          help_text='Rating out of 5')
+
+    created_at = models.DateTimeField(default=timezone.now,
+            help_text='Time when the comment was created')
 
     comment = models.TextField(blank=True, null=True,
                                help_text='Comment left by the host')

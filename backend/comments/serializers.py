@@ -21,7 +21,7 @@ class CommentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         raise NotImplementedError
 
-
+# comment for a guest left by host
 class HostCommentSerializer(serializers.ModelSerializer):
 
     guest = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -53,7 +53,6 @@ class HostCommentSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return HostComment.objects.create(**validated_data)
-
 
 class GuestCommentSerializer(serializers.ModelSerializer):
     

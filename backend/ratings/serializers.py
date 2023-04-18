@@ -4,16 +4,19 @@ from .models import Rating, HostRating, GuestRating
 
 from properties.models import Reservation, Property
 from accounts.models import User
+from django.utils import timezone
+from django.utils.dateformat import format
+from datetime import datetime
 
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['id', 'host', 'guest', 'property', 'rating', 'comment']
+        fields = ['id', 'host', 'guest', 'property', 'created_at', 'rating', 'comment']
 
 
 class CreateRatingSerializer(serializers.ModelSerializer):
-
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     guest = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     property = serializers.PrimaryKeyRelatedField(
         queryset=Property.objects.all())
@@ -26,7 +29,11 @@ class CreateRatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ['host', 'guest', 'property', 'rating', 'comment']
+        fields = ['host', 'guest', 'property', 'rating', 'created_at', 'comment']
+
+    def create(self, validated_data):
+        validated_data['created_at'] = timezone.now()
+        return super(GuestRatingSerializer, self).create(validated_data)
 
     def validate_guest(self, value):
         self._check_guest_valid()
@@ -65,14 +72,20 @@ class CreateRatingSerializer(serializers.ModelSerializer):
 
         return data
 
-
+#comment and rating left by a guest for a host(his property)
 class HostRatingSerializer(serializers.ModelSerializer):
     # Set guest to the authenticated user
     guest = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
 
     class Meta:
         model = HostRating
-        fields = ['id', 'host', 'guest', 'property', 'rating', 'comment']
+        fields = ['id', 'host', 'guest', 'property', 'rating', 'created_at', 'comment']
+
+    def create(self, validated_data):
+        validated_data['created_at'] = timezone.now()
+        return super(GuestRatingSerializer, self).create(validated_data)
 
     def validate_host(self, value):
         self._check_host_valid()
@@ -108,13 +121,19 @@ class HostRatingSerializer(serializers.ModelSerializer):
                                               'the property.')
 
 
+#comment and rating left by a host for a guest
 class GuestRatingSerializer(serializers.ModelSerializer):
     # Set host to the authenticated user
     host = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
     class Meta:
         model = GuestRating
-        fields = ['id', 'host', 'guest', 'property', 'rating', 'comment']
+        fields = ['id', 'host', 'guest', 'property', 'rating', 'created_at', 'comment']
+
+    def create(self, validated_data):
+        validated_data['created_at'] = timezone.now()
+        return super(GuestRatingSerializer, self).create(validated_data)
 
     def validate_guest(self, value):
         self._check_guest_valid()
