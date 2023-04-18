@@ -6,6 +6,7 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Property, Amenity, PropertyImage, Reservation, Availability
 from comments.models import HostComment, GuestComment
+from ratings.models import HostRating
 from accounts.models import User
 from django.db.models import Avg
 
@@ -40,11 +41,13 @@ class AvailabilitySerializer(serializers.ModelSerializer):
         return value
 
 class PropertyCommentSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.first_name')
+    guest = serializers.CharField(source='guest.first_name')
+    guest_photo = serializers.ImageField(source='guest.avatar')    
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
     class Meta:
-        model = GuestComment
-        fields = ['id', 'author_name', 'rating', 'text', ]
+        model = HostRating
+        fields = ['id', 'guest', 'guest_photo', 'rating', 'comment', 'created_at' ]
 
 class propertyCreateSerializer(ModelSerializer):
     class Meta:
@@ -150,16 +153,16 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     imagesOfProperty = propertyImageCreator(many=True)
     availabilitiesOfProperty = AvailabilitySerializer(many=True)
     host = HostDetailSerializer()
-    commentsOftheProperty = PropertyCommentSerializer(many=True)
+    host_ratings = PropertyCommentSerializer(many=True)
 
     #calculate average rating
     rating = serializers.SerializerMethodField()
     def get_rating(self, obj):
-        return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
+        return obj.host_ratings.aggregate(Avg('rating'))['rating__avg']
 
     class Meta:
         model = Property
-        fields = ['id', 'host',  'address', 'rating', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'commentsOftheProperty']
+        fields = ['id', 'host', 'address', 'rating', 'name', 'description', 'location', 'beds', 'guests', 'bathrooms', 'amenities','imagesOfProperty', 'availabilitiesOfProperty', 'host_ratings']
 
     def get_images(self, obj):
         return propertyImageCreator(obj.imagesOfProperty.all(), many=True).data
