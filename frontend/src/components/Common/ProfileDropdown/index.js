@@ -137,6 +137,7 @@ function ProfileDropdown() {
                 className="ms-2 text-bg-primary"
                 title={username}
                 id="profile-dropdown"
+                drop="start"
             >
                 {authenticated ? loggedInMenu : loggedOutMenu}
             </NavDropdown>
