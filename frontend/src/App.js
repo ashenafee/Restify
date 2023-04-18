@@ -86,8 +86,14 @@ function App() {
             console.log("Token checked");
         });
         // Respond to the "loggedOut" message
-        window.addEventListener("loggedOut", () => {
-            console.log("Logged out");
+        window.addEventListener("loggingOut", () => {
+            console.log("App.js: Logged out");
+
+            // Update the authentication status
+            setAuthenticated(false);
+
+            // Send a message to the login page
+            window.dispatchEvent(new Event("loggedOut"));
         });
     });
 

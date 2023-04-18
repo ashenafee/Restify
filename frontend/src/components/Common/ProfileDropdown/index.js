@@ -55,7 +55,26 @@ function ProfileDropdown() {
         } else {
             setUsername("Profile");
         }
+
+        const handleLoggedOut = () => {
+            console.log("ProfileDropdown: Logged out");
+            // Update the authentication status
+            setAuthenticated(false);
+
+            // Navigate to the login page
+            navigate("/login");
+        };
+
+        // Listen for the signal in the App
+        window.addEventListener("loggedOut", handleLoggedOut);
+
+        // Clean up the event listener when the component is unmounted or the effect is cleaned up
+        return () => {
+            window.removeEventListener("loggedOut", handleLoggedOut);
+        };
+
     }, [authenticated, user]);
+
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
@@ -63,9 +82,8 @@ function ProfileDropdown() {
         setAuthenticated(false);
         setUsername("Profile");
 
-        // Redirect to the login page
-        // TODO: This doesn't redirect to login. Why?
-        navigate("/login", { replace: true });
+        // Send a signal to the App
+        window.dispatchEvent(new Event("loggingOut"));
     };
 
     const handleManageProfile = () => {
