@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, NavDropdown } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ProfileDropdown() {
     const { user } = useContext(AuthContext);
@@ -10,6 +10,8 @@ function ProfileDropdown() {
     const [authenticated, setAuthenticated] = useState(
         localStorage.getItem("access_token") !== null
     );
+
+    const navigate = useNavigate();
 
     // Handle the signal from the login page
     window.addEventListener("newLogin", () => {
@@ -32,6 +34,9 @@ function ProfileDropdown() {
                 "Authorization": `Bearer ${accessToken}`
             }
         }).then((response) => {
+
+            console.log(response);
+
             if (response.status !== 200) {
                 console.error("Failed to fetch user");
                 return;
@@ -61,22 +66,24 @@ function ProfileDropdown() {
         setUsername("Profile");
 
         // Redirect to the login page
-        redirect("/login");
+        // TODO: This doesn't redirect to login. Why?
+        navigate("/login", { replace: true });
     };
 
     const handleManageProfile = () => {
-        // Redirect to the login page
-        redirect("/profile/edit");
+        // Redirect to the manage profile page
+        console.log("Manage profile");
+        navigate("/profile");
     }
 
     const handleMyReservations = () => {
-        // Redirect to the login page
-        redirect("/my-reservations");
+        // Redirect to the my reservations page
+        // TODO
     }
 
     const handleMyProperties = () => {
-        // Redirect to the login page
-        redirect("/my-properties");
+        // Redirect to the my properties page
+        // TODO
     }
 
     const loggedInMenu = (

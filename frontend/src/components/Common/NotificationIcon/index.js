@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Bell, BellFill } from "react-bootstrap-icons";
 import { Button, Dropdown } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import NotificationModal from "../NotificationModal";
 
 function NotificationIcon() {
     const [hovered, setHovered] = useState(false);
     const [notifications, setNotifications] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     const isLoggedIn = localStorage.getItem("access_token") !== null;
 
-    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    const navigate = useNavigate();
+
+    const CustomToggle = React.forwardRef(({children, onClick}, ref) => (
         <Button
             ref={ref}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            onMouseEnter={() => {
+                setHovered(true);
+                const accessToken = localStorage.getItem("access_token");
+                if (accessToken) {
+                    fetchNotifications(accessToken);
+                }
+            }}
+            onMouseLeave={() => {
+                setHovered(false);
+            }}
             onClick={(e) => {
                 e.preventDefault();
                 onClick(e);
@@ -29,14 +42,44 @@ function NotificationIcon() {
         </Button>
     ));
 
-    // Respond to the message from the login page
-    window.addEventListener("newLogin", () => {
-        const accessToken = localStorage.getItem("access_token");
-
-        if (accessToken) {
-            fetchNotifications(accessToken);
+    const CustomMenu = React.forwardRef(
+        ({children, style, className, "aria-labelledby": labeledBy}, ref) => {
+            return (
+                <div
+                    ref={ref}
+                    style={style}
+                    className={className}
+                    aria-labelledby={labeledBy}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+                >
+                    <ul className="list-unstyled">{children}</ul>
+                </div>
+            );
         }
-    });
+    );
+
+    const clearNotification = (notif_id) => {
+        const accessToken = localStorage.getItem("access_token");
+        fetch("http://localhost:8000/notifications/clear/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({notif_id}),
+        })
+            .then((response) => {
+                if (response.status !== 200) {
+                    console.error("Failed to clear notification");
+                    return;
+                }
+                console.log("Notification cleared successfully");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     const fetchNotifications = (accessToken) => {
         fetch("http://localhost:8000/notifications/list/", {
@@ -68,14 +111,26 @@ function NotificationIcon() {
 
                     return (
                         <Dropdown.Item key={notification.id} href="#">
-                            <div className="d-flex flex-column justify-content-between">
-                                <div>
-                                    <strong>{type}</strong>
-                                    <div>{text}</div>
+                            <div className="d-flex flex-row justify-content-between align-items-center">
+                                <div className="d-flex flex-column justify-content-between">
+                                    <div>
+                                        <strong>{type}</strong>
+                                        <div>{text}</div>
+                                    </div>
+                                    <small className="text-muted">
+                                        {date.toLocaleString()}
+                                    </small>
                                 </div>
-                                <small className="text-muted">
-                                    {date.toLocaleString()}
-                                </small>
+                                <Button
+                                    variant="light"
+                                    size="sm"
+                                    onClick={() => {
+                                        console.log("ping");
+                                        clearNotification(notification.id);
+                                    }}
+                                >
+                                    X
+                                </Button>
                             </div>
                         </Dropdown.Item>
                     );
@@ -88,40 +143,20 @@ function NotificationIcon() {
             });
     };
 
-    useEffect(() => {
-        const handleStorageChange = (e) => {
-            if (e.key === "access_token") {
-                const accessToken = e.newValue;
+    const handleViewAll = () => {
+        // Show a modal with all notifications
+        const accessToken = localStorage.getItem("access_token");
+        if (accessToken) {
+            fetchNotifications(accessToken);
+        }
+    };
 
-                if (accessToken) {
-                    fetchNotifications(accessToken);
-                } else {
-                    setNotifications([]);
-                }
-            }
-        };
-
-        window.addEventListener("storage", handleStorageChange);
-        return () => {
-            window.removeEventListener("storage", handleStorageChange);
-        };
-    }, []);
 
     return (
-        <Dropdown show={hovered}>
-            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                {hovered ? <BellFill /> : <Bell />}
-            </Dropdown.Toggle>
-            {isLoggedIn && (
-                <Dropdown.Menu>
-                    {notifications.length > 0 ? (
-                        notifications
-                    ) : (
-                        <Dropdown.Item href="#">No notifications</Dropdown.Item>
-                    )}
-                </Dropdown.Menu>
-            )}
-        </Dropdown>
+        <NotificationModal
+            show={showModal}
+            onHide={() => setShowModal(false)}
+        />
     );
 }
 
