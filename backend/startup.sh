@@ -43,3 +43,5 @@ python manage.py makemigrations
 
 # Run migrations
 python manage.py migrate
+
+python manage.py loaddata data.json
