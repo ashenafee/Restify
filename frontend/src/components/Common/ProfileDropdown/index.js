@@ -94,12 +94,12 @@ function ProfileDropdown() {
 
     const handleMyReservations = () => {
         // Redirect to the my reservations page
-        // TODO
+        navigate("/profile/reservations");
     }
 
     const handleMyProperties = () => {
         // Redirect to the my properties page
-        // TODO
+        navigate("/profile/properties");
     }
 
     const loggedInMenu = (
