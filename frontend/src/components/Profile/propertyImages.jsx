@@ -109,7 +109,7 @@ const PropertyImages = () => {
   };
 
   const handleNavigateToAvailability = async (e) => { 
-    navigate('/property/:property_id/availability')
+    navigate(`/property/${property_id}/availability`)
   }
 
 
