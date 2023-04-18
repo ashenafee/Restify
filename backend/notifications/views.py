@@ -72,6 +72,7 @@ class ClearNotificationView(APIView):
 
     def post(self, request, *args, **kwargs):
 
+        # Get the notification ID
         try:
             notif_id = request.data['notif_id']
         except KeyError:

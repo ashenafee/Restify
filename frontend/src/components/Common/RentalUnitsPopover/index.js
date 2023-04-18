@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useNavigate } from "react-router-dom";
 
 function RentalUnitsPopover() {
     const [rentalUnits, setRentalUnits] = useState(null);
+    const navigate = useNavigate();
 
     const fetchRentalUnits = async (accessToken) => {
         try {
@@ -73,6 +75,11 @@ function RentalUnitsPopover() {
             className="ms-2 py-3"
             style={{
                 cursor: isLoggedIn ? "pointer" : "not-allowed",
+            }}
+            onClick={() => {
+                if (isLoggedIn) {
+                    navigate("profile/properties");
+                }
             }}
         >
             My Rental Units

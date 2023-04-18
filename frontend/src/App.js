@@ -8,7 +8,7 @@ import { AuthContext, AuthProvider } from "./context/AuthContext";
 import SignupPage from "./components/Signup";
 import LoginPage from './components/Login';
 
-// Search 
+// Search
 import { PropertyContextProvider } from "./context/PropertyContext";
 import PropertySearch from "./components/Search";
 
@@ -23,7 +23,7 @@ import PropertyReserve from './components/Property/propertyReserve';
 import UserProfilePage from './components/Profile/updateProfile';
 
 // see a list of reservations as a user or host
-import ReservationDetailList from './components/Reservation/reservationDetailList'; 
+import ReservationDetailList from './components/Reservation/reservationDetailList';
 // see a specific reservation as a user or host
 import ReservationDetail from './components/Reservation/reservationDetail';
 
@@ -44,6 +44,7 @@ import HomepageSearchBar from "./components/HomepageSearchBar";
 // React
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
+import ManageProfile from "./components/ManageProfile";
 
 
 function App() {
@@ -83,6 +84,10 @@ function App() {
         checkToken().then(() => {
             console.log("Token checked");
         });
+        // Respond to the "loggedOut" message
+        window.addEventListener("loggedOut", () => {
+            console.log("Logged out");
+        });
     });
 
     return (
@@ -93,13 +98,10 @@ function App() {
                 <Route
                     path="/"
                     element={
-                        authenticated
-                            ?
-                            <PropertyContextProvider>
-                                <PropertySearch />
-                            </PropertyContextProvider>
-                            :
-                            <Navigate to="/login" />
+                        <MainContent
+                            authenticated={authenticated}
+                            setAuthenticated={setAuthenticated}
+                        />
                     }
                 />
 
@@ -155,7 +157,7 @@ function App() {
                             <PropertySearch />
                         </PropertyContextProvider>
                     }
-                /> 
+                />
                 {/* property details */}
                 <Route
                     path="/property/:property_id/details"
@@ -177,19 +179,10 @@ function App() {
                     element={<ReservationDetail/>}
                 />
 
-                {/* profile edit */}
+                {/* Profile Routes */}
                 <Route
-                    path="/profile/edit"
-                    element = {
-                        <   UserProfilePage />
-                    }
-                />
-                {/* my properties */}
-                <Route
-                    path="/profile/properties"
-                    element = {
-                        <   MyProperties />
-                    }
+                    path="/profile/*"
+                    element={<ProfileRoutes />}
                 />
                 {/* property create */}
                 <Route
@@ -221,8 +214,38 @@ function App() {
                     }
                 />
             </Routes>
-            
+
         </BrowserRouter>
+    );
+}
+
+function MainContent({ authenticated, setAuthenticated }) {
+    if (authenticated) {
+        return (
+            <PropertyContextProvider>
+                <PropertySearch />
+            </PropertyContextProvider>
+        );
+    } else {
+        return <Navigate to="/login" />;
+    }
+}
+
+function ProfileRoutes() {
+    return (
+        <Routes>
+            {/* Manage */}
+            <Route path="/" element={<ManageProfile />} />
+
+            {/* Edit */}
+            <Route path="/edit" element={<UserProfilePage />} />
+
+            {/* Reservations */}
+            <Route path="/reservations" element={<ReservationDetailList />} />
+
+            {/* Properties */}
+            <Route path="/properties" element={<MyProperties />} />
+        </Routes>
     );
 }
 

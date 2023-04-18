@@ -12,6 +12,8 @@ function ProfileDropdown() {
     );
     const navigate = useNavigate();
 
+    const navigate = useNavigate();
+
     // Handle the signal from the login page
     window.addEventListener("newLogin", () => {
         // Update the username
@@ -33,6 +35,9 @@ function ProfileDropdown() {
                 "Authorization": `Bearer ${accessToken}`
             }
         }).then((response) => {
+
+            console.log(response);
+
             if (response.status !== 200) {
                 console.error("Failed to fetch user");
                 return;
@@ -62,23 +67,24 @@ function ProfileDropdown() {
         setUsername("Profile");
 
         // Redirect to the login page
-        navigate("/login");
+        // TODO: This doesn't redirect to login. Why?
+        navigate("/login", { replace: true });
     };
 
     const handleManageProfile = () => {
-        // Redirect to the login page
-        //redirect("/manage-profile");
-        navigate('/profile/edit');
+        // Redirect to the manage profile page
+        console.log("Manage profile");
+        navigate("/profile");
     }
 
     const handleMyReservations = () => {
-        // Redirect to the login page
-        navigate("/reservation/details/list/");
+        // Redirect to the my reservations page
+        // TODO
     }
 
     const handleMyProperties = () => {
-        // Redirect to the login page
-        navigate( '/profile/properties');
+        // Redirect to the my properties page
+        // TODO
     }
 
     const loggedInMenu = (
