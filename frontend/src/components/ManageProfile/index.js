@@ -70,7 +70,7 @@ const ProfileCardArray = () => (
             icon="bi bi-envelope-plus"
             title="Reviews"
             description="View both hosting and guest reviews"
-            link="reviews.html"
+            link="reviews"
         />
     </Row>
 );

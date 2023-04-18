@@ -1,6 +1,6 @@
 from django.http import Http404
 from rest_framework import serializers
-from .models import Rating
+from .models import Rating, HostRating, GuestRating
 
 from properties.models import Reservation, Property
 from accounts.models import User
@@ -65,3 +65,88 @@ class CreateRatingSerializer(serializers.ModelSerializer):
 
         return data
 
+
+class HostRatingSerializer(serializers.ModelSerializer):
+    # Set guest to the authenticated user
+    guest = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = HostRating
+        fields = ['id', 'host', 'guest', 'property', 'rating', 'comment']
+
+    def validate_host(self, value):
+        self._check_host_valid()
+        return value
+
+    def validate_property(self, value):
+        self._check_host_valid()
+        return value
+
+    def validate_rating(self, value):
+        # Check if the rating is between 1 and 5
+        if value < 1 or value > 5:
+            raise serializers.ValidationError('The rating must be between 1 '
+                                              'and 5.')
+        return value
+
+    def validate_comment(self, value):
+        # Check if the comment is less than 500 characters
+        if len(value) > 500:
+            raise serializers.ValidationError('The comment must be less than '
+                                              '500 characters.')
+
+        return value
+
+    def _check_host_valid(self):
+        host_id = self.initial_data['host']
+        property_id = self.initial_data['property']
+        # Check if the host is the owner of the property
+        property = Property.objects.filter(id=property_id,
+                                             host_id=host_id).first()
+        if not property:
+            raise serializers.ValidationError('The host is not the owner of '
+                                              'the property.')
+
+
+class GuestRatingSerializer(serializers.ModelSerializer):
+    # Set host to the authenticated user
+    host = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = GuestRating
+        fields = ['id', 'host', 'guest', 'property', 'rating', 'comment']
+
+    def validate_guest(self, value):
+        self._check_guest_valid()
+        return value
+
+    def validate_property(self, value):
+        self._check_guest_valid()
+        return value
+
+    def validate_rating(self, value):
+        # Check if the rating is between 1 and 5
+        if value < 1 or value > 5:
+            raise serializers.ValidationError('The rating must be between 1 '
+                                              'and 5.')
+        return value
+
+    def validate_comment(self, value):
+        # Check if the comment is less than 500 characters
+        if len(value) > 500:
+            raise serializers.ValidationError('The comment must be less than '
+                                              '500 characters.')
+
+        return value
+
+    def _check_guest_valid(self):
+        guest_id = self.initial_data['guest']
+        property_id = self.initial_data['property']
+        # Get all reservations for the property
+        reservations = Reservation.objects.filter(property_id=property_id)
+        # Check if the guest has a COMPLETED reservation for the property
+        reservation = reservations.filter(guest_id=guest_id,
+                                          state=Reservation.COMPLETED).first()
+        if not reservation:
+            raise serializers.ValidationError('The guest has no completed '
+                                              'reservation for the property.')

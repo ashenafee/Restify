@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Dropdown, Popover } from "react-bootstrap";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from "react-router-dom";
+import {FaBed, FaToilet} from "react-icons/fa";
+import {BsPeopleFill} from "react-icons/bs";
 
 function RentalUnitsPopover() {
     const [rentalUnits, setRentalUnits] = useState(null);
     const navigate = useNavigate();
+    const [showDropdown, setShowDropdown] = useState(false);
+
 
     const fetchRentalUnits = async (accessToken) => {
         try {
@@ -52,15 +56,22 @@ function RentalUnitsPopover() {
                         <p>No rental units available.</p>
                 ) : (
                         rentalUnits.map((unit) => (
-                            <div key={unit.id}>
-                                <strong>{unit.name}</strong>
-                                <p>{unit.address}, {unit.location}</p>
-                                {/* Use Bootstrap icons to display the number of guests, bedrooms, and bathrooms */}
-                                <p>
-                                    <i className="bi bi-people-fill"></i> {unit.guests} guests
-                                    <i className="bi bi-bed-fill ms-3"></i> {unit.bedrooms} bedrooms
-                                    <i className="bi bi-bath-fill ms-3"></i> {unit.bathrooms} bathrooms
-                                </p>
+                            <div key={unit.id} className={"d-flex flex-row align-items-center"}>
+                                <div className={"d-flex flex-column p-2"}>
+                                    <strong>{unit.name}</strong>
+                                    <p>{unit.address}, {unit.location}</p>
+                                </div>
+                                <div className={"d-flex flex-column p-2 text-end"}>
+                                    <div>
+                                        {unit.guests} <BsPeopleFill/>
+                                    </div>
+                                    <div>
+                                        {unit.beds} <FaBed/>
+                                    </div>
+                                    <div>
+                                        {unit.bathrooms} <FaToilet/>
+                                    </div>
+                                </div>
                             </div>
                 )))}
             </Popover.Body>
@@ -86,10 +97,68 @@ function RentalUnitsPopover() {
         </Button>
     );
 
+    const handleRentalUnitClick = (id) => {
+        navigate(`/property/${id}/update`);
+    };
+
+    const CustomToggle = React.forwardRef(({children, onClick}, ref) => {
+        const handleClick = (e) => {
+            e.preventDefault();
+            onClick(e);
+        };
+
+        return (
+            <Button
+                ref={ref}
+                onClick={handleClick}
+                variant="outline-light"
+                className="ms-2 py-3"
+                style={{
+                    cursor: isLoggedIn ? "pointer" : "not-allowed",
+                }}
+            >
+                {children}
+            </Button>
+        );
+    });
+
     return isLoggedIn ? (
-        <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={rentalUnitsPopover}>
-            {renderButton()}
-        </OverlayTrigger>
+        <Dropdown show={showDropdown} onToggle={(isOpen) => setShowDropdown(isOpen)}>
+            <Dropdown.Toggle as={CustomToggle}>
+                My Rental Units
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                {rentalUnits === null ? (
+                    <Dropdown.Item>
+                        <p>No rental units available.</p>
+                    </Dropdown.Item>
+                ) : (
+                    rentalUnits.map((unit) => (
+                        <Dropdown.Item
+                            key={unit.id}
+                            onClick={() => handleRentalUnitClick(unit.id)}
+                            className={"d-flex flex-row align-items-center"}
+                        >
+                            <div className={"d-flex flex-column p-2"}>
+                                <strong>{unit.name}</strong>
+                                <p>{unit.address}, {unit.location}</p>
+                            </div>
+                            <div className={"d-flex flex-column p-2 text-end"}>
+                                <div>
+                                    {unit.guests} <BsPeopleFill />
+                                </div>
+                                <div>
+                                    {unit.beds} <FaBed />
+                                </div>
+                                <div>
+                                    {unit.bathrooms} <FaToilet />
+                                </div>
+                            </div>
+                        </Dropdown.Item>
+                    ))
+                )}
+            </Dropdown.Menu>
+        </Dropdown>
     ) : (
         renderButton()
     );

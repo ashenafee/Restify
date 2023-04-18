@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .models import Rating
-from .serializers import RatingSerializer, CreateRatingSerializer
+from .models import Rating, GuestRating, HostRating
+from .serializers import RatingSerializer, CreateRatingSerializer, GuestRatingSerializer, HostRatingSerializer
 from properties.models import Reservation, Property
 from accounts.models import User
 
@@ -56,6 +56,68 @@ class RatingListAPIView(generics.ListAPIView):
                                    'They do not have a reservation for any of '
                                    'your properties.')
 
+        ratings = self.get_queryset()
+        serializer = self.serializer_class(ratings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class HostRatingCreateAPIView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = HostRatingSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class HostRatingListAPIView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = HostRatingSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return HostRating.objects.filter(host=user_id)
+
+    def get(self, request, user_id):
+        ratings = self.get_queryset()
+        serializer = self.serializer_class(ratings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GuestRatingCreateAPIView(generics.CreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = GuestRatingSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GuestRatingListAPIView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = GuestRatingSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return GuestRating.objects.filter(guest=user_id)
+
+    def get(self, request, user_id):
         ratings = self.get_queryset()
         serializer = self.serializer_class(ratings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

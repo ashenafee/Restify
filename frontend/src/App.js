@@ -45,6 +45,7 @@ import HomepageSearchBar from "./components/HomepageSearchBar";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useContext, useEffect, useState } from "react";
 import ManageProfile from "./components/ManageProfile";
+import Reviews from "./components/Reviews";
 
 
 function App() {
@@ -85,8 +86,14 @@ function App() {
             console.log("Token checked");
         });
         // Respond to the "loggedOut" message
-        window.addEventListener("loggedOut", () => {
-            console.log("Logged out");
+        window.addEventListener("loggingOut", () => {
+            console.log("App.js: Logged out");
+
+            // Update the authentication status
+            setAuthenticated(false);
+
+            // Send a message to the login page
+            window.dispatchEvent(new Event("loggedOut"));
         });
     });
 
@@ -245,6 +252,9 @@ function ProfileRoutes() {
 
             {/* Properties */}
             <Route path="/properties" element={<MyProperties />} />
+
+            {/* Reviews */}
+            <Route path="/reviews" element={<Reviews />} />
         </Routes>
     );
 }
