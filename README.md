@@ -191,13 +191,11 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [ ] With rating system (2 marks)
         - [ ] Reply system is worth (5 marks)
 
-- [ ] Notifications (32 marks) - Ash
-    - [...] Responsive design (3 marks)
-    - [...] Pagination support (4 marks) 
+- [x] Notifications (32 marks) - Ash
+    - [x] Responsive design (3 marks)
+    - [x] Pagination support (4 marks) 
     - [x] View/List notifications (8 marks)
-        - [x] This may be shown as a component and not a whole page.
-    - [...] Clear notification (3 marks)
-        - [...] Can be implemented in various ways. Please explain to the TA how notification can be cleared.
+    - [x] Clear notification (3 marks)
     - [x] Receiving notifications (12 marks)
         - [x] Host: new reservation, cancellation request, new comment on owned property (2 each, 6 total)
         - [x] Guest: result of reservation or cancellation request (2 each, 4 total)
