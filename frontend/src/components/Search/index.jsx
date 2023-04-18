@@ -16,115 +16,99 @@ import { useNavigate } from 'react-router-dom';
 
 
 const PropertySearch = () => {
-const [location, setLocation] = useState('');
-const [guests, setGuests] = useState('');
-const [amenities, setAmenities] = useState('');
-const [start_date, setStartDate] = useState('');
-const [end_date, setEndDate] = useState('');
-
-const [sort, setSort] = useState('');
-const [order, setOrder] = useState('');
-
-const [nextPageUrl, setNextPageUrl] = useState(''); 
-const [prevPageUrl, setPrevPageUrl] = useState(''); 
-
-const { properties, setProperties } = useContext(PropertyContext);
-const navigate = useNavigate(); // use useHistory hook to get access to history object
-
-// Fetch properties from backend on component mount
-useEffect(() => {
-fetchProperties();
-}, []);
-
-useEffect(() => {
-if (sort && order) {
-    fetchProperties();
-}
-}, [sort, order]); // Watch for changes in sort and order
-
-// Fetch properties from backend based on search criteria
-const fetchProperties = async (url = null) => {
-    try {
+    const [location, setLocation] = useState('');
+    const [guests, setGuests] = useState('');
+    const [amenities, setAmenities] = useState('');
+    const [start_date, setStartDate] = useState('');
+    const [end_date, setEndDate] = useState('');
+  
+    const [sort, setSort] = useState('');
+    const [order, setOrder] = useState('');
+  
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+  
+    const { properties, setProperties } = useContext(PropertyContext);
+    const navigate = useNavigate();
+  
+    // Fetch properties from backend on component mount
+    useEffect(() => {
+      fetchProperties();
+    }, [currentPage, sort, order]);
+  
+    // Fetch properties from backend based on search criteria
+    const fetchProperties = async () => {
+      try {
         // Construct the final URL with query parameters
-        let finalUrl = 'http://localhost:8000/search/catalog/';
+        let finalUrl = `http://localhost:8000/search/catalog/?page=${currentPage}`;
         const queryParams = [];
-        if (url) {
-            finalUrl = url; // If URL for pagination
-        }
-
+  
         if (location) {
-            queryParams.push(`location=${location}`);
+          queryParams.push(`location=${location}`);
         }
         if (guests) {
-            queryParams.push(`guests=${guests}`);
+          queryParams.push(`guests=${guests}`);
         }
         if (amenities) {
-            queryParams.push(`amenities=${amenities}`);
+          queryParams.push(`amenities=${amenities}`);
         }
         if (start_date) {
-            queryParams.push(`start_date=${start_date}`);
+          queryParams.push(`start_date=${start_date}`);
         }
         if (end_date) {
-            queryParams.push(`end_date=${end_date}`);
+          queryParams.push(`end_date=${end_date}`);
         }
         if (sort && order) {
-            if (sort === 'price' || sort === 'rating') {
-                queryParams.push(`sort=${sort}`);
-                queryParams.push(`order=${order}`);
-            }
+          if (sort === 'price' || sort === 'rating') {
+            queryParams.push(`sort=${sort}`);
+            queryParams.push(`order=${order}`);
+          }
         }
-
+  
         if (queryParams.length > 0) {
-            finalUrl += `?${queryParams.join('&')}`;
+          finalUrl += `&${queryParams.join('&')}`;
         }
-
+  
         const response = await fetch(finalUrl);
         const data = await response.json();
         setProperties(data.results);
-
-    setNextPageUrl(data.next);
-    setPrevPageUrl(data.previous);
-
-} catch (error) {
-    console.error('Error fetching properties:', error);
-}
-};  
-
-// Handle search button click
-const handleSearch = () => {
-fetchProperties();
-};
-
-const handleSort = (sortType, sortOrder) => {
-setSort(sortType);
-setOrder(sortOrder);
-fetchProperties();
-};
-
-// Handle reset button click
-const handleReset = () => {
-setLocation('');
-setGuests('');
-setAmenities('');
-setStartDate('');
-setEndDate('');
-setSort('');
-setOrder('');
-
-fetchProperties();
-};
-
-const handleNextPage = () => {
-    if (nextPageUrl) {
-      fetchProperties(nextPageUrl);
-    }
-  };
+        setPageCount(Math.ceil(data.count / 5));
   
-  const handlePrevPage = () => {
-    if (prevPageUrl) {
-      fetchProperties(prevPageUrl);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
     }
-  };
+  
+    const handlePageClick = (e) => {
+      const newPage = Number(e.target.textContent);
+      setCurrentPage(newPage);
+    }
+  
+    // Handle search button click
+    const handleSearch = () => {
+      setCurrentPage(1);
+      fetchProperties();
+    };
+  
+    // Handle sort button click
+    const handleSort = (sortType, sortOrder) => {
+      setSort(sortType);
+      setOrder(sortOrder);
+      setCurrentPage(1);
+    };
+  
+    // Handle reset button click
+    const handleReset = () => {
+      setLocation('');
+      setGuests('');
+      setAmenities('');
+      setStartDate('');
+      setEndDate('');
+      setSort('');
+      setOrder('');
+      setCurrentPage(1);
+      fetchProperties();
+    };
 
 return (
     <div>
@@ -217,12 +201,32 @@ return (
     </Row>
     </Container>
 
-    <div className='container d-flex'>
-    <ButtonStroke onClick={handlePrevPage} value = {"< Previous"}/>
-    {/* a little gap */}
-    <div className='mx-2'></div>
-    <ButtonStroke onClick={handleNextPage} value = {"Next >"}/>
-  </div>
+    <div className="pagination-container">
+        <button
+            className={`pagination-button currentPage === 1 ? 'disabled' : ''`}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+        >
+            Previous
+        </button>
+        {Array.from({ length: pageCount }, (_, i) => (
+            <button
+            key={i + 1}
+            className={`pagination-button currentPage === i + 1 ? 'active' : ''`}
+            onClick={() => setCurrentPage(i + 1)}
+            >
+            {i + 1}
+            </button>
+        ))}
+        <button
+            className={`pagination-button currentPage === pageCount ? 'disabled' : ''`}
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === pageCount}
+        >
+            Next
+        </button>
+    </div>
+
 </div >
     <Footer />
 </div>

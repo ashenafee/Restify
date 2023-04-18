@@ -3,24 +3,39 @@ import './styles.css';
 import { useNavigate } from 'react-router-dom';
 
 const PropertyCard = ({ property }) => {
-  const { id, name, location, rating, availabilitiesOfProperty, imagesOfProperty } = property;
+  const { id, name, location, guests, beds, bathrooms, rating, amenities, availabilitiesOfProperty, imagesOfProperty } = property;
   const navigate = useNavigate();
 
-  // remove later
   const renderAvailability = () => {
-    console.log(name + " " + imagesOfProperty)
     if (availabilitiesOfProperty && availabilitiesOfProperty.length > 0) {
       return availabilitiesOfProperty.map(availability => (
         <div key={availability.id}>
-          Availability: {availability.start_date} - {availability.end_date}
+          <b>Availability: </b> {availability.start_date} - {availability.end_date}
           <br />
-          Price per night: ${availability.price_per_night}
+          <b>Price per night:</b> ${availability.price_per_night}
         </div>
       ));
     } else {
       return <div>No availability information</div>;
     }
   };
+
+  const renderAmenities = () => {
+    if (amenities && amenities.length > 0) {
+      return (
+        <ul>
+          {amenities.map(amenity => (
+            <li key={amenity.id}>
+              {amenity.name}
+            </li>
+          ))}
+        </ul>
+      );
+    } else {
+      return <div>No amenities</div>;
+    }
+  };
+  
 
   const handleCardClick = () => {
     // Redirect to property details page on card click
@@ -43,8 +58,14 @@ const PropertyCard = ({ property }) => {
 
     <div className="py-3 px-3">
         <h2>{name}</h2>
-        <p>Location: {location}</p>
-        <p>Rating: {rating}</p>
+        <p> <b>Location: </b> {location}</p>
+        <p> <b>Guests:</b> {guests}</p>
+        <p> <b>Bathrooms:</b> {bathrooms}</p>
+        <p><b> Beds: </b>{beds}</p>
+        {renderAmenities()}
+        < br />
+        {/* <p>Amenities: {amenities}</p> */}
+        <p><b>Rating: </b>{rating}</p>
 
         {renderAvailability()}
       </div>
