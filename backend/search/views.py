@@ -70,7 +70,7 @@ class PropertySearchView(ListAPIView):
         sort_by = self.request.query_params.get('sort', None)
         order_by = self.request.query_params.get('order', None)
         if sort_by == 'rating':
-            queryset = queryset.annotate(avg_rating=Avg('commentsOftheProperty__rating'))
+            queryset = queryset.annotate(avg_rating=Avg('host_ratings__rating'))
             if order_by == 'asc':
                 queryset = queryset.order_by('avg_rating')
             elif order_by == 'desc':

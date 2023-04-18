@@ -6,8 +6,8 @@ from accounts.models import User
 from properties.models import Amenity, Availability, Property, PropertyImage
 from datetime import datetime
 from comments.models import HostComment, GuestComment
+from ratings.models import HostRating # new
 from django.db.models import Avg
-
 
 
 class AmenitySerializer(serializers.ModelSerializer):
@@ -43,26 +43,34 @@ class PropertyImageSerializer(serializers.ModelSerializer):
         fields =['name','image','default']
 
 class PropertyCommentSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.first_name')
+    # author_name = serializers.CharField(source='author.first_name')
+    guest = serializers.CharField(source='guest.first_name')
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
     class Meta:
-        model = GuestComment
-        fields = ['id', 'author_name', 'rating', 'text', ]
+        # model = GuestComment
+        # fields = ['id', 'author_name', 'rating', 'text', ]
+        model = HostRating
+        fields = ['id', 'guest', 'rating', 'comment', 'created_at' ]
 
 class PropertySearchSerializer(serializers.ModelSerializer):
     amenities = AmenitySerializer(many=True)
     imagesOfProperty = PropertyImageSerializer(many=True)
-    commentsOftheProperty = PropertyCommentSerializer(many=True)
+
+    # commentsOftheProperty = PropertyCommentSerializer(many=True) # changed
+    host_ratings = PropertyCommentSerializer(many=True)
+
     availabilitiesOfProperty = AvailabilitySerializer(many=True)
 
     rating = serializers.SerializerMethodField()
 
     def get_rating(self, obj):
-        return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
+        #return obj.commentsOftheProperty.aggregate(Avg('rating'))['rating__avg']
+        return obj.host_ratings.aggregate(Avg('rating'))['rating__avg']
 
     class Meta:
         model = Property
-        fields = ['id', 'imagesOfProperty', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities', 'rating', 'commentsOftheProperty', 'availabilitiesOfProperty']
+        fields = ['id', 'imagesOfProperty', 'name', 'location', 'guests', 'beds', 'bathrooms', 'amenities', 'rating', 'host_ratings', 'availabilitiesOfProperty']
 
     def validate(self, data):
         amenities = data.get('amenities')
