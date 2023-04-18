@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Pagination, Dropdown } from "react-bootstrap";
 import {Bell, BellFill} from "react-bootstrap-icons";
+import Notification from "../Notification";
 
 function NotificationModal() {
     const [notifications, setNotifications] = useState([]);
@@ -10,6 +11,13 @@ function NotificationModal() {
     const[hovered, setHovered] = useState(false);
     const accessToken = localStorage.getItem("access_token");
     const isLoggedIn = accessToken !== null;
+
+    useEffect(() => {
+        if (modalOpen) {
+            fetchNotifications();
+        }
+
+    }, [modalOpen]);
 
     const fetchNotifications = (page = 1) => {
         fetch(`http://localhost:8000/notifications/list/?page=${page}`, {
@@ -37,19 +45,17 @@ function NotificationModal() {
                 console.error(error);
             });
     };
-
-    useEffect(() => {
-        if (modalOpen) {
-            fetchNotifications();
-        }
-
-    }, [modalOpen]);
-
     const handleClose = () => setModalOpen(false);
     const handleShow = () => setModalOpen(true);
     const handlePageChange = (page) => {
         setCurrentPage(page);
         fetchNotifications(page);
+    };
+
+    const handleNotificationDelete = (id) => {
+        setNotifications((prevNotifications) =>
+            prevNotifications.filter((notif) => notif.id !== id)
+        );
     };
 
     const CustomToggle = React.forwardRef(({children, onClick}, ref) => {
@@ -96,13 +102,11 @@ function NotificationModal() {
                         {notifications.length > 0 ? (
                             [
                                 notifications.map((notification) => (
-                                    <Dropdown.Item key={notification.id}>
-                                        <strong>{notification.type}</strong>
-                                        <p>{notification.text}</p>
-                                        <small className="text-muted">
-                                            {new Date(notification.date).toLocaleString()}
-                                        </small>
-                                    </Dropdown.Item>
+                                    <Notification
+                                        notification={notification}
+                                        key={notification.id}
+                                        onDelete={handleNotificationDelete}
+                                    />
                                 )),
                                 <Dropdown.Divider key="divider"/>,
                                 <Dropdown.Item key="view-all" onClick={handleShow}>
