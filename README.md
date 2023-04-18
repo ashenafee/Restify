@@ -172,7 +172,7 @@ All edits made can be found under the [commits](https://github.com/ashenafee/Res
         - [x] Pagination support (4 marks) 
         - [x] Filters (4 marks)
         - [x] Order-by (2 marks)
-    - [ ] Create/update (11 marks) - Kate
+    - [x] Create/update (11 marks) - Kate
     - [ ] Delete (2 marks)
         - [ ] Remember to give a big warning
         - [ ] Consider what should happen to existing reservations
