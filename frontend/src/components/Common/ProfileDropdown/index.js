@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, NavDropdown } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ProfileDropdown() {
     const { user } = useContext(AuthContext);
@@ -10,6 +10,7 @@ function ProfileDropdown() {
     const [authenticated, setAuthenticated] = useState(
         localStorage.getItem("access_token") !== null
     );
+    const navigate = useNavigate();
 
     // Handle the signal from the login page
     window.addEventListener("newLogin", () => {
@@ -61,22 +62,23 @@ function ProfileDropdown() {
         setUsername("Profile");
 
         // Redirect to the login page
-        redirect("/login");
+        navigate("/login");
     };
 
     const handleManageProfile = () => {
         // Redirect to the login page
-        redirect("/manage-profile");
+        //redirect("/manage-profile");
+        navigate('/profile/edit');
     }
 
     const handleMyReservations = () => {
         // Redirect to the login page
-        redirect("/my-reservations");
+        navigate("/reservation/details/list/");
     }
 
     const handleMyProperties = () => {
         // Redirect to the login page
-        redirect("/my-properties");
+        navigate( '/profile/properties');
     }
 
     const loggedInMenu = (
