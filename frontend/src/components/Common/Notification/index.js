@@ -32,13 +32,15 @@ function Notification({ notification, onDelete }) {
 
     return (
         <Dropdown.Item className={"mb-0"}>
-            <div className="d-flex flex-row justify-content-between align-items-center">
-                <div className="d-flex flex-column justify-content-between">
+            <div className={"d-flex flex-row justify-content-between align-items-center"}>
+                <div className={"d-flex flex-column justify-content-between w-100"}>
                     <div>
                         <strong>{type}</strong>
-                        <div>{text}</div>
+                        <div className={"text-wrap"}>
+                            {text}
+                        </div>
                     </div>
-                    <small className="text-muted">{new Date(date).toLocaleString()}</small>
+                    <small className={"text-muted"}>{new Date(date).toLocaleString()}</small>
                 </div>
                 {
                     hovered ?
