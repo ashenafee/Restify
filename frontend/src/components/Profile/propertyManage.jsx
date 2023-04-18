@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { ButtonFilled } from '../Common/Button';
+import { ButtonFilled, ButtonStroke } from '../Common/Button';
 import FormInput from '../Common/FormInput';
 import Footer from '../Common/Footer';
 import jwtDecode from 'jwt-decode';
@@ -143,6 +143,10 @@ const PropertyUpdate = () => {
     }
   }
 
+  const handleNavigateToImages = async (e) => { 
+    navigate('/property/:property_id/images')
+  }
+
   return (
     <div>
     {loggedIn ? (
@@ -272,6 +276,7 @@ const PropertyUpdate = () => {
                     />
             {success && <p className="success-message">Property update successfully!</p>}
             </form> 
+            <ButtonStroke value="Set images >" onClick={handleNavigateToImages} />
         </div>   
       <Footer />
       </div> 
