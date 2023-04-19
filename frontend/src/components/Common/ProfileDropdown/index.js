@@ -102,6 +102,11 @@ function ProfileDropdown() {
         navigate("/profile/properties");
     }
 
+    const handleLogin = () => {
+        // Redirect to the my properties page
+        navigate("/login");
+    }
+
     const loggedInMenu = (
         <>
             <NavDropdown.Item onClick={handleManageProfile}>
@@ -122,7 +127,7 @@ function ProfileDropdown() {
 
     const loggedOutMenu = (
         <>
-            <NavDropdown.Item>Log In</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogin}>Log In</NavDropdown.Item>
         </>
     );
 
