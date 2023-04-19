@@ -60,6 +60,9 @@ function PropertyReserve() {
     reservationData.append('start_date', startDateFormatted);
     reservationData.append('end_date', endDateFormatted);
 
+
+
+
     const response = await fetch(`http://localhost:8000/properties/reservation/${property_id}/add/`, {
       method: 'POST',
       headers: {
@@ -75,6 +78,20 @@ function PropertyReserve() {
     } else {
       setReservationSucess(false)
       setHasClickReserve(true)
+    }
+  };
+
+  const renderAvailability = () => {
+    if (property.availabilitiesOfProperty && property.availabilitiesOfProperty.length > 0) {
+      return property.availabilitiesOfProperty.map(availability => (
+        <div key={availability.id}>
+          <b>Availability: </b> {availability.start_date} - {availability.end_date}
+          <br />
+          <b>Price per night:</b> ${availability.price_per_night}
+        </div>
+      ));
+    } else {
+      return <div>No availability information</div>;
     }
   };
   return (
@@ -119,11 +136,7 @@ function PropertyReserve() {
               120.60 per day
             </h2>
             <p style={{ fontSize: '10px' }}>Tax and other fees not included</p> */}
-            <form action="booking.html">
-              <button className="rent-button" href="booking.html">
-                Rent
-              </button>
-            </form>
+            {renderAvailability()}
           </div>
         </div>
         <div className="row">

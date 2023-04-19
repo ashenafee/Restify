@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 function ReservationDetail() {
   const { reservation_id} = useParams();
   const [property, setProperty] = useState({});
+  const [username, setUsername] = useState({});
   const [reservation, setReservation] = useState({});
   const [cancelClicked, setCancelClick] =useState(false);
   const [cancelSuccess, setCancelSucess] = useState(false);
@@ -30,9 +31,55 @@ function ReservationDetail() {
       }
       console.log(`I am looking for a property with this id ${reservation.property_id}`);
       console.log(property.name);
+      fetchUsername();
     }
     fetchProperty();
   }, [reservation.property_id]);
+
+  function fetchUsername() {
+    // Get the access token from localStorage
+    const accessToken = localStorage.getItem("access_token");
+
+    // Get the user's username from the API
+    fetch("http://localhost:8000/accounts/edit/", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
+        }
+    }).then((response) => {
+
+        if (response.status !== 200) {
+            console.error("Failed to fetch user");
+            return;
+        }
+        return response.json();
+    }).then((data) => {
+        if (!data) {
+            return;
+        }
+        setUsername(data.username);
+    });
+}
+
+
+  const updateData = async (e) => {
+    const response1 = await fetch(`http://localhost:8000/properties/reservation/${reservation_id}/detail/`)
+    const data1 = await response1.json();
+    if (data1) {
+      setReservation(data1);
+    }
+    else {
+      console.log("not a valid reservation")
+    }
+    const response = await fetch(`http://localhost:8000/properties/property/${reservation.property_id}/view/`);
+    const data = await response.json();
+    if (data) {
+      setProperty(data);
+    }
+    console.log(`I am looking for a property with this id ${reservation.property_id}`);
+    console.log(property.name);
+  }
 
   const handleCancel = async (e) => {
     const access_token = localStorage.getItem('access_token');
@@ -55,6 +102,125 @@ function ReservationDetail() {
         setCancelClick(true);
         setCancelSucess(true);
         setCancelStatus(response.data);
+        updateData();
+      } else {
+        const data = await response.json();
+        setCancelClick(true);
+        setCancelSucess(false);
+        setCancelStatus(data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      setCancelClick(true);
+      setCancelSucess(false);
+      setCancelStatus('An error occurred while processing your request.');
+    }
+  };
+
+  const handleApprove = async (e) => {
+    const access_token = localStorage.getItem('access_token');
+    e.preventDefault();
+  
+    try {
+      const reservationData = new URLSearchParams();
+      reservationData.append('state', "Approved");
+      const response = await fetch(`http://localhost:8000/properties/reservation/${reservation_id}/update/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${access_token}`,
+
+        },
+        body: reservationData.toString(),
+      });
+  
+      if (response.ok) {
+        setCancelClick(true);
+        setCancelSucess(true);
+        setCancelStatus(response.data);
+        updateDate();
+      } else {
+        const data = await response.json();
+        setCancelClick(true);
+        setCancelSucess(false);
+        setCancelStatus(data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      setCancelClick(true);
+      setCancelSucess(false);
+      setCancelStatus('An error occurred while processing your request.');
+    }
+  };
+
+  const handleTerminate = async (e) => {
+    const access_token = localStorage.getItem('access_token');
+    e.preventDefault();
+
+    if (!window.confirm("Are you sure you want to Terminate? You would incur fees in repayment.")) {
+        return;
+    }
+  
+    try {
+      const reservationData = new URLSearchParams();
+      reservationData.append('state', 'Terminated');
+      const response = await fetch(`http://localhost:8000/properties/reservation/${reservation_id}/update/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${access_token}`,
+  
+        },
+        body:reservationData.toString(),
+      });
+  
+      if (response.ok) {
+        setCancelClick(true);
+        setCancelSucess(true);
+        setCancelStatus(response.data);
+        updateData();
+      } else {
+        const data = await response.json();
+        setCancelClick(true);
+        setCancelSucess(false);
+        setCancelStatus(data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      setCancelClick(true);
+      setCancelSucess(false);
+      setCancelStatus('An error occurred while processing your request.');
+    }
+  };
+
+  const handleDeny = async (e) => {
+    const access_token = localStorage.getItem('access_token');
+    e.preventDefault();
+
+    if (!window.confirm("Are you sure you want to Deny?")) {
+        return;
+    }
+  
+    try {
+      const reservationData = new URLSearchParams();
+      reservationData.append('state', "Denied");
+      const response = await fetch(`http://localhost:8000/properties/reservation/${reservation_id}/update/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${access_token}`,
+
+
+        },
+        body:reservationData.toString(),
+
+      });
+  
+      if (response.ok) {
+        setCancelClick(true);
+        setCancelSucess(true);
+        setCancelStatus(response.data);
+        updateData();
       } else {
         const data = await response.json();
         setCancelClick(true);
@@ -123,17 +289,72 @@ function ReservationDetail() {
                 <h4>End Date: {reservation.end_date}</h4>
             </div>
             <div class="col">
-                <form action="leave-comment.html">
-                    <button className = "leave-comment-button">Leave a Comment</button>
-                </form>
-                <form>
-                    <button className = "cancel-booking-button" onClick={handleCancel}>Request Cancel</button>
-                </form>
-                {cancelClicked && cancelSuccess ? (
-                    <h4>Your reservation has been canceled successfully and is now pending</h4>
-                ) : cancelClicked ? (
-                    <h4>Your reservation was not canceled successfully</h4>
-                ) : null}
+            <div className="row">
+                <div className="col">
+                  <h1>Review Your Booking</h1>
+                <h4>{reservation.state}</h4>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <h4>Start Date: {reservation.start_date}</h4>
+                <h4>End Date: {reservation.end_date}</h4>
+              </div>
+            </div>
+            <div className="row">
+              {reservation.property_owner === username ? (
+                reservation.state === "Pending" ? (
+                  <div className="col">
+                  <h3>You are the host</h3>
+                  <form action="leave-comment.html">
+                    <button className="leave-comment-button">Leave a Comment</button>
+                  </form>
+                    <button className="cancel-booking-button" onClick={handleApprove}>Approve Request</button>
+                    <button className="cancel-booking-button" onClick={handleDeny}>Deny Request</button>
+                    {cancelClicked && cancelSuccess ? (
+                    <h4>Your request has been processed succesfuly</h4>
+                  ) : cancelClicked ? (
+                    <h4>Your request has not been processed successfully</h4>
+                  ) : null}
+                  </div>
+                ) : reservation.state === "Completed" || reservation.state === "Denied" || reservation.state === "Expired" || reservation.state === "Terminated"? null : (
+                  <div className="col">
+                  <h3>You are the host</h3>
+                  <form action="leave-comment.html">
+                    <button className="leave-comment-button">Leave a Comment</button>
+                  </form>
+                    <button className="cancel-booking-button" onClick={handleTerminate}>Terminate Reservation</button>
+                    {cancelClicked && cancelSuccess ? (
+                    <h4>Your request has been processed succesfuly</h4>
+                  ) : cancelClicked ? (
+                    <h4>Your request has not been processed successfully</h4>
+                  ) : <h3>You are the host</h3>}
+                  </div>
+                )
+              ) : reservation.state === "Approved" || reservation.state === "Pending" ? (
+                <div className="col">
+                  <h3>You are the guest</h3>
+                  <form action="leave-comment.html">
+                    <button className="leave-comment-button">Leave a Comment</button>
+                  </form>
+                  <form>
+                    <button className="cancel-booking-button" onClick={handleCancel}>Request Cancel</button>
+                  </form>
+                  {cancelClicked && cancelSuccess ? (
+                    <h4>Your request has been processed succesfuly</h4>
+                  ) : cancelClicked ? (
+                    <h4>Your request has not been processed successfully</h4>
+                  ) : null}
+                </div>
+              ) : (
+                <div className="col">
+                  <h3>You are the guest</h3>
+                  <form action="leave-comment.html">
+                    <button className="leave-comment-button">Leave a Comment</button>
+                  </form>
+                </div>
+              )}
+            </div>
             </div>
         </div>
       </div>

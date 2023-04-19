@@ -200,6 +200,7 @@ class ReservationDetailSerializer(serializers.ModelSerializer):
     property_name = serializers.CharField(source='property.name')
     property_address = serializers.CharField(source='property.address')
     property_id = serializers.CharField(source='property.id')
+    property_owner = serializers.CharField(source='property.host.username')
     class Meta:
         model = Reservation
-        fields =['id', 'start_date', 'end_date', 'property_name', 'property_address', 'state', 'property_id']
+        fields =['id', 'start_date', 'end_date', 'property_name', 'property_address', 'state', 'property_id', 'property_owner']
