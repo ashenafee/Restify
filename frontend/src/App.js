@@ -36,6 +36,8 @@ import CreatePropertyForm from './components/Profile/propertyCreate';
 import PropertyUpdate from './components/Profile/propertyManage';
 // add photos to property
 import PropertyImages from './components/Profile/propertyImages';
+// add availability to property
+import PropertyAvailability from './components/Profile/propertyAvailability';
 
 
 // not used
@@ -217,7 +219,7 @@ function App() {
                 <Route
                     path="/property/:property_id/availability"
                     element={
-                        <PropertyImages />
+                        <PropertyAvailability />
                     }
                 />
             </Routes>
