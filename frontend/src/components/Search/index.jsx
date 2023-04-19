@@ -72,7 +72,7 @@ const PropertySearch = () => {
         const response = await fetch(finalUrl);
         const data = await response.json();
         setProperties(data.results);
-        setPageCount(Math.ceil(data.count / 5));
+        setPageCount(Math.ceil(data.count / 4));
   
       } catch (error) {
         console.error('Error fetching properties:', error);
